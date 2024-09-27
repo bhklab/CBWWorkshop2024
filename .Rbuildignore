@@ -3,3 +3,6 @@
 ^_pkgdown\.yml$
 pixi.toml
 pixi.lock
+^docs$
+^pkgdown$
+^\.github$
