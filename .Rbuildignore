@@ -1,0 +1,5 @@
+^LICENSE\.md$
+.pixi
+^_pkgdown\.yml$
+pixi.toml
+pixi.lock

@@ -1,0 +1,1486 @@
+---
+title: "Pharmacogenomic Analysis of Drug Combination Experiments to Identify
+  Biomarkers of Response or Resistance"
+author:
+  - name: Christopher Eeles
+    email: christopher.eeles@uhnresearch.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
+  - name: Petr Smirnov
+    email: petr.smirnov@utoronto.ca
+    affiliation:
+        - *pm
+        - &uot University of Toronto
+  - name: Feifei Li
+    email: ff.li@mail.utoronto.ca
+    affiliation:
+      - *uot
+output: BiocStyle::html_document
+bibliography: BioC2022Conference.bib
+vignette: >
+  %\VignetteIndexEntry{Pharmacogenomic Analysis of Drug Combination Experiments to Identify Biomarkers of Response or Resistance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- Remove {-} from header to show numbering -->
+# Workshop Overview {-}
+
+## Instructor(s) name(s) and contact information {-}
+
+* Christopher Eeles <christopher.eeles@uhnresearch.ca>
+* Petr Smirnov <petr.smirnov@utoronto.ca>
+* Benjamin Haibe-Kains <benjamin.haibe.kains@utoronto.ca>
+
+## Workshop Description {-}
+
+<!-- Alias package links -->
+
+```{r eval=TRUE, echo=FALSE}
+PGx <- BiocStyle::Biocpkg("PharmacoGx")
+CGx <- BiocStyle::Biocpkg("CoreGx")
+TGx <- BiocStyle::Biocpkg("ToxicoGx")
+RGx <- BiocStyle::Biocpkg("RadioGx")
+Xv <- BiocStyle::Biocpkg("Xeva")
+DT <- BiocStyle::CRANpkg("data.table")
+SE <- BiocStyle::Biocpkg("SummarizedExperiment")
+MAE <- BiocStyle::Biocpkg("MultiAssayExperiment")
+```
+
+This workshop will introduce users to the `r CGx` and
+`r PGx` R packages, which are useful tools for
+pharmacogenomic modelling to discover biomarkers of treatment response in cancer
+model systems. `r PGx` specifically focuses on
+drug sensitivity experiments in cancer cell lines, which will be the major
+focus of this workshop. Additional infrastructure from our lab includes
+`r TGx` for toxicogenomics in healthy human
+cell-lines, `r RGx` for
+radiogenomics in cancer cell-lines and `r Xv` for
+pharmacogenomics in patient derived xenograph (PDX) murine models.
+
+Participants will learn the fundamentals of using `r CGx`
+and `r PGx` to create a `PharmacoSet`&mdash;an
+integrative container for the storage, analysis and visualization of
+pharmacogenomic experiments. Particular focus will be placed
+on newly developed support for storing, analyzing and visualizing drug
+combination sensitivity experiments and correlating results therefrom
+with multi-omic molecular profiles to discover biomarkers of drug sensitivity,
+resistance, synergy, or antagonism.
+
+### Pre-requisites {-}
+  * Basic knowledge of R syntax
+  * Knowledge of or interest in pharmacogenomics
+  * Familiarity with core Bioconductor classes such as the
+  and `r SE` and `r MAE`
+  * Curiosity about or experience with `r DT` an asset!
+
+Useful publications:
+
+* Smirnov, P., Safikhani, Z., El-Hachem, N., Wang, D., She, A., Olsen, C., Freeman, M., Selby, H., Gendoo, D. M. A., Grossmann, P., Beck, A. H., Aerts, H. J. W. L., Lupien, M., Goldenberg, A., & Haibe-Kains, B. (2016). PharmacoGx: An R package for analysis of large pharmacogenomic datasets. Bioinformatics (Oxford, England), 32(8), 1244–1246. https://doi.org/10.1093/bioinformatics/btv723
+* Tonekaboni, M., Ali, S., Soltan Ghoraie, L., Manem, V. S. K. & Haibe-Kains, B. Predictive approaches for drug combination discovery in cancer. Brief Bioinform 19, 263–276 (2018).
+
+
+### Workshop Participation {-}
+
+<!-- The workshop will be presented as a set of analysis steps to be replicated by the learners, with instructors
+available to explain the why and how of applying these functions to the given datasets. Learners will write analysis
+scripts as well as use interactive commands to explore the generated data structures and results. Learners will then
+brainstorm potential applications of the analysis results in their field as well as comment on use case examples
+presented by the instructors on research in our lab. -->
+
+
+Participants expected to have the following required packages installed on their
+machines to be able to run the commands along with the instructors:
+
+
+### _R_ / _Bioconductor_ packages used {-}
+
+Bioconductor:
+
+* `r CGx`
+* `r PGx`
+
+CRAN:
+
+* `r DT`
+* `r BiocStyle::CRANpkg("ggplot2")`
+
+## Time outline {-}
+
+For a 1.5-hr workshop:
+
+| Activity                                                   | Time |
+|------------------------------------------------------------|------|
+| Introduction to CoreGx and PharmacoGx                      |  5m  |
+| Overview of Data Structures                                |  15m |
+| How the `TRE` Supports Drug Combinations Data Analysis     |  10m |
+| Using a `DataMapper` to build a Drug Combo PharmacoSet     |  10m |
+| Dose Response Models and Drug Sensitivity measures         |  10m |
+| Drug Combination Synergy Models                            |  15m |
+| Biomarker Discovery                                        |  10m |
+| Further Resources                                          |  5m  |
+
+
+## Workshop goals and objectives {-}
+
+### Learning goals {-}
+
+* Describe pharmacogenomic mono and combination datasets and their usefulness in cancer research
+* Understand how experimental designs and research questions map onto data structures
+* Learn how to extract information from these datasets
+* Learn how to visualize experimental results from these datasets
+* Learn how to model dose-response for both monotherapy and combination small compound datasets
+* Learn measures to quantify response and synergy in cancer cell-line sensitivity screens
+
+### Learning objectives {-}
+
+* Describe use cases for `r CGx` and `r PGx` in pharmacogenomics and beyond
+* Understand the structure of the `CoreSet` and `PharmacoSet` classes to facilitate their use in subsequent analyses
+* Learn how the `TreatmentResponseExperiment` provides a highly flexible container for storing high-throughput drug combination screening data
+* Use a `TREDataMapper` to create a `TreatmentResponseExperiment` and incorporate it into a `PharmacoSet`
+* Learn to apply arbitrary R functions over a `TreatmentResponseExperiment` using the `aggregate` and `endoaggregate` methods
+* Access the molecular features, dose-response and metadata contained within the data structures defined in our packages
+* Fit Hill Slope models to dose-response experiments using small compound treatments in cell-lines
+* Calculate the AAC, AUC, and IC50 metrics for response quantification in cell lines
+* Compute and store various metrics of drug synergy and antagonism using `r PGx` and the `TreatmentResponseExperiment`
+* Learn how to use `PharmacoGx` to discover univariate biomarkers of drug response, resistance, synergy, or antagnoism
+
+----
+
+```{r global_knitr_opts, echo=FALSE}
+knitr::opts_chunk$set(echo=TRUE, include=TRUE, warning=FALSE, message=TRUE)
+```
+
+```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
+suppressPackageStartupMessages({
+    library(pgxBioc2022Workshop)
+    library(PharmacoGx)
+    library(data.table)
+    library(ggplot2)
+})
+```
+
+# Introduction to CoreGx and PharmacoGx
+
+This tutorial, titled *Pharmacogenomic Analysis of Drug Combination Experiments
+to Identify Biomarkers of Response or Resistance*, focuses on using the
+`r PGx` R package to correlate treatment response,
+measured as the viability of cancer cell-lines after _in vitro_ drug treatment,
+with their respective multi-omic profiles. `r CGx`
+provides the core infrastructure for storing, analyzing, and visualizing generic
+treatment response experiments. It provides methods and classes which can be
+inherited from in downstream packages, such as `r TGx` and
+`r RGx`. We hope that the `CoreSet` object is
+generalized enough that it can be reused by other developers for their specific
+treatment (or stimuli) response use case.
+
+## CoreGx
+
+### Package Nomenclature
+
+To facilitate modularization of the GxSuite of R packages, we have shifted
+the nomenclature within a `CoreSet`&mdash;and therefore in inheriting packages
+&mdash;to be more general.
+
+To this end, have made the following changes:
+
+  * Previous reference to cell (cell-line) have become sample, allowing the
+`CoreSet` to be used for other model systems
+  * Drug (radiation in `RadioGx`) have become treatment, allowing the
+`CoreSet` to be treatment type (or stimuli) agnostic
+  * Sensitivity will become response (sensitivity slot becomes treatmentResponse)
+
+As a result of these changes, the names of some common accessors have been updated.
+The old accessors still remain functional to ensure backwards compatibility for
+at least two Bioconductor releases. A deprecation warning will be added to old
+accessors informing users of the corresponding new function, as per Bioconductor
+best practices.
+
+## PharmacoGx
+
+`r PGx` stores drug screening data together with molecular profiling of
+cell-lines in an object called a `PharmacoSet`, or `PSet` for short. This object
+inherits for the `CoreSet` class defined in our package `CoreGx`, which is
+used to share common datas structure and method across our suite of package.
+The primary use case for `PharmacoGx` is to provide a standardized and highly
+curated container for high-throughput screens in cancer-cell lines, with the
+goal of enabling discovery of biomarkers of treatment response or resistance
+which can be easily compared and validated across large published
+pharmacogneomic datasets.
+
+---
+
+# Overview of Data Structures
+
+The GxSuite of packages make use of various Bioconductor classes for storing
+molecular profile data.
+
+## `CoreSet` and `PharmacoSet`
+
+With the recent updates in the structure and nomenclature of the `CoreSet`,
+the underling data structures are essentially identical. Previously, the
+"treatment" slot was specific to inheriting classes and named according to
+their domain specific use case, for example drug in `r PGx` and radiation
+in `r RGx`. Correspondingly, the "sample" slot was named cell and corresponded
+to _in vitro_ immortalized human cancer cell-lines.
+
+```{r coreset,  echo=FALSE, fig.wide=TRUE, fig.cap = "**CoreSet / PharmacoSet class diagram**. Objects comprising a `CoreSet` are enclosed in boxes. The first box indicates the type and name of each object. The second box indicates the structure of an object or class. The third box shows accessor methods from `PharmacoGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
+knitr::include_graphics("./CoreSet-class.drawio.png")
+```
+
+## `MultiAssayExperiment` and `SummarizedExperiment`
+
+The `MultiAssayExperiment` (`MAE`) is a common Bioconductor class for storing
+the results of diverse multi-omic profiling experiments, including mutation,
+RNA expression, copy number abberation and protein abundace. Along with the
+`SummarizedExperiment` (`SE`), this object is used to store molecular
+phenotype data within a `CoreSet` and `PharmacoSet`.
+
+At the heart of both objects is a feature by sample matrix, with the major
+difference being that the `SE` require congruent matrices (i.e., observations
+on the same set of features and samples) where as the `MAE` allows storage of
+disjoint sets of feature and samples via the use of the `sampleMap`, which,
+conceptually, stores a graph of the mapping from samples to each assay in the
+object.
+
+```{r SummarizedExperiment_schema, echo=FALSE, fig.wide=TRUE, fig.cap = "**SummarizedExperiment** and **MultiAssayExperiment** classes."}
+knitr::include_graphics("./MultiAssayExperiment_SummarizedExperiment_schematics.png")
+
+```
+
+For both these objects, rows map to molecular features
+(often genomic coordinates to better generalize across diverse molecular datatypes),
+and columns to samples. Metadata for both is available via the
+`rowData` and `colData` accessors, respectively.
+
+## `TreatmentResponseExperiment`
+
+The `TRE` object shares much of its design with the `MultiAssayExperiment` and
+`SummarizedExperiment`. We store dimension metadata in `rowData` and `colData`,
+similar to an `SE` but also allow disjoint rows and columns to be stored in
+`assays`, like an `MAE`. The major difference is that instead of using a
+matrix or array for storing assay observations, we instead store them as a long
+format `data.table` where integer keys define the relevant "shape" of the
+underlying data and observations live within columns of that table.
+
+For those familar with relational modelling from RDBMS systems,
+our design has taken inspiration from the star schema often used in OLAP
+applications to improve the efficiency of analytic database queries.
+
+```{r tre_class, echo=FALSE, fig.wide=TRUE, fig.cap = "**TreatmentResponseExperiment class diagram**. Objects comprising a `TreatmentResponseExperiment` are enclosed in boxes. The first box indicates the type and name of each object. The second box indicates the structure of an object or class. The third box shows accessor methods from `PharmacoGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
+knitr::include_graphics("./TreatmentResponseExperimentClassDiagram.drawio.png")
+
+```
+
+The `TRE` differentiates between full assays and summary assays by the presence
+of various identifier columns which can be viewed with the `idCols` method.
+Each `TRE` has a set of `rowIDs` and `colIDs` which define these respective
+dimensions. By storing an `assayIndex`, analagous to the `sampleMap` from the
+`MAE` object, we are able to summarize over one or more row or column
+identifiers while storing only the relevant rows within the assays slot, allowing
+for a measure of compression relative to a matrix or array, where missing values
+must be stored as `NA`.
+
+The association between the various identifiers in the object are shown
+below, with the `assayIndex` being the central repository for the graph like
+relationships between the `rowIDs`, `colIDs` and each respective `assay`.
+
+```{r tre_structure, echo=FALSE, fig.wide=TRUE, fig.cap="The structure of a `TreatmentResponseExperiment` centers around the `assayIndex` which contains a mapping from unique identifiers for row or columns and the primary key of each assay in the object. Summaries over rowKey and colKeys, and thus their corresponding identifiers, and made possible by repeating a givan assay key for ecah rowKey/colKey combination it has been summarized over."}
+knitr::include_graphics("./TreatmentResponseExperimentStructure.drawio.png")
+
+```
+
+----
+
+# How the `TRE` Support Drug Combinations Data Analysis
+
+## Drug Combination Experiments
+
+The field of precision oncology is increasingly interested in exploring possible
+synergies between cancer therapies as a means of overcoming acquired treatment
+resistance or overcoming in complete responses to first line therapies. To
+accelerate the process of translating insights from _in vitro_ drug combination
+experiments into clinical practice, we have extended the `CoreSet` and
+`PharmacoSet` classes with a new object, the `TreatmentResponseExperiment`
+(`TRE`), which has been specifically designed to handle high dimensional
+biological stimilus-response data.
+
+While drug combinations are the first use case for this data structure,
+as cancer model systems continue to advance we expected to also see sample-wise
+combinations. For example, 3D organoid models could include multiple cell-lines
+or patient tissue types. Additionally, we can imagine the object being useful
+for other types of stimuli-response experiments across the biological sciences,
+such as monitoring the response of nerve cells to various types of sensory
+stimuli.
+
+## Building A Drug Combination PharmacoSet
+
+### `DataMapper` Class
+
+The `DataMapper` is an abstract class included in `CoreGx` which defines
+metadata specifying a "recipe" to go from rawdata files associated
+with a specific experiment or publication to a curated and standardized data
+format within an R `S4` class.
+
+In `r CGx` we have implemented the `TREDataMapper` class, which encodes how
+the rawdata from a drug combination experiment should be transformed
+into its associated `TRE` object. A primary motivation for the creation of this
+class was to document and standardize creation of `TRE` objects from the myriad
+experimental designs available in drug combination experiments in the wild. It
+is our hope that, for example, 3x3 drug combination experiments have enough in
+common that we could theoretically create a `3by3TREDataMapper` which works
+for (almost) all publications following this design.
+
+As things stand right now, the `TREDataMapper` primarily acts as helper class
+to explore the specifics of a drug combination experimental design. It allows
+us to generate hypotheses about which identifiers are required to identify
+observations in an assay. Below we will see how, along with the `guessMapping`
+method, we can use the `TREDataMapper` to ensure we have mapped all data
+from the NCI-ALMANAC drug combination experiment into a `TRE` object, ensuring
+that all study observations and relevant metadata are captured in our
+`TRE` and therefore in our `PharmacoSet`.
+
+By curating and releasing such `PharmacoSet` objects, we ensure that our users
+can access all information from the original publication via `r PGx` and
+therefore easily ensure the reproducibility of the results as well as simplify
+their comparison against other curated mono and combination therapy
+`PharmacoSet`s object. In doing so, we help to improve the reproducibility and
+consistency of _in vitro_ pharmacogenomic experiments and accelerate translation
+of insights from the lab into the clinic.
+
+### Using the `TREDataMapper` to Construct a `TreatmentResponseExperiment`
+
+For this workshop we have included a subset of the NCI_ALMANAC_2017
+`PharmacoSet`, curated from [@holbeckNationalCancerInstitute2017]. When approaching new
+treament response experiment data, the first step is to merge it into a single,
+long format table by attaching additional metadata for treatments, sample and
+any other entities defined in the publication. We have done this already and
+included it as the `NCI_ALMANAC_raw` dataset in the workshop package.
+
+```{r nci_rawdata_echo, eval=FALSE, echo=TRUE}
+data(NCI_ALMANAC_raw)
+(head(NCI_ALMANAC_raw))
+```
+
+```{r nci_rawdata_eval, eval=TRUE, echo=FALSE}
+data(NCI_ALMANAC_raw)
+knitr::kable(head(NCI_ALMANAC_raw, 5))
+```
+
+Viewing the table, we see that each column represents a variable, and that
+the number of rows in the table corresponds to the number of dose-response
+observations measured in the `NCI-ALMANAC` study. To those familiar with
+the R `tidyverse`, you may recognize that this dataset is in
+[tidy format](https://r4ds.had.co.nz/tidy-data.html). It is also said be
+in a "long" format because all observations are contained in a single column;
+contrast this with a "wide" format where columns generally respresent samples
+and values are observations are stored across both rows and columns
+(_i.e._, as in a matrix or tensor).
+
+In order for the helper methods of the `TREDataMapper` class to work, our
+rawdata must first be in a single large, tidy `data.frame` or `data.table`.
+Since these conditions are already met for the included example data, we can
+create of `TREDataMapper` object and start exploring the to dimensionality of
+the experiment in question!
+
+```{r data_mapper_creation, eval=TRUE, echo=TRUE}
+print(treDataMapper <- TREDataMapper(rawdata=NCI_ALMANAC_raw))
+```
+
+A `DataMapper` as a concept is simply a collection of metadata around our
+raw data which defines how different columns map to different aspects of our
+target `S4` class. For a `TRE`, similar to a `r SE`, we have the concept of
+`rowData` which defines what is considered a treatment
+(a specific drug combination, its doses and potential technical replicates) and
+`colData` which defines what is considered a sample (a specific cell-line and
+possible biological replicate identifier).
+
+The `guessMapping` method can be used to test our hypotheses about which
+information maps to treatments (rows), samples (columns) or assays
+(experimental observations). This is done by defining a set of groupings
+and querying the table to find other columns which map 1:1 with those groups.
+
+For our first guess, lets assume there are no replicates and see if we are
+able to map all of our rawdata columns using just treatment, treatment dose
+and sample identifiers. Once we format our guess for rows, columns and
+assays, we specify the subset parmeter to indicate we want to remove any
+mapped columns before moving on to the next group. This prevents multimapping
+a column to several groups and is generally recommended.
+
+
+```{r data_mapper_incorrect_guess, eval=TRUE, echo=TRUE}
+groups1 <- list(
+    rowDataMap=c("treatment1id", "treatment2id", "treatment1dose",
+        "treatment2dose"),
+    colDataMap=c("sampleid"),
+    assayMap=c("treatment1id", "treatment2id", "treatment1dose",
+        "treatment2dose", "sampleid"
+    )
+)
+
+(guess1 <- guessMapping(treDataMapper, groups=groups1, subset=TRUE))
+```
+
+Observing the results of our first guess, we can see that many column remain
+unmapped. This likely indicates there is an additional piece of information
+needed to uniquely identify the dimensions of our drug combination experiment.
+One potential cause for this is inclusion of technical or biological
+replicates.
+
+Indeed, for the NCI-ALMANAC both of these kinds of replicates are present.
+
+```{r debugging_incorrect_guess, eval=TRUE, echo=TRUE}
+str(rawdata(treDataMapper), give.attr=FALSE)
+```
+
+Examining the columns in our data, we see we have already defined the both
+`bio_rep`s and `tech_rep`s during raw data in preprocessing. We identified
+biological replicates as observations of the sample treatment, dose and sample
+combination across multiple dates. Technical replicates were the defined as any
+additional rows not mapped to treatment, dose, sample and biological replicates.
+
+For your own data in the wild, you will likely need to consult the original
+publication and explore the data to differentiate these two types of replicates
+and assign identifiers which make every observation within an experiment unique.
+
+For our second guess we will include these columns, mapping biological
+replicates to samples and technical replicates to treatments.
+
+```{r data_mapper_correct_guess, eval=TRUE, echo=TRUE}
+groups2 <- list(
+    rowDataMap=c("treatment1id", "treatment2id", "treatment1dose",
+        "treatment2dose", "tech_rep"),
+    colDataMap=c("sampleid", "bio_rep"),
+    assayMap=c("treatment1id", "treatment2id", "treatment1dose",
+        "treatment2dose",  "sampleid", "bio_rep", "tech_rep")
+)
+
+(guess2 <- guessMapping(treDataMapper, groups=groups2, subset=TRUE))
+```
+
+Since we no longer have any unmapped columns, we know that we have found
+valid dimension identifiers for our data. It is possible that some datasets
+will have multiple valid dimension definitions, so further exploration may
+be required if the first solution doesn't fit with your domain knowledge of the
+experiment or with the design of the `TRE`, which stores data more efficiently
+when only one dimension is large.
+
+Lets assign our mapped columns back to the `TREDataMapper` so we can use
+it to construct a `TreatmentResponseExperiment`.
+
+For identified metadata, we need to assign a name to be used in the `metadata`
+list of the createed `TRE`, other dimension maps can be assigned directly
+to the slots of the `TREDataMapper`.
+
+```{r updating_the_data_mapper, eval=TRUE, echo=TRUE}
+metadataMap(treDataMapper) <- list(experiment_metadata=guess2$metadata$mapped_columns)
+rowDataMap(treDataMapper) <- guess2$rowDataMap
+colDataMap(treDataMapper) <- guess2$colDataMap
+```
+
+Unless we wish to have a single large assay in our `TRE`, we should further
+subdivide our assay columns into sensible groups.
+
+```{r splitting_up_the_assays1}
+(guess2$assayMap)
+```
+
+For the NCI-ALMANAC we have decided to separate our treatment-response
+measurements into the "response" assay. Any additional metadata which doesn't
+map cleaning to rows or columns gets assigned to "assay_metadata". The publsihed
+synergy score will go in the "profiles" assay, which generally stores metrics
+computed from the "response" assay.
+
+For our assay definitions we setup a nested list where each item defines an
+assay in the `TRE`, with the "id_columns" containing identifiers needed to
+uniquely map each row in that assay to its associated treatments and samples.
+The "mapped_columns" item specifies the definition of the assay table.
+
+For this case, all of our assays have the same identifier columns. However,
+this is not a requirement and it may be more efficient to test further
+subgroupings with our identifier columns to prevent uncessarily repeating
+values in our `TRE`.
+
+```{r splitting_up_the_assays2}
+assaymap <- list(
+    response=list(
+        id_columns=guess2$assayMap$id_columns,
+        mapped_columns=c("viability", "PERCENTGROWTH", "PERCENTGROWTHNOTZ",
+            "EXPECTEDGROWTH", "TESTVALUE", "CONTROLVALUE", "TZVALUE")
+    ),
+    profiles=list(
+        id_columns=guess2$assayMap$id_columns,
+        mapped_columns=c("SCORE")
+    ),
+    assay_metadata=list(
+        id_columns=guess2$assayMap$id_columns,
+        mapped_columns=c("COMBODRUGSEQ", "STUDY", "TESTDATE", "PLATE",
+            "SCREENER", "PREFIX2", "CONCINDEX1", "CONCINDEX2", "SAMPLE1",
+            "SAMPLE2")
+    )
+)
+assayMap(treDataMapper) <- assaymap
+(treDataMapper)
+```
+
+Now that we have assigned all the necessary metadata to the `TREDataMapper`,
+creating the object is as simple as calling `metaConstruct`, which combines
+together the rawdata and the metadata into a constructor call for the
+`TreatmentResponseExperiment`.
+
+```{r metaconstruct_tre}
+(NCI_ALMANAC_tre <- metaConstruct(treDataMapper))
+```
+
+### Computing Over a `TreatmentResponseExperiment`
+
+So far we have seen how a `TRE` allows for flexible definitions of treatments
+and samples to enable storage of dose-response observations across a range of
+experimental designs. However, data storage is not the sole point of the `TRE`.
+Once our data is curated and stored safely inside our object we are ready to
+start answering interesting questions about the experiment.
+
+To facilitate computation over a `TRE`, we have included the `aggregate` and
+`endoaggregate` methods which allows arbitrary R functions to be applied over
+groups of identifiers within an assay. For example, we may want to take averages
+for all monotherapy viabilities over technical replicates. We can do so using
+the `aggregate` method as follows:
+
+```{r aggregate_tre}
+(NCI_ALMANAC_tre |>
+  subset(treatment2id == "") |>
+  aggregate(
+    assay="response",
+    mean(viability),
+    by=c("treatment1id", "treatment1dose", "sampleid", "bio_rep")
+  ) ->
+  mono_response_no_reps)
+```
+
+As you can see above, we select only our monotherapy response observations using
+the `subset` method. Aggregate provides an argument for the `assay` we want
+compute over, in this case the "response" assay. We also specify how we want our
+groups defined using the `by` argument. Finally, we can specify one or more
+functions to aggregate columns with. In this case, we are simply taking the
+mean of viability within groups defined by `by`. We have excluded "tech_rep" for
+the by argument which means that our summary will be computed over it.
+
+The resulting table will contain the identifer columns specified to `by`,
+as well as any columns which were summarized. By default, for
+unnamed aggregations, `aggregate` tries to guess the column name. We can see in
+the results it figured out that we are taking the mean of the viability column
+and returned the results as "mean_viability".
+
+You can also customize your resulting column names by naming the aggregation
+arguments:
+
+For example:
+```{r aggregate_tre_named}
+(NCI_ALMANAC_tre |>
+  aggregate(
+    subset=treatment2id == "",
+    assay="response",
+    my_viability=mean(viability),
+    my_dose=mean(treatment1dose),
+    by=c("treatment1id", "treatment1dose", "sampleid", "bio_rep")
+  ) ->
+  mono_response_custom_names)
+```
+
+Here we can see that the viability column is named "my_viability" and that
+our dose column named "my_dose". We also use the `subset` parameter, which
+was added to `aggregate` for convenience to filter to relevant assay rows
+in a single function call.
+
+For more complex operations, such as optimizing parameters to a non-linear
+function (as is done for fitting the Hill curve model to dose-response data),
+we have provided the `nthread` argument to parallelize computations when
+we have additional compute resources available. In generaly, parallelized
+computations with aggregate will use much more RAM than their serialized
+counterparts. Since there is also overhead associated with dispatching parallel
+threads for a computation, this feature should be used sparingly for only
+complex and time consuming computations.
+
+<!-- We will see examples of parallelized aggregation in subsequent sections. -->
+
+The final feature of `aggregate` is allowing information be shared between
+summarized columns to prevent the need for multiple parallelized calls On
+our `TRE` object. For these cases, we set the `enlist` parameter to `FALSE` and
+pass a block of code wrapped in `{}`. The final statment in the curly brackets
+should return a named list, where each list item will become a column in the
+returned table.
+
+The utility of this option will also become apparent in subsequent sections.
+
+### Combining with Omics Data into a `PharmacoSet`
+
+The NCI-ALMANAC study did not conduct its own set of molecular profiling
+experiments, since the NCI60 already profiled all cell-lines
+available in the NCI-ALMANAC. We have already curated a `PharmacoSet`
+for `NCI60`, so adding our molecular data to the NCI-ALMANAC `PharmacoSet`
+requires no manual curation. We must simply subset the `NCI60` dataset
+to those cell-lines present in NCI-ALMANAC.
+
+Lets examine the included molecualr data:
+```{r load_molecular_data}
+data(NCI60_molecular_data)
+(NCI60_molecular_data)
+```
+
+We can see the molecular data is available as `MultiAssayExperiment` containing
+four `RangedSummarizedExperiment` objects. The molecular data types are:
+
+  1. "rna" represents RNA expression microarray data.
+  2. "mirna" represents microRNA expression data.
+  3. "rnaseq.comp" contains RNA sequencing data.
+  4. "rnaseq.iso" is RNA sequencing data specifically targeting transcript isoforms.
+
+Once we have our `MultiAssayExperiment` and `TreatmentResponseExperiment`
+objects ready, we next have to extract and curate sample and treatment
+metadata tables which store a summary of metadata for available samples and
+treatments in our `PharmacoSet` object.
+
+For brevity, we have included preassembled annotation files for NCI-ALMANAC
+since manual curation is beyong the scope of this workshop. When creating your
+own `PharmacoSet`, we recommend assembling a set of standardized annotations
+from sources like PubChem or ChEMBL for treatments and Cellosaurus for
+cancer cell-lines and using these to standardize identifiers in your data
+as well as adding links to additional information in external databases.
+
+```{r load_sample_metadata_files1, eval=FALSE}
+data(NCI_ALMANAC_sample_metadata)
+head(NCI_ALMANAC_sample_metadata)
+```
+
+```{r load_sample_metadata_files2, echo=FALSE}
+data(NCI_ALMANAC_sample_metadata)
+knitr::kable(head(NCI_ALMANAC_sample_metadata))
+```
+
+The above table contains the sample metadata which will comprise the `@sample`
+slot of our `PharmacoSet`. It contains a set of standardized identifiers
+including `cellid` and `tissueid`, as well as cell-line identifiers from
+the NCI-ALMANAC publication and some additional metadata we have added.
+
+```{r load_treatment_metadata_files1, eval=FALSE}
+data(NCI_ALMANAC_treatment_metadata)
+head(NCI_ALMANAC_treatment_metadata)
+```
+
+```{r load_treatment_metadata_files2, echo=FALSE}
+data(NCI_ALMANAC_treatment_metadata)
+knitr::kable(head(NCI_ALMANAC_treatment_metadata))
+```
+
+Similar to the sample table, this one contains treatment metadata which will
+be assigned to the `@treatment` slot of our `PharmacoSet`. It also contains
+a set of standardized identifiers including `treatmentid`, structural
+chemical identifiers, links to external databases as well as the drug identifiers
+from the NCI-ALMANAC publication.
+
+For the curation list, we extract our mappings from our standardized identifiers
+to dataset specific identifiers and store those separately to ensure these
+associations are not lost should the treatment or sample metadata tables
+be modified.
+
+```{r build_the_curation_list}
+curation <- list(
+  sample=NCI_ALMANAC_sample_metadata[, c("sampleid", "NCI_ALMANAC.sampleid")],
+  treatment=NCI_ALMANAC_treatment_metadata[, c("treatmentid", "NCI_ALMANAC.treatmentid")],
+  tissue=data.frame(
+    NCI_ALMANAC_sample_metadata[, c("tissueid", "NCI_ALMANAC.disease")],
+    rownames=NCI_ALMANAC_sample_metadata$sampleid
+  )
+)
+```
+
+With all of our pieces in place, we can finally construct a drug combination
+`PharmacoSet` which can be used in subsequent analysis. Along with the recent
+changes in the structure and nomenclature of a `PharmacoSet` comes the
+introduction of the `PharmacoSet2` contructor. This version enforces new
+requirements for the object such as a `MultiAssayExperiment` for the molecular
+profiles slot and a `TreatmentResponseExperiment` for treatment response slot.
+The original constructor is still included in the package for backwards
+compatibility but will be retired after we finish updating all our existing
+datasets on ORCESTRA.ca.
+
+If you have an old style `PharmacoSet` but want to use the new package features,
+simply call `updateObject` to return the dataset with an updated class
+structure. This method will be available in all future releases to ensure
+datasets can be updated and reused regardless of their age.
+
+```{r create_our_drug_combo_pharmacoset}
+(NCI_ALMANAC_2017 <- PharmacoSet2(
+  name="NCI_ALMANAC_2017",
+  molecularProfiles=NCI60_molecular_data,
+  treatmentResponse=NCI_ALMANAC_tre,
+  treatment=NCI_ALMANAC_treatment_metadata,
+  sample=NCI_ALMANAC_sample_metadata,
+  curation=curation
+))
+```
+
+Finally we see our finished drug combination `PharmacoSet` and are ready
+to use it to answer interesting research questions and discover the relationship
+between molecular phenotypes and treatment response!
+
+----
+
+# Dose Response Models and Drug Sensitivity Measures
+
+Understanding monotherapy dose-viability data is an important step in assessing drug combination response. Drug synergy is assessed by
+comparing the observed combination response to what is expected from the response of cells to each drug separately. While
+different models for "expected" combination effect will be discussed in the next section, we first review how monotherapy data are analyzed.
+
+Monotherapy dose-response experiments are usually analyzed by first fitting a dose-response or dose-viability model to the observed measurements.
+The most common model used in the literature is a form of sigmoid function, called the Hill Curve. The Hill Curve has its
+basis in the Michaelis-Menten chemical kinetics model, while adding an extra parameter that is traditionally interpreted to account
+for co-operativity of binding. To better match real observed data, the model can also be extended to include parameters
+controlling the maximum and minimum observed viability.
+
+_NB: Sometimes, dose-viability and dose-response curves are used interchangebly in the literature. Precisely, dose-response curves
+for a cell kiling screen would plot % cell death against dose, leading to an increasing sigmoid curve._
+
+In `r PGx`, we use the 3 Parameter Hill Curve
+function as our model of drug response in cancer cell lines:
+
+$$y = E_\infty + \frac{1-E_\infty}{1 + (\frac{x}{EC50})^{HS}}$$
+
+This is a log-logistic model, meaning that it takes the form of a logistic curve when x is on the log scale.
+The three parameters are:
+$E_\infty$, which is the maximal inhibition predicted at infinite concentration of the drug (the right asymptote);
+$EC50$, which is the inflection point of the logit, where the inhibition reaches 50% of the maximum;
+$HS$, the Hill Slope, which is thought to be a measure of the cooperativity of binding. This parameter controls the steepness
+of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in
+inhibition/binding of the target for the small molecule ligands, which values less than 1 imply negative cooperativity/antagonism.
+
+
+
+```{r hillSlopeFig, fig.cap="Diagram of a logLogistic Hill Slope", echo=FALSE, warning=FALSE}
+knitr::include_graphics("./hill_slope.png")
+```
+
+PharmacoGx provides functions to both fit and visualize dose-viability curves. Plotting dose-viability data is easy using the
+`drugDoseResponseCurve` function:
+
+```{r ddrc_own, warning=FALSE}
+concentrations <- (1 / 2)^seq(0, 8) * 1
+viabilities <- c(0.1, 5, 15, 23.8, 55.2, 85.9, 96.9, 98.4, 99.2)
+
+drugDoseResponseCurve(
+  concentrations = list("Exp 1" = concentrations),
+  viabilities = list("Exp 1" = viabilities),
+  plot.type = "Both"
+)
+```
+
+Similarly, fitting Log-Logistic models to data is simple using the `logLogisticRegression` function in `PharmacoGx`.
+
+```{r loglogistic, warning=FALSE}
+concentrations <- (1 / 2)^seq(0, 8) * 1
+viabilities <- c(0.1, 5, 15, 23.8, 55.2, 85.9, 96.9, 98.4, 99.2)
+
+(pars <- logLogisticRegression(conc = concentrations, viability = viabilities))
+```
+
+<!-- `(` always prints its contents, even for assignments. It's cleaner than printing after IMO. -->
+
+Note that sometimes, it is may be more appropriate to use either a 2 parameter model (excluding the $E_\infty$ parameter), or a
+4 parameter model, including a parameter for the left-assymptote, that is, the measurement when no drug is added. `PharmacoGx` is opiniated
+in using the 3 parameter model, as the logical value for the viability as a percentage of untreated cells when no drug is added is 100%.
+However, the `r BiocStyle::CRANpkg("drc")` CRAN package provides a larger variety of dose-response models, should it be appropriate in your application.
+
+We will soon demonstrate how to apply the `logLogisticRegression` to dose-viability data stored in a `TreatmentResponseExperiment`,
+but first we will talk about how to summarize dose-response curves for downstream analysis.
+
+
+### Computing Summary Measures for DDRCs
+
+Often with _in vitro_ Pharmacogenomics data, we want to compare the drug sensitivity of a cell line
+to some omic features. For this, we want to summarize the drug dose response curve into a single
+number representing the sensitivity of the cell line.
+
+```{r hillSlopeSumFig, fig.cap="Some commonly used summary metrics for a dose-response curve", echo=FALSE}
+knitr::include_graphics("./hillSlopeSummary.png")
+```
+
+
+The IC50 and Area Above the Curve are two
+convenient metrics for quantifying the observed drug sensitivity. If you noticed above,
+the `drugDoseResponseCurve` function computes them by default. In PharmacoGx, they can be
+computed manually as follows:
+
+```{r sens_ow, warning=FALSE}
+concentrations <- (1 / 2)^seq(0, 8) * 1
+viabilities <- c(0.1, 5, 15, 23.8, 55.2, 85.9, 96.9, 98.4, 99.2)
+
+print(PharmacoGx::computeAUC(concentration = concentrations, viability = viabilities))
+print(PharmacoGx::computeIC50(concentration = concentrations, viability = viabilities))
+```
+
+If measurements are passed into these function, the Log Logistic model is fit to compute the IC50 and AAC.
+Clearly, if multiple metrics are being computed, redoing the fit is inefficent. Therefore, these functions
+can also take parameters fit by `logLogisticRegression`.
+
+```{r sens_own_fit_first, eval=TRUE, warning=FALSE}
+concentrations <- (1 / 2)^seq(0, 8) * 1
+viabilities <- c(0.1, 5, 15, 23.8, 55.2, 85.9, 96.9, 98.4, 99.2)
+pars <- logLogisticRegression(conc = concentrations, viability = viabilities)
+
+print(PharmacoGx::computeAUC(concentration = concentrations, Hill_fit = pars))
+print(PharmacoGx::computeIC50(concentration = concentrations, Hill_fit = pars))
+```
+
+
+As processsing monotherapy data is often a step in preparing for assessing synergy from combination experiments,
+we will demonstrate how to use these functions together with a TreatmentResponseExperiment during our preprocessing
+for synergy calculation.
+
+# Drug Combination Synergy Models
+
+When assessing drug combinations, the question of interest is usually not to quantify drug response to the therapy,
+but to identify combinations that give more or less response to therapy than expected from the monotherapy regiments,
+that is, to look for synergy or antagonism. Alternatively, for a paritcular drug combination, we may be interested to
+identify which biological models show synergy or antagonism, and understand why that could be the case on a molecular level.
+
+For these tasks, it is important to define what we expect the result of combining two drugs at a particular combination to
+be without the presence of any synergy or antagonism between them. Usually, when searching for synergy,
+will have access to experiments testing each drug in monotherapy, as well as the drugs in combination. For our discussion, we
+we restrict ourselves to the two-drug combination case, however, the principles we discuss can be extended to handle multiple
+drugs.
+
+Unfortunately, there is no consensus of what the theoretical expected value of response for combining two drugs is, given the
+response that each drug elicits in monotherapy. However, there are a few models widely applied in the literature, each with
+different biological assumptions behind them.
+
+To introduce these models, we will define some mathematical notation, which we will use both throughout our exposition and the
+example computations. Let $x_{1}$, and $x_{2}$ correspond to the corresponding drug 1 and drug 2 doses at which we wish to predict
+the expected combination response. Let $v_{1}$ and $v_{2}$ be the viabilities that are observed in monotherapy for these drugs, and
+$v_{c}$ be the viability observed in combination. Furthermore, let $r_{i} = 1 - v_{i}$ be the response value corresponding to each
+measured viability. We will use both response and viability measurements in explaining the models, as some are more natural from one
+or the other perspective. However, it is easy to convert between these variables using the relationship above.
+
+When we look for drug synergy, we are looking for cases where $v_c < v_{model}$, or $r_c > r_{model}$. The degree of synergy
+is usually measured either on the additive or multplicative scale, that is, looking at either $v_c - v_{model}$ or $v_c / v_{model}$.
+However, some models, such as the ZIP, also perscribe a certain perspective or scoring method to assess synergy.
+
+This vignette covers 4 different models for predicting what the effect of drug combination treatment should be.
+
+_In the live workshop we focus only on the first 3 models._
+
+1. Highest Single Agent
+2. Bliss Independence
+3. Loewe Additivity
+4. Zero Interaction Potency (ZIP)
+
+As we introduce each method, we will go through the theoretical motivation behind it, the calculation, and then show how to compute
+the expected viability/response for each model using the TreatmentResponseExperiment API.
+
+### Preprocessing Monotherapy Data for Synergy Estimation
+Prior to computing expected viabilities from combination experiments, the monotherapy data may need to be preprocessed. In our case,
+the dataset we are using has replicate experiments for the monotherapy curves, as seen below:
+```{r plotting_monotherapy_replicates}
+treatmentResponse(NCI_ALMANAC_2017) |>
+  subset(treatment2id == "") |>
+  aggregate(
+      assay="response",
+      N=.N,
+      by=c("treatment1id", "treatment1dose", "sampleid", "bio_rep")
+  ) |>
+  with(expr=hist(N))
+```
+
+The majority of these were replicates across plates, most probably so that monotherapy results could be plate matched to combination results.
+Therefore, we can make two choices for how to handle these replicates, either average across plates, or to match analysis by plate whenever possible.
+Ideally, we would recommend the latter approach, however, it is computationally more expensive (as we must fit monotherapy curves per-plate).
+In interest of computation time, we average replicates across all experiments for our demonstration.
+
+Here, we use the `endoaggregate` TRE method while setting the `by` argument to compute
+an aggregation over each unique combination of `treatment1id`, `treatment1dose`, `sampleid` and
+`bio_rep` (summarizing over technical replicates).
+
+```{r extracting_nci_monotherapy_data}
+NCI_TRE <- treatmentResponse(NCI_ALMANAC_2017)
+
+# -- Extract and summarize monotherapy data, defined by an absent treatment2id
+NCI_TRE |>
+  endoaggregate(
+    assay="response",
+    target="mono_response",
+    subset = treatment2id == "",
+    viability=mean(viability),
+    by=c("treatment1id", "treatment1dose", "sampleid", "bio_rep")
+  ) ->
+  NCI_TRE
+
+head(NCI_TRE$mono_response)
+
+```
+
+
+Additionally, computing the Loewe and ZIP scores requires knowing the Hill Fit parameters for the monotherapy experiments.
+This is also a required step whenever it is necessary to interpolate between measured monotherapy doses to predict
+for the measured combination viability doses.
+
+We can fit the curves using `logLogisticRegression`, and save the monotherapy
+fits back to the TreatmentResponseExperimentClassDiagram using the same endoaggregate pattern as above.
+Since we are already calculating the Hill Curve fits for these experiments, we will also calculate the AAC and IC50 values.
+
+Note that by default, `logLogisticRegression` returns the `E_inf` parameter on a percentage scale when the input data is
+on a percentage scale. We convert to a fraction scale because that makes the subsequent calculations simpler.
+
+```{r fitting_hill_curves_to_monotherapy, warning=FALSE}
+# -- Fit the Hill curve model to monotherapy drugs and compute associated metrics
+NCI_TRE |>
+  endoaggregate(
+    {
+      fit <- PharmacoGx::logLogisticRegression(treatment1dose, viability)
+      ic50 <- PharmacoGx::computeIC50(treatment1dose, Hill_fit = fit)
+      aac <- PharmacoGx::computeAUC(treatment1dose, Hill_fit = fit, area.type = "Fitted")
+      list(
+        HS = fit[["HS"]], E_inf = fit[["E_inf"]]/100, EC50 = fit[["EC50"]],
+        Rsq = as.numeric(unlist(attributes(fit))),
+        aac = aac,
+        ic50 = ic50
+      )
+    },
+    assay = "mono_response",
+    by = c("treatment1id", "sampleid", "bio_rep"),
+    enlist = FALSE,
+    target = "mono_profiles"
+  ) -> NCI_TRE
+
+head(NCI_TRE$mono_profiles)
+
+
+```
+
+We will now extract the combination data into its own assay in the LongTable, and append the monotherapy Hill fits using the `mergeAssays` function, so that we can later use the fitted data
+from above to calculate expected combination viability. We also filter our downstream analysis only to those experiments where the monotherapy fits were good (R squared better than 0.5).
+
+Notice that we need to do two merges, one for appending the monotherapy Hill fits for the first compound treatment, and one for appending the monotherapy Hill fits for the second compound treatment.
+Fortunately, the `suffixes` parameter will allow us to differentiate between the two once they are merged to the same table.
+
+_The `mergeAssays` is built on top of R's merge function (actually, merge from `data.table`), and therefore accepts the same arguments to control how the merge is done._
+
+```{r build_combo_profiles}
+# -- Attach the Hill parameters from the monotherapy profiles to the combination data
+# Extract the monotherapy fits
+NCI_TRE |>
+  assay("mono_profiles", summarize=TRUE) |>
+  subset(
+    Rsq > 0.5,  # filter to only good quality fits
+    c("treatment1id", "sampleid", "bio_rep", "HS", "E_inf", "EC50")
+  ) ->
+  NCI_TRE$mono_fits
+
+# Extract the combination response observations
+NCI_TRE |>
+  assay("response") |>
+  subset(treatment2id != "") ->
+  NCI_TRE$combo_response
+
+# Merge with the fits from the monotherapy experiments
+NCI_TRE |>
+  mergeAssays(
+    x="combo_response",
+    y="mono_fits",
+    by = c("treatment1id", "sampleid", "bio_rep"),
+    sort = FALSE # workaround to not have weird DT keys as a result.
+  ) |>
+  mergeAssays(
+    x="combo_response",
+    y="mono_fits",
+    by.x = c("treatment2id", "sampleid", "bio_rep"),
+    by.y = c("treatment1id", "sampleid", "bio_rep"),
+    suffixes = c("_1", "_2"),
+    sort = FALSE # workaround to not have weird DT keys as a result.
+  ) ->
+  NCI_TRE
+(NCI_TRE$combo_response)
+```
+
+
+Finally, we can make predictions for each of the measured combination doses using the corresponding fit parameters
+and the Hill Curve models. This step is necessary when interpolating between monotherapy doses, but is often done
+in any case, as the predicted viabilities can be less noisy than each individual monotherapy measurement.
+
+```{r predicting_mono_response_for_combo_doses, warning=FALSE}
+# predict viability at the combo doses from the Hill curves fit to monotherapy data
+NCI_TRE |>
+  endoaggregate(
+    {
+      viability_1 <- PharmacoGx:::.Hill(
+        log10(treatment1dose),
+        c(HS_1, E_inf_1, log10(EC50_1))
+      )
+      viability_2 <- PharmacoGx:::.Hill(
+        log10(treatment2dose),
+        c(HS_2, E_inf_2, log10(EC50_2))
+      )
+      list(
+        viability_1 = viability_1,
+        viability_2 = viability_2
+      )
+    },
+    assay = "combo_response",
+    by = c("treatment1id", "treatment2id", "treatment1dose", "treatment2dose",
+    "sampleid", "bio_rep"),
+    enlist = FALSE
+  ) -> NCI_TRE
+
+
+```
+
+Last, we also put the measured combination viabilily onto a fractional, not percentage scale.
+
+```{r fix_viability_percentage}
+
+NCI_TRE$combo_response$viability <-
+  NCI_TRE$combo_response$viability / 100
+
+```
+
+Finally, we can talk about the different models to compute the predicted response from monotherapy, and thereby compute estimates of
+synergy or antagonism.
+
+
+## Highest Single Agent / Highest Single Effect
+
+The simplest model that one can assume for the response of drugs in combination is the Highest Single Agent model. This model predicts
+that the result of treating with two drugs is the same as the highest response (or lowest viability) seen by treating with either drug
+independently. Mathematically, this is equivalent to:
+
+$$HSA((r_1,x_1), (r_2,x_2)) = \mbox{max}(r_1, r_2)$$
+
+For viability values, this flips to a minimum.
+
+Intuitively, this model can be interpreted as assuming that one compound is at the maximum possible effect, and the other is
+treated as a potentiator, contributing little to the response itself, but allowing the maximum response of the first drug to
+be increased. Practically, this case is not very often observed during _in vitro_ dose-response experiments, and the highest
+single agent model is often a very weak baseline from which to compute synergy.
+
+
+### Computing HSA Reference Viabilities
+
+As one can imagine, this is very simple to do using the `min` or `max` functions in R.
+
+```{r computeHSA, warning=FALSE}
+# -- compute our drug synergy metrics
+NCI_TRE |>
+  endoaggregate(
+    HSA = min(viability_1, viability_2),
+    by = c("treatment1id", "treatment2id", "treatment1dose", "treatment2dose",
+      "sampleid", "bio_rep"),
+    assay = "combo_response",
+    target = "combo_response"
+  ) -> NCI_TRE
+head(NCI_TRE$combo_response)
+```
+
+For convenience, `PharmacoGx::computeHSA(viability_1, viability_2)` is a more readable alias for computing the HSA reference viability.
+
+## Bliss Independence
+
+Bliss Independence can be understood by making the assumption that cell death from treatment with a drugs is a stochastic process
+with the probability of cell death being proportional to the response observed in the experiment. The model than assumes that the
+cell death events from the two drugs are independent, for example because they occur through completely separate pathways. As such,
+the model predicts that adding a second drug will kill the same fraction of cells as it kills on its own, and therefore the fractions
+of cells remaining alive are caculated by multplying the fraction of cells alive after treatment with drug 1 in monotherapy,
+with the fraction of cells alive after treatment with drug 2 in monotherapy.
+
+
+```{r bliss_diagram, echo=FALSE, fig.cap="Diagram of Bliss Independence Assumption. Bliss independence assumes a constant fraction of cells is killed independently by each drug. In this diagram, the orange drug leaves 40% of the cells alive, and the blue drug leaves 60% of the cells alive. Therefore, Bliss predicts that the two drugs in combination will leave 24% of the cells alive."}
+knitr::include_graphics("./BlissDiagram.png")
+```
+
+
+Mathematically, that works out to:
+
+$$BLISS((v_1,x_1), (v_2,x_2)) = v_1 v_2$$
+
+In response units this is:
+
+$$BLISS((r_1,x_1), (r_2,x_2)) = r_1 + r_2 - r_1*r_2$$
+
+This model is always going to be more strict that HSA (as long as response is between 0 and 1), and is usually a more practical assumption
+to make when searching for drug synergy. Intuitively, one can think of it as modeling the case where the two drugs have separate mechanisms,
+with synergy signifiying a biological interaction that makes them more effective than expected.
+
+
+
+
+### Computing Bliss Reference Viabilities
+
+This is also quite simple to do, as we just use the product of the monotherapy viabilities.
+
+```{r computeBliss, warning=FALSE}
+# -- compute our drug synergy metrics
+NCI_TRE |>
+  endoaggregate(
+    Bliss = prod(viability_1, viability_2),
+    by = c("treatment1id", "treatment2id", "treatment1dose", "treatment2dose",
+      "sampleid", "bio_rep"),
+    assay="combo_response",
+    target = "combo_response"
+  ) -> NCI_TRE
+head(NCI_TRE$combo_response)
+
+```
+
+For convenience, `PharmacoGx::computeBliss(viability_1, viability_2)` is a more readable alias for computing the Bliss reference viability.
+
+## Loewe Additivity
+
+Loewe Additivity comes from a different assumption on what the effect of adding two drugs should be. While Bliss Independence assumes that the
+drugs act independently, for example through different pathways, Loewe assumes that in the null case, adding $x_2$ concentration of a second drug
+should lower the viability as if we added a proportional amount of the same drug, with that proportion caculated according to the relative efficacy
+of the two drugs at the final combination viability. This proportinal relationship is defined implicity at each predicted value of $v_{loewe}
+by the following formula:
+
+$$ \frac{x_1}{X^{loewe}_1} + \frac{x_2}{X^{loewe}_2} = 1$$
+
+where $ X^{loewe}_1 $ is the concentration of drug 1 required to achieve $v_{loewe}$ on its own, and similarly for $ X^{loewe}_2$ and drug 2.
+Translating this to english, it assumes that we can lower the concentration of drug 1 needed to see the same effect by replacing the missing
+dose with a similar amount of drug 2, adjusted for the difference in potency between the two drugs.
+
+Practically, this formula is not very useful for estimating $v_{loewe}$ from actual dose-response data. However, if we assume that drug response
+follows a Hill Curve model, we can define $y_{loewe}$ implicitly using the parameters $HS_{1}$, $EC50_{1}$,
+and $E_{\infty,1}$, and $HS_{2}$, $EC50_{2}$, and $E_{\infty,2}$ by rearranging the Hill Curve relationship as follows:
+
+$$ x = EC50 * (\frac{v-1}{v-E_{\infty}})^{\frac{1}{HS}}$$
+
+We can then plug this relationship in to get an emplicit formula for $v_{loewe}$:
+
+$$ 
+\frac{x_1}{EC50_1 (\frac{1 - v_{loewe}}{v_{loewe} - E_{\infty,1}})^{\frac{1}{HS_1}}} + 
+  \frac{x_2}{EC50_2 (\frac{1 - v_{loewe}}{v_{loewe} - E_{\infty,2}})^{\frac{1}{HS_2}}} = 1
+$$
+
+This formula can be solved numerically to find the value of $v_{loewe}$ for any two particular fitted curves.
+
+
+While the Loewe Additivity model can be used to calculate the expected response at any pair of doses, more commonly, the Loewe Additivity is assessed in terms of the
+Combination Index. The combination index measures the deviation from the Loewe assumption as a ratio at each point, by computing the Loewe model with the observed
+combination viability instead of the reference viability. As it doesn't require calculating $v_{loewe}$, it is also easier to compute. The formula for the
+Combination Index given a Loewe assumption is:
+
+$$ 
+CI_{loewe} = \frac{x_1}{EC50^1(\frac{v_c}{v_c - E_{\infty}^1})^{1/HS_1}} + 
+  \frac{x_2}{EC50^2(\frac{v_c}{v_c - E_{\infty}^2})^{1/HS_2}} 
+$$
+
+
+```{r loewe_diagram, echo=FALSE, fig.cap="Diagram of Loewe Additivity Assumption. Loewe additivity assumes that when plotting viability as a function of both concentrations (bottom plots), lines of equal viability (isoboles) will be straight. Using this assumption, either the expected viability for each pair of concentrations can be calculated (left), or the combination index can be computed to assess synergy or antagonism directly (right)."}
+knitr::include_graphics("./LoeweDiagram.png")
+```
+
+
+
+### Computing Loewe Reference Viabilities
+
+As mentioned above, the computation of the Loewe reference viability requires solving a non-linear implicitly defined equation. PharmacoGx provides
+the `computeLoewe` function to do this calculation.
+
+
+```{r computeLoewe, warning=FALSE}
+# -- compute our drug synergy metrics
+NCI_TRE |>
+  endoaggregate(
+    Loewe = PharmacoGx::computeLoewe(
+      treatment1dose, HS_1, E_inf_1, EC50_1,
+      treatment2dose, HS_2, E_inf_2, EC50_2
+    ),
+    by = c("treatment1id", "treatment2id", "treatment1dose", "treatment2dose",
+      "sampleid", "bio_rep"),
+    assay = "combo_response"
+  ) -> NCI_TRE
+head(NCI_TRE$combo_response)
+
+```
+
+
+
+## BONUS: ZIP
+
+The Zero interaction Potency model was recently introduced with the goal of capturing the ideas behind both the Bliss and Loewe assumptions. As the name implies
+the model assumes that the two drugs do not "potentiate" each other, meaning, that the only difference between the dose response curves of Drug 1 with and without
+Drug 2 present is that the presence of Drug 2 changes the baseline response, without affecting the potency of Drug 1. While the ZIP model can be extended to 3 and 4
+parameter Hill Curve models, it is simplest to understand and explain using the 2 parameter Hill Curve, which is equivalent to the case where $E_{\infty}=0$.
+
+The authors were then able to show that the ZIP model can be derived from multiplying the two fitted Dose-Response curves together.
+
+$$
+ZIP((v_1,x_1), (v_2,x_2)) = 
+  (E_{\infty}^1 + \frac{1-E_{\infty}^1}{1+(\frac{x_1}{EC50^1})^{HS^1}})
+  (E_{\infty}^2 + \frac{1-E_{\infty}^2}{1+(\frac{x_2}{EC50^2})^{HS^2}})
+$$
+
+While the formula for computing the ZIP reference value at each point works out to being the Bliss formula applied to the fitted curves, the ZIP assumptions
+suggest a new method to assess syngergy or antagosism at each point. Building on the assumption that combination without synergy should not change the potency of
+each particular drug, the ZIP $\delta$ score defines a measure comparing the difference between the fitted curve for each drug with and without the presence of the second
+drug, taking the average of differences for the two drugs.
+
+Mathematically, ZIP defines two values:
+$$ 
+v_c^{1 \leftarrow 2}((v_1,x_1), (v_2,x_2)) = 
+  \frac{v_2}{1 + (\frac{x_1}{EC50^{1 \leftarrow 2}})^{HS^{1 \leftarrow 2}}}
+$$
+$$ 
+v_c^{2 \leftarrow 1}((v_1,x_1), (v_2,x_2)) = 
+  \frac{v_1}{1 + (\frac{x_2}{EC50^{2 \leftarrow 1}})^{HS^{2 \leftarrow 1}}}
+$$
+
+In this notation, {$1 \leftarrow 2$} means that we fit the Hill Curve for drug 1 after the addition of drug 2 at the dose $x_2$. Intuitively, we adjust for the observed effect
+of adding $x_2$ of drug 2 ($v_2$), and then treat drug 1 as if it is a monotherapy experiment. The $\delta$ score is then defined as the difference of the viability predicted
+by this curve and the ZIP predicted viability, averaged over treating each of the drugs as the "main drug":
+
+$$
+\delta((v_1,x_1), (v_2,x_2)) = 
+  \frac{v_c^{1 \leftarrow 2} - v_{ZIP}}{2} + 
+  \frac{v_c^{2 \leftarrow 1} - v_{ZIP}}{2}
+$$
+
+For more information on the ZIP model, we refer the reader to the original publication [@yadavSearchingDrugSynergy2015].
+Alternatively, the `r BiocStyle::Biocpkg("synergyfinder")` package contains vignettes and the reference implementation for ZIP calculations.
+
+## Picking a Null Drug Combination Model
+
+Given the fact that there is no universal consensus on which null model is correct in all cases, when analyzing drug combination data, a choice must be made
+by the analyst. Ideally, this choice would be made according to reasonable assumptions about the drugs and their mechanisms of action. For example, for two compounds
+which inhibit targets converging on the same pathway, the Loewe model may be most appropriate, whereas for drug combinations with completely unrelated mechanisms, Bliss
+may be a more natural choice.
+
+However, practical considerations may also limit your choices. For both the Loewe and ZIP approaches, one needs enough points to be measured to be able to fit Hill Curves
+to the available data. For Loewe, this needs to be done only in monotherapy, while for ZIP, both monotherapy and combination data must have sufficient points to fit a curve.
+On the other hand, both HSA and Bliss can be computed from the raw measurements of monotherapy viability, not requiring any models of the dose-response data to be fit.
+
+In general, we would recommend using a model which makes stronger assumptions than HSA, which is the weakest of the presented models. If the number of tested
+doses is low (<6), the Bliss model is probably the reference of choice, even though it is known to be quite strict. When possible to calculate, the ZIP
+approach has advantages in a high-throughput setting, where it would be difficult to pick between Bliss and Loewe a-priori for each individual combination.
+
+
+## Quantifying Synergy or Antagonism Compared to a Null Model
+
+Once a null model is chosen, the expected combination viability or response is compared to the observed value, as mentioned above. For all methods, this can be done
+using either a difference, or a ratio. In addition, the Loewe model directly facilitates calculating the Combination Index described above, and the ZIP model defines
+the $\delta$ score for quantifying synergy. The main practical consideration when choosing how to compare the observations to the null is the scale on which results
+will be interpreted or further analyzed. Taking the ratio of $v_c/v_{model}$, or using the Combination Index for Loewe leads to values that lie in $(0, \infty]$
+(with 1 as the reference for no syngergy or antagonism), similar to fold changes. On the other hand, both differences and the ZIP $\delta$-score lie on a bounded scale $[-1,1]$,
+with 0 as the reference.
+
+If the goal is simply to identify whether there was synergy or antagonism observed at a certain dose, the last step would be to visualize the results, and examine the extent
+of deviation from the null model. For this, the scale chosen is a matter of preference. However, if the downstream goal is biomarker discovery using a summary of synergy for
+each model tested with a particular combination, if the Combination Index or a ratio is used, it may be more appropriate to analyze the results on a log-scale, as otherwise
+the range is asymmetric around the reference.
+
+In practice, our personal preference is to use the absolute deviation from the Bliss predicted value for downstream analysis.
+
+
+_Note that we also skip the ZIP delta score computation in the interest of time._
+
+```{r compute_combo_profiles, warning=FALSE}
+# -- compute combination index and score
+NCI_TRE |>
+  endoaggregate(
+    HSA_CI = viability / HSA,
+    HSA_score = HSA - viability,
+    Bliss_CI = viability / Bliss,
+    Bliss_score = Bliss - viability,
+    Loewe_CI = (
+      (treatment1dose /
+        EC50_1 * ((1 - viability_1) / (viability_1 - E_inf_1))^(1 / HS_1)
+      ) +
+        (treatment2dose /
+          EC50_2 * ((1 - viability_2) / (viability_2 - E_inf_2))^(1 / HS_2)
+        )
+        ),
+    Loewe_score = Loewe - viability,
+    viability = viability,
+    viability_1 = viability_1,
+    viability_2 = viability_2,
+    by = c("treatment1id", "treatment2id", "treatment1dose", "treatment2dose",
+      "sampleid", "bio_rep"),
+    assay = "combo_response",
+    target = "combo_scores"
+  ) ->
+  NCI_TRE
+
+combo_scores <- NCI_TRE$combo_scores
+head(combo_scores)
+```
+
+Once we have a measure of synergy calculated for each dose combination in a
+particular experiment, we often would like to visualize the whole surface of
+drug-dose combinations to understand how synergy depends on dosage.
+
+Below, we plot the Bliss score for an antagonistic combination of drugs,
+Mitotane and Paclitaxel, on the A-549 cell line. If we recall the formula for
+the Bliss score above, we took $v_{model} - v_c$, meaning that in this case,
+negative numbers indicate antagonism, as there is more viability observed than
+expected.
+
+```{r bliss_score_plot, warning=FALSE}
+library(ggplot2)
+
+p <- ggplot(combo_scores[
+    treatment1id == "Mitotane" & treatment2id == "Paclitaxel" & sampleid == "A-549"
+    ],
+    aes(treatment1dose, treatment2dose, fill = Bliss_score)
+  ) +
+  geom_tile() +
+  scale_x_log10() +
+  scale_y_log10() +
+  xlab("Mitotane") +
+  ylab("Paclitaxel")
+print(p)
+```
+
+Note that here, it seems that antagonism is exacerbated at higher doses, suggesting a dose-dependant mechanism for antagonism.
+
+
+## Summarizing Synergy Matrices into Single Values
+
+Often, we will want to summarize a whole synergy surface into a single synergy score for a drug combination per cell-line, for example, if we want to discover biomarkers of synergy. There are several methods that
+this can be done, the most common of which is taking the average value of your score matrix for the combination. If your doses are equally spaced (on the log scale), this will give a measure of Volume Under the Surface.
+
+For some experiments, you may want to be a bit more careful, and not select the average of the whole surface. For example, in the experiment above, we see very strong antagonism when both doses of the drugs are high.
+However, this may not be a very interesting regime, as often one of the goals of drug combination therapy is to limit the dose of any single drug used to reduce associated toxicities. Therefore, an option could be to
+summarize only over a dose-range of interest.
+
+If you find yourself in a situation where synergy is observed only in a narrow dose range, the most extreme deviation from the reference (deviation from 0 or 1, depending on use of additive or fold-change metrics) may
+instead be more appropriate.
+
+For our demo, we will summarize the combination profiles we have calculated into a Mean Bliss Score per experiment.
+
+```{r mean_bliss_calculation, warning=FALSE}
+
+(NCI_TRE |>
+  aggregate(
+    Mean_Bliss = mean(Bliss_score),
+    assay = "combo_scores",
+    by = c("treatment1id", "treatment2id", "sampleid")
+  ) ->
+  mean_bliss_score)
+
+```
+
+# Biomarker Discovery:
+
+## Monotherapy response
+
+PharmacoGx makes an initial analysis for univariate biomarker discovery very simple, by providing the `drugSensitivitySig` function which will compute the association between molecular features and
+drug response summaries (such as AAC) across the cell lines in a PharmacoSet.
+
+There are two approaches implemented in PharmacoGx for measuring the association between molecular features and drug response. The first, older approach is to use a linear model to estimate the effect
+of the molecular feature measurements on the drug response summary, and an analysis of variance F-test to test the significance of the molecular feature in predicting drug response over a Null model. If
+multiple tissue types are present in the dataset, the Null model includes the tissue as an explanatory features, otherwise, it is just the intercept. This approach is most flexible, allowing for
+both continous and binary measurements of drug response, as well as continous, categorical and binary molecular features. However, the estimate of the effect returned is a standardized regression coefficient,
+which may be difficult to interpret and compare between biomarkers.
+
+The second approach is to use a Pearson Correlation, or a Partial Pearson Correlation corrected for tissue type to test for associations. Currently, this is our preferred approach for two reasons:
+
+1. The returned effect size estimate will be on the scale of a Pearson Correlation, which is familiar to most scientists and comparable between molecular features (as long as the sample sizes do not vary too drastically).
+2. Currently, PharmacoGx has implemented efficient permutation testing of Pearson Correlations for significance assessment, in addition to the regular asymptotic formulas for inferring significance.
+
+As our focus is on drug combination analysis in this workshop, we won't be demonstrating the usage of `drugSensitivitySig` to compute monotherapy associations with drug response. Rather, we skip directly
+to computing associations with drug synergy. An example of monotherapy analysis can be found in the `r PGx` vignette: `vignette("PharmacoGx")`.
+
+## Combination Synergy
+
+The `drugSensitivitySig` function can be used to find biomarkers for synergy, by passing in a matrix of synergy values for each drug combination and cell line.
+
+Above, we had already summarized our synergy surfaces into a single mean value for each experiment. Now, we need to reshape the "long" format table into a table of
+drug combinations x cell lines.
+```{r gene_sig_discovery, warning=FALSE, message=FALSE}
+## Create a matrix of drug combo x cell lines.
+synergy_summaries <- as.data.frame(data.table::dcast(
+  mean_bliss_score,
+  treatment1id + treatment2id ~ sampleid
+))
+
+## Name our rows something sensible related to the drug combinations.
+rownames(synergy_summaries) <- paste(
+    synergy_summaries$treatment1id,
+    synergy_summaries$treatment2id,
+    sep="_+_"
+  )
+
+## Removing the two columns of treatment ids, and converting to a numerical matrix.
+synergy_summaries <- data.matrix(synergy_summaries[, -c(1:2)])
+```
+
+Finally, we can run our biomarker discovery. Note that we pass in the treatment x sample matrix to the `sProfiles` argument, short for sensitivity profiles.
+For the purposes of this demonstration, we also subset the features we are computing over to 100 random genes, simply to save time.
+
+```{r, echo=FALSE}
+set.seed(42)
+```
+
+```{r biomarker_prediction, warning=FALSE}
+
+gene_exp_sigs <- drugSensitivitySig(NCI_ALMANAC_2017,
+  mDataType = "rnaseq.comp",
+  sProfiles = synergy_summaries,
+  modeling.method = "pearson",
+  features = sample(rownames(molecularProfiles(NCI_ALMANAC_2017, "rnaseq.comp")), 100),
+  nthread = 1
+)
+```
+
+The object returned by `drugSensitivitySig` is a 3D array, with the first two dimensions of features X treatments, and the third dimension
+returning computed statistics, the associated confidence intervals, p values, and FDR correction.
+
+One intersting (toy) example we find here is that expression of a couple of genes are significantly correlated with antagonism
+(negative Mean Bliss Score) for the combination of Vinblastine and Dasatinib.
+
+```{r headDrugSensSig}
+
+(significant_vin_das <- subset(
+  gene_exp_sigs[, "Vinblastine_+_Dasatinib", ],
+  gene_exp_sigs[, "Vinblastine_+_Dasatinib", "significant"] == 1
+))
+
+
+```
+
+
+To get a more global view of the results, we can also plot the resulting object, which by default will display as a volcano plot.
+Note below that the object returned is a normal ggplot2 plot, and therefore we can add other annotations to it, such as the gene
+labels. Below, we will add the labels for the two genes predicting antagonism between Vinblastine and Dasatinib to the plot.
+
+```{r plotDrugSensSig}
+
+p <- plot(gene_exp_sigs)
+p <- p + geom_label(aes(x = significant_vin_das[, "estimate"],
+                        y = -log10(significant_vin_das[, "pvalue"]),
+                        label = rownames(significant_vin_das)))
+print(p)
+```
+
+# Further Resources
+
+We hope that this workshop leaves you feeling familiar with both the data structures defined in `r CGx` as well as the
+analysis of drug combination experiments. Over time, our group will be curating public drug combination studies
+and releasing `PharmacoSet` objects through our *[orcestra.ca](https://orcestra.ca)* platform, which will be available for everyone to download
+and use in their own research. These studies will use identifiers mapped to the same databases (Pubchem and Cellosaurus)
+as already existing monotherapy PSets, allowing studies combining monotherapy and combination response data.
+
+Furthermore, on *[orcestra.ca](https://orcestra.ca)* we are curating clinical datasets combining genomic or transcriptomic profiling of cancer patient
+samples with clinical drug response, mapped to the same identifiers and processed as much as possible with the same pipelines.
+Much of the time, clinical treatments are done in combination therapies, as standard of care often involves more than 1 treatment.
+As this resource grows, it will become possible to evaluate how well cell line combination experiment results translate to
+clinical outcomes.
+
+
+----
+
+# References
+
+<div id="refs"></div>
+
+# SessionInfo
+
+```{r session_info, include=TRUE, echo=FALSE}
+sessionInfo()
+```

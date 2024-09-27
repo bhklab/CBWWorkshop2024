@@ -1,0 +1,201 @@
+---
+title: "Pharmacogenomic Analysis of Drug Combination Experiments to Identify
+  Biomarkers of Response or Resistance"
+author:
+  - name: Jermiah J. Joseph
+    email: jermiah.joseph@uhn.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
+output: BiocStyle::html_document
+bibliography: BioC2022Conference.bib
+vignette: >
+  %\VignetteIndexEntry{Pharmacogenomic Analysis of Drug Combination Experiments to Identify Biomarkers of Response or Resistance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- Remove {-} from header to show numbering -->
+# Workshop Overview {-}
+
+## Instructor(s) name(s) and contact information {-}
+
+* Jermiah J. Joseph <jermiah.joseph@uhn.ca>
+
+## Workshop Description {-}
+
+<!-- Alias package links -->
+
+```{r eval=TRUE, echo=FALSE}
+PGx <- BiocStyle::Biocpkg("PharmacoGx")
+CGx <- BiocStyle::Biocpkg("CoreGx")
+TGx <- BiocStyle::Biocpkg("ToxicoGx")
+RGx <- BiocStyle::Biocpkg("RadioGx")
+Xv <- BiocStyle::Biocpkg("Xeva")
+DT <- BiocStyle::CRANpkg("data.table")
+SE <- BiocStyle::Biocpkg("SummarizedExperiment")
+MAE <- BiocStyle::Biocpkg("MultiAssayExperiment")
+```
+
+This workshop will introduce users to the `r CGx` and
+`r PGx` R packages, which are useful tools for
+pharmacogenomic modelling to discover biomarkers of treatment response in cancer
+model systems. `r PGx` specifically focuses on
+drug sensitivity experiments in cancer cell lines, which will be the major
+focus of this workshop. Additional infrastructure from our lab includes
+`r TGx` for toxicogenomics in healthy human
+cell-lines, `r RGx` for
+radiogenomics in cancer cell-lines and `r Xv` for
+pharmacogenomics in patient derived xenograph (PDX) murine models.
+
+Participants will learn the fundamentals of using `r CGx`
+and `r PGx` to create a `PharmacoSet`&mdash;an
+integrative container for the storage, analysis and visualization of
+pharmacogenomic experiments. Particular focus will be placed
+on newly developed support for storing, analyzing and visualizing drug
+combination sensitivity experiments and correlating results therefrom
+with multi-omic molecular profiles to discover biomarkers of drug sensitivity,
+resistance, synergy, or antagonism.
+
+### Pre-requisites {-}
+  * Basic knowledge of R syntax
+  * Knowledge of or interest in pharmacogenomics
+  * Familiarity with core Bioconductor classes such as the
+  and `r SE` and `r MAE`
+  * Curiosity about or experience with `r DT` an asset!
+
+Useful publications:
+
+* Smirnov, P., Safikhani, Z., El-Hachem, N., Wang, D., She, A., Olsen, C., Freeman, M., Selby, H., Gendoo, D. M. A., Grossmann, P., Beck, A. H., Aerts, H. J. W. L., Lupien, M., Goldenberg, A., & Haibe-Kains, B. (2016). PharmacoGx: An R package for analysis of large pharmacogenomic datasets. Bioinformatics (Oxford, England), 32(8), 1244–1246. https://doi.org/10.1093/bioinformatics/btv723
+* Tonekaboni, M., Ali, S., Soltan Ghoraie, L., Manem, V. S. K. & Haibe-Kains, B. Predictive approaches for drug combination discovery in cancer. Brief Bioinform 19, 263–276 (2018).
+
+
+### Workshop Participation {-}
+
+<!-- The workshop will be presented as a set of analysis steps to be replicated by the learners, with instructors
+available to explain the why and how of applying these functions to the given datasets. Learners will write analysis
+scripts as well as use interactive commands to explore the generated data structures and results. Learners will then
+brainstorm potential applications of the analysis results in their field as well as comment on use case examples
+presented by the instructors on research in our lab. -->
+
+
+Participants expected to have the following required packages installed on their
+machines to be able to run the commands along with the instructors:
+
+
+### _R_ / _Bioconductor_ packages used {-}
+
+Bioconductor:
+
+* `r CGx`
+* `r PGx`
+
+CRAN:
+
+* `r DT`
+* `r BiocStyle::CRANpkg("ggplot2")`
+
+## Time outline {-}
+
+For a 1.5-hr workshop:
+
+| Activity                                                   | Time |
+|------------------------------------------------------------|------|
+| Introduction to CoreGx and PharmacoGx                      |  5m  |
+| Overview of Data Structures                                |  15m |
+| Loading a `PharmacoSet` using `r PGx` or [orcestra.ca](https://orcestra.ca) |  10m |
+| Accessing slots of a `PharmacoSet` using `r PGx`           |  10m |
+<!-- | How the `TRE` Supports Drug Combinations Data Analysis     |  10m |
+| Using a `DataMapper` to build a Drug Combo PharmacoSet     |  10m |
+| Dose Response Models and Drug Sensitivity measures         |  10m |
+| Drug Combination Synergy Models                            |  15m |
+| Biomarker Discovery                                        |  10m |
+| Further Resources                                          |  5m  |
+ -->
+
+## Workshop goals and objectives {-}
+
+### Learning goals {-}
+
+* Describe pharmacogenomic mono and combination datasets and their usefulness in cancer research
+* Understand how experimental designs and research questions map onto data structures
+* Learn how to extract information from these datasets
+* Learn how to visualize experimental results from these datasets
+* Learn how to model dose-response for both monotherapy and combination small compound datasets
+* Learn measures to quantify response and synergy in cancer cell-line sensitivity screens
+
+### Learning objectives {-}
+
+* Describe use cases for `r CGx` and `r PGx` in pharmacogenomics and beyond
+* Understand the structure of the `CoreSet` and `PharmacoSet` classes to facilitate their use in subsequent analyses
+* Learn how the `TreatmentResponseExperiment` provides a highly flexible container for storing high-throughput drug combination screening data
+* Use a `TREDataMapper` to create a `TreatmentResponseExperiment` and incorporate it into a `PharmacoSet`
+* Learn to apply arbitrary R functions over a `TreatmentResponseExperiment` using the `aggregate` and `endoaggregate` methods
+* Access the molecular features, dose-response and metadata contained within the data structures defined in our packages
+* Fit Hill Slope models to dose-response experiments using small compound treatments in cell-lines
+* Calculate the AAC, AUC, and IC50 metrics for response quantification in cell lines
+* Compute and store various metrics of drug synergy and antagonism using `r PGx` and the `TreatmentResponseExperiment`
+* Learn how to use `PharmacoGx` to discover univariate biomarkers of drug response, resistance, synergy, or antagnoism
+
+----
+
+```{r global_knitr_opts, echo=FALSE}
+knitr::opts_chunk$set(echo=TRUE, include=TRUE, warning=FALSE, message=TRUE)
+```
+
+```{r load_packages, eval=F, echo=FALSE, include=FALSE}
+suppressPackageStartupMessages({
+    # library(PharmacoGx)
+    # library(data.table)
+    # library(ggplot2)
+})
+```
+
+# Introduction to CoreGx and PharmacoGx
+
+This tutorial, titled *Pharmacogenomic Analysis of Drug Combination Experiments
+to Identify Biomarkers of Response or Resistance*, focuses on using the
+`r PGx` R package to correlate treatment response,
+measured as the viability of cancer cell-lines after _in vitro_ drug treatment,
+with their respective multi-omic profiles. `r CGx`
+provides the core infrastructure for storing, analyzing, and visualizing generic
+treatment response experiments. It provides methods and classes which can be
+inherited from in downstream packages, such as `r TGx` and
+`r RGx`. We hope that the `CoreSet` object is
+generalized enough that it can be reused by other developers for their specific
+treatment (or stimuli) response use case.
+
+## CoreGx
+
+### Package Nomenclature
+
+To facilitate modularization of the GxSuite of R packages, we have shifted
+the nomenclature within a `CoreSet`&mdash;and therefore in inheriting packages
+&mdash;to be more general.
+
+To this end, have made the following changes:
+
+  * Previous reference to cell (cell-line) have become sample, allowing the
+`CoreSet` to be used for other model systems
+  * Drug (radiation in `RadioGx`) have become treatment, allowing the
+`CoreSet` to be treatment type (or stimuli) agnostic
+  * Sensitivity will become response (sensitivity slot becomes treatmentResponse)
+
+As a result of these changes, the names of some common accessors have been updated.
+The old accessors still remain functional to ensure backwards compatibility for
+at least two Bioconductor releases. A deprecation warning will be added to old
+accessors informing users of the corresponding new function, as per Bioconductor
+best practices.
+
+## PharmacoGx
+
+`r PGx` stores drug screening data together with molecular profiling of
+cell-lines in an object called a `PharmacoSet`, or `PSet` for short. This object
+inherits for the `CoreSet` class defined in our package `CoreGx`, which is
+used to share common datas structure and method across our suite of package.
+The primary use case for `PharmacoGx` is to provide a standardized and highly
+curated container for high-throughput screens in cancer-cell lines, with the
+goal of enabling discovery of biomarkers of treatment response or resistance
+which can be easily compared and validated across large published
+pharmacogneomic datasets.
+
+---
