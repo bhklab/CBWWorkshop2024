@@ -75,13 +75,34 @@ suppressPackageStartupMessages({
 
 ## Use Cases for `r PGx`
 
+*Downloading Data from [orcestra.ca](https://orcestra.ca)
+
+```{r }
+available <- PharmacoGx::availablePSets() |> 
+  data.table::as.data.table()
+
+print(names(available))
+
+print(available[, c("Dataset Name", "PSet Name", "version") ])
+
+
+```
+
+``` {r downloadPset, eval=FALSE}
+PharmacoGx::downloadPSet(name="CCLE_2015",saveDir = "./psets", timeout = 3600, verbose = T)
+
+``` 
 
 
 
 
+``` {r viewpseT, eval=TRUE}
 
+data(
+NCI60_molecular_data)
 
-
+NCI60_molecular_data
+```
 
 
 
