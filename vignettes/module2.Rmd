@@ -1,5 +1,10 @@
 ---
 title: "Module 2: Hands-on with pharmacogenomics data"
+author:
+  - name: Jermiah J. Joseph
+    email: jermiah.joseph@uhn.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
 output: 
   BiocStyle::html_document:
     self_contained: yes
@@ -73,7 +78,7 @@ knitr::opts_chunk$set(echo=TRUE, include=TRUE, warning=FALSE, message=TRUE)
 ```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
 suppressPackageStartupMessages({
     library(CBWWorkshop2024)
-    # library(PharmacoGx)
+    library(PharmacoGx)
     library(data.table)
 })
 ```
@@ -85,7 +90,7 @@ suppressPackageStartupMessages({
 
 *Downloading Data from [orcestra.ca](https://orcestra.ca)
 
-```{r }
+```{r get_avail_psets}
 available <- PharmacoGx::availablePSets() |> 
   data.table::as.data.table()
 
@@ -93,26 +98,111 @@ print(names(available))
 
 print(available[, c("Dataset Name", "PSet Name", "version") ])
 
-
 ```
 
-``` {r downloadPset, eval=FALSE}
-PharmacoGx::downloadPSet(name="CCLE_2015",saveDir = "./psets", timeout = 3600, verbose = T)
+The following function from `r PGx` can be used to download any of the available PSets from [orcestra.ca](https://orcestra.ca)
 
+``` {r downloadPset, eval=FALSE}
+# this markdown will not run the command as download can take up to 10 minutes
+# PharmacoGx::downloadPSet(name="CCLE_2015",saveDir = "../psets", timeout = 3600, verbose = T)
 ``` 
 
 
+For convenience, we have created a `PharmacoSet` to be used in this tutorial. 
+We will be interacting with this dataset for the remainder of the tutorial.
+
+```{r load_pset}
+data(NCI_ALMANAC_2017)
+NCI_ALMANAC_2017
+```
+
+## Understanding the Data Structure
+
+The `PharmacoSet` class is a container for pharmacogenomic data. 
+
+This pharmacogenomic data is typically generated from high-throughput
+screening experiments where cell lines are treated with a panel of drugs at multiple doses and the response is measured using a molecular assay.
 
 
-``` {r viewpseT, eval=TRUE}
+```{r show_pset_structure}
+slotNames(NCI_ALMANAC_2017)
+```
 
-data(
-NCI60_molecular_data)
+### View the `sample`s 
 
-NCI60_molecular_data
+We can access the `sampleNames` of the `PharmacoSet`:
+
+```{r show_sample_names}
+PharmacoGx::sampleNames(NCI_ALMANAC_2017)
+```
+
+To get all the metadata associated with the samples, we can access the `sample` slot:
+```{r show_samples}
+NCI_ALMANAC_2017@sample |> str()
 ```
 
 
+We can see from the `sample` slot that there are 60 samples in this `PharmacoSet`.
+
+### View the `treatment`s
+
+Similar to the `sample`s, we can access the `treatmentNames` of the `PharmacoSet`:
+
+```{r show_treatment_names}
+PharmacoGx::treatmentNames(NCI_ALMANAC_2017) |> head()
+```
+
+To get all the metadata associated with the treatments, we can access the `treatment` slot:
+
+```{r show_treatments}
+NCI_ALMANAC_2017@treatment |> str()
+```
+There are also 31 treatments used.
+
+
+### Subset by `sampleNames` and/or `treatmentNames`
+
+```{r subset_pset}
+PharmacoGx::subsetBySample(
+  NCI_ALMANAC_2017, 
+  sample = sampleNames(NCI_ALMANAC_2017)[1:5]
+)
+
+PharmacoGx::subsetByTreatment(
+  NCI_ALMANAC_2017, 
+  treatment = treatmentNames(NCI_ALMANAC_2017)[1:5]
+)
+```
+
+
+### Subsetting using `sample` and `treatment` metadata
+
+```{r subset_pset_metadata, warning=FALSE}
+unique(NCI_ALMANAC_2017@sample$tissueid)
+
+tissues_of_interest <- c("Kidney")
+indices  <- which(NCI_ALMANAC_2017@sample$tissueid %in% tissues_of_interest)
+
+
+(samples_of_interest <- sampleNames(NCI_ALMANAC_2017)[indices])
+
+PharmacoGx::subsetBySample(
+  NCI_ALMANAC_2017, 
+  sample = samples_of_interest
+)
+```
+A concise way to subset by `sample` in one step:
+
+```{r subset_pset_metadata2, warning=FALSE}
+
+PharmacoGx::subsetBySample(
+  NCI_ALMANAC_2017, 
+  sample = NCI_ALMANAC_2017@sample[
+    NCI_ALMANAC_2017@sample$tissueid == "Kidney", 
+    "sampleid"
+  ]
+)
+```
 
 
 
