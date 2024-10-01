@@ -1,6 +1,14 @@
 ---
 title: "Module 2: Hands-on with pharmacogenomics data"
-output: BiocStyle::html_document
+output: 
+  BiocStyle::html_document:
+    self_contained: yes
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    code_folding: show
+date: "`r doc_date()`"
+package: "`r pkg_ver('CBWWorkshop2024')`"
 vignette: >
   %\VignetteIndexEntry{Module 2: Hands-on with pharmacogenomics data}
   %\VignetteEngine{knitr::rmarkdown}
@@ -103,9 +111,6 @@ NCI60_molecular_data)
 
 NCI60_molecular_data
 ```
-
-
-
 
 
 

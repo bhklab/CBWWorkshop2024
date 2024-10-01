@@ -18,7 +18,10 @@ Suggests:
     knitr,
     rmarkdown,
     BiocStyle,
-    pkgdown
+    pkgdown,
+    RefManageR,
+    sessioninfo,
+    testthat
 Remotes:
     bhklab/CoreGx@devel,
     bhklab/PharmacoGx@development
