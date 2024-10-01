@@ -1,6 +1,6 @@
 ---
 title: "Module 2: Hands-on with pharmacogenomics data"
-output: rmarkdown::html_vignette
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Module 2: Hands-on with pharmacogenomics data}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,6 +13,18 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+```{r eval=TRUE, echo=FALSE}
+PGx <- BiocStyle::Biocpkg("PharmacoGx")
+CGx <- BiocStyle::Biocpkg("CoreGx")
+TGx <- BiocStyle::Biocpkg("ToxicoGx")
+RGx <- BiocStyle::Biocpkg("RadioGx")
+Xv <- BiocStyle::Biocpkg("Xeva")
+DT <- BiocStyle::CRANpkg("data.table")
+SE <- BiocStyle::Biocpkg("SummarizedExperiment")
+MAE <- BiocStyle::Biocpkg("MultiAssayExperiment")
+```
+
 
 # Lab 2 Overview
 
@@ -52,8 +64,8 @@ knitr::opts_chunk$set(echo=TRUE, include=TRUE, warning=FALSE, message=TRUE)
 
 ```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
 suppressPackageStartupMessages({
-    library(pgxBioc2022Workshop)
-    library(PharmacoGx)
+    library(CBWWorkshop2024)
+    # library(PharmacoGx)
     library(data.table)
 })
 ```
