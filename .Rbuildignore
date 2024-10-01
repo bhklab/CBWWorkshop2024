@@ -8,3 +8,5 @@ pixi.lock
 ^\.github$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^doc$
+^Meta$
