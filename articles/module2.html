@@ -124,6 +124,57 @@ within the <code>PharmacoSet</code>
 <div class="section level3">
 <h3 id="use-cases-for-pharmacogx">Use Cases for <em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em><a class="anchor" aria-label="anchor" href="#use-cases-for-pharmacogx"></a>
 </h3>
+<p>*Downloading Data from <a href="https://orcestra.ca" class="external-link">orcestra.ca</a></p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">available</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/availablePSets.html" class="external-link">availablePSets</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">available</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Dataset Name" "Date Created" "PSet Name"    "version"      "type"        </span></span>
+<span><span class="co">#&gt; [6] "publication"  "DOI"          "Download"</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">available</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Dataset Name"</span>, <span class="st">"PSet Name"</span>, <span class="st">"version"</span><span class="op">)</span> <span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     Dataset Name         PSet Name      version</span></span>
+<span><span class="co">#&gt;           &lt;char&gt;            &lt;char&gt;       &lt;char&gt;</span></span>
+<span><span class="co">#&gt;  1:         GDSC GDSC_2020(v2-8.2) 2020(v2-8.2)</span></span>
+<span><span class="co">#&gt;  2:         FIMM         FIMM_2016         2016</span></span>
+<span><span class="co">#&gt;  3:        Tavor        Tavor_2020         2020</span></span>
+<span><span class="co">#&gt;  4:        NCI60        NCI60_2021         2021</span></span>
+<span><span class="co">#&gt;  5:    UHNBreast    UHNBreast_2019         2019</span></span>
+<span><span class="co">#&gt;  6:         GDSC GDSC_2020(v1-8.2) 2020(v1-8.2)</span></span>
+<span><span class="co">#&gt;  7:        PRISM        PRISM_2020         2020</span></span>
+<span><span class="co">#&gt;  8:      BeatAML      BeatAML_2018         2018</span></span>
+<span><span class="co">#&gt;  9:         gCSI         gCSI_2019         2019</span></span>
+<span><span class="co">#&gt; 10:       CTRPv2       CTRPv2_2015         2015</span></span>
+<span><span class="co">#&gt; 11:         GRAY         GRAY_2017         2017</span></span>
+<span><span class="co">#&gt; 12:         CCLE         CCLE_2015         2015</span></span>
+<span><span class="co">#&gt; 13:         PDTX         PDTX_2019         2019</span></span>
+<span><span class="co">#&gt; 14:          GBM          GBM_scr2         2021</span></span>
+<span><span class="co">#&gt; 15:          GBM          GBM_scr3         2021</span></span>
+<span><span class="co">#&gt; 16:   NCISarcoma   NCISarcoma_2015         2015</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/downloadPSet.html" class="external-link">downloadPSet</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"CCLE_2015"</span>,saveDir <span class="op">=</span> <span class="st">"./psets"</span>, timeout <span class="op">=</span> <span class="fl">3600</span>, verbose <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span>
+<span><span class="va">NCI60_molecular_data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">NCI60_molecular_data</span></span>
+<span><span class="co">#&gt; A MultiAssayExperiment object of 4 listed</span></span>
+<span><span class="co">#&gt;  experiments with user-defined names and respective classes.</span></span>
+<span><span class="co">#&gt;  Containing an ExperimentList class object of length 4:</span></span>
+<span><span class="co">#&gt;  [1] rna: RangedSummarizedExperiment with 54609 rows and 59 columns</span></span>
+<span><span class="co">#&gt;  [2] mirna: RangedSummarizedExperiment with 417 rows and 59 columns</span></span>
+<span><span class="co">#&gt;  [3] rnaseq.comp: RangedSummarizedExperiment with 23808 rows and 59 columns</span></span>
+<span><span class="co">#&gt;  [4] rnaseq.iso: RangedSummarizedExperiment with 23808 rows and 59 columns</span></span>
+<span><span class="co">#&gt; Functionality:</span></span>
+<span><span class="co">#&gt;  experiments() - obtain the ExperimentList instance</span></span>
+<span><span class="co">#&gt;  colData() - the primary/phenotype DataFrame</span></span>
+<span><span class="co">#&gt;  sampleMap() - the sample coordination DataFrame</span></span>
+<span><span class="co">#&gt;  `$`, `[`, `[[` - extract colData columns, subset, or experiment</span></span>
+<span><span class="co">#&gt;  *Format() - convert into a long or wide DataFrame</span></span>
+<span><span class="co">#&gt;  assays() - convert ExperimentList to a SimpleList of matrices</span></span>
+<span><span class="co">#&gt;  exportClass() - save data to flat files</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
