@@ -77,12 +77,12 @@ scripts as well as use interactive commands to explore the generated data struct
 brainstorm potential applications of the analysis results in their field as well as comment on use case examples
 presented by the instructors on research in our lab. -->
 
-
+<!-- 
 Participants expected to have the following required packages installed on their
-machines to be able to run the commands along with the instructors:
+machines to be able to run the commands along with the instructors: -->
 
 
-### _R_ / _Bioconductor_ packages used {-}
+<!-- ### _R_ / _Bioconductor_ packages used {-}
 
 Bioconductor:
 
@@ -92,9 +92,9 @@ Bioconductor:
 CRAN:
 
 * `r DT`
-* `r BiocStyle::CRANpkg("ggplot2")`
+* `r BiocStyle::CRANpkg("ggplot2")` -->
 
-## Time outline {-}
+<!-- ## Time outline {-}
 
 For a 1.5-hr workshop:
 
@@ -103,7 +103,7 @@ For a 1.5-hr workshop:
 | Introduction to CoreGx and PharmacoGx                      |  5m  |
 | Overview of Data Structures                                |  15m |
 | Loading a `PharmacoSet` using `r PGx` or [orcestra.ca](https://orcestra.ca) |  10m |
-| Accessing slots of a `PharmacoSet` using `r PGx`           |  10m |
+| Accessing slots of a `PharmacoSet` using `r PGx`           |  10m | -->
 <!-- | How the `TRE` Supports Drug Combinations Data Analysis     |  10m |
 | Using a `DataMapper` to build a Drug Combo PharmacoSet     |  10m |
 | Dose Response Models and Drug Sensitivity measures         |  10m |
@@ -111,7 +111,7 @@ For a 1.5-hr workshop:
 | Biomarker Discovery                                        |  10m |
 | Further Resources                                          |  5m  |
  -->
-
+<!-- 
 ## Workshop goals and objectives {-}
 
 ### Learning goals {-}
@@ -136,7 +136,7 @@ For a 1.5-hr workshop:
 * Compute and store various metrics of drug synergy and antagonism using `r PGx` and the `TreatmentResponseExperiment`
 * Learn how to use `PharmacoGx` to discover univariate biomarkers of drug response, resistance, synergy, or antagnoism
 
-----
+---- -->
 
 ```{r global_knitr_opts, echo=FALSE}
 knitr::opts_chunk$set(echo=TRUE, include=TRUE, warning=FALSE, message=TRUE)
@@ -189,13 +189,70 @@ best practices.
 ## PharmacoGx
 
 `r PGx` stores drug screening data together with molecular profiling of
-cell-lines in an object called a `PharmacoSet`, or `PSet` for short. This object
-inherits for the `CoreSet` class defined in our package `CoreGx`, which is
+cell-lines in an object called a `PharmacoSet`, or `PSet` for short. 
+
+Previously, the `PharmacoSet` class was entirely defined by the `PharmacoGx` package.
+However, after building the `RadioGx` and `ToxicoGx` packages, we realized that
+the core data structures could be abstracted out and shared.
+
+As such, `PharmacoSet`s now inherit from the `CoreSet` class defined in our package `CoreGx`, which is
 used to share common datas structure and method across our suite of package.
-The primary use case for `PharmacoGx` is to provide a standardized and highly
-curated container for high-throughput screens in cancer-cell lines, with the
-goal of enabling discovery of biomarkers of treatment response or resistance
-which can be easily compared and validated across large published
-pharmacogneomic datasets.
+The primary use case for `PharmacoGx` is to :
+
+1. Provide a standardized and highly curated container for high-throughput screens 
+in cancer-cell lines
+2. Enable discovery of biomarkers of treatment response or resistance
+3. Allow for comparison and validation across large published
+pharmacogneomic datasets
+
 
 ---
+
+# Overview of Data Structures
+
+The GxSuite of packages make use of various Bioconductor classes for storing
+molecular profile data.
+
+## `CoreSet` and `PharmacoSet`
+
+```{r coreset,  echo=FALSE, fig.wide=TRUE, fig.cap = "**CoreSet / PharmacoSet class diagram**. Objects comprising a `CoreSet` are enclosed in boxes. The first box indicates the type and name of each object. The second box indicates the structure of an object or class. The third box shows accessor methods from `PharmacoGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
+knitr::include_graphics("./CoreSet-class.drawio.svg")
+```
+
+# Example Experiment
+
+## Cell Lines (`samples`)
+
+The following cell lines are used in the study:
+
+- **Cell Line A (CLC-123)**: A breast cancer cell line.
+- **Cell Line B (CLC-456)**: A lung cancer cell line.
+- **Cell Line C (CLC-789)**: A colon cancer cell line.
+- **Cell Line D (CLC-101)**: A melanoma cell line.
+- **Cell Line E (CLC-202)**: A pancreatic cancer cell line.
+
+## Drugs (`treatments`)
+
+The following drugs were tested on the cell lines:
+
+- **Drug X (Toxo-1)**: A novel chemotherapy drug that targets fast-dividing cancer cells.
+- **Drug Y (Inhi-2)**: A targeted therapy designed to block a protein that is commonly overactive in certain cancers.
+- **Drug Z (Syner-3)**: A combination therapy that enhances the effectiveness of Drug X when used together.
+
+## Profiles of the samples  (`molecularProfiles`)
+
+We managed to obtain the following molecular profiles for each of the cell lines:
+
+1. RNA Expression (rnaseq)
+2. DNA Methylation (methylation)
+3. Mutations (mutation)
+4. Copy Number Variation (cnv)
+
+## Treatment Responses (`treatmentResponse`)
+
+For each sample, the treatments were tested with the following doses:
+
+- 1 µM 
+- 10 µM
+- 100 µM
+- 1000 µM

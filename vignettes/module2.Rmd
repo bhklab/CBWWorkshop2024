@@ -1,0 +1,62 @@
+---
+title: "Module 2: Hands-on with pharmacogenomics data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Module 2: Hands-on with pharmacogenomics data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Lab 2 Overview
+
+## Instructor(s) name(s) and contact information {-}
+
+* Jermiah J. Joseph <jermiah.joseph@uhn.ca>
+* ALMAS_ DETAILS
+
+## Lab Description {-}
+
+<!-- Lab Practical – Hands-on with pharmacogenomics data  (Jermiah Joseph, Almas Khan)
+
+Loading a PharmacoSet in R using PharmacoGx or ORCESTRA, understanding the data structure, accessing features, and preparing metadata
+Plot batch effects using PCA and run correction method (SVA)
+Filter out outliers and missing values -->
+
+### Learning goals {-}
+
+* Understand the data structure of a PharmacoSet
+* Learn how to access features and metadata from a PharmacoSet
+* Learn how to plot batch effects using PCA and run correction method (SVA)
+* Learn how to filter out outliers and missing values
+
+### Learning objectives {-}
+
+* Describe the use cases for `r PGx` in Pharmacogenomics
+* Understand the structure of the `CoreSet` and `PharmacoSet` classes to facilitate their use in subsequent analyses
+* Download/load a `PharmacoSet` using `r PGx` or [orcestra.ca](https://orcestra.ca)
+* Subset and filter a `PharmacoSet` by samples and/or treatments
+* Access the molecular features, dose-response and metadata contained within the `PharmacoSet`
+
+----
+
+```{r global_knitr_opts, echo=FALSE}
+knitr::opts_chunk$set(echo=TRUE, include=TRUE, warning=FALSE, message=TRUE)
+```
+
+```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
+suppressPackageStartupMessages({
+    library(pgxBioc2022Workshop)
+    library(PharmacoGx)
+    library(data.table)
+})
+```
+
+
+
