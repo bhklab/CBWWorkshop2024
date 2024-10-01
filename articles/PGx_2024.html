@@ -33,7 +33,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/PGx_2024.html">Pharmacogenomic Analysis of Drug Combination Experiments to Identify Biomarkers of Response or Resistance</a></li>
+<li><a class="dropdown-item" href="../articles/module2.html">Module 2: Hands-on with pharmacogenomics data</a></li>
+    <li><a class="dropdown-item" href="../articles/PGx_2024.html">Pharmacogenomic Analysis of Drug Combination Experiments to Identify Biomarkers of Response or Resistance</a></li>
   </ul>
 </li>
       </ul>
@@ -140,62 +141,30 @@ available to explain the why and how of applying these functions to the given da
 scripts as well as use interactive commands to explore the generated data structures and results. Learners will then
 brainstorm potential applications of the analysis results in their field as well as comment on use case examples
 presented by the instructors on research in our lab. -->
-<p>Participants expected to have the following required packages
-installed on their machines to be able to run the commands along with
-the instructors:</p>
-</div>
-<div class="section level4">
-<h4 class="unnumbered" id="r-bioconductor-packages-used">
-<em>R</em> / <em>Bioconductor</em> packages
-used<a class="anchor" aria-label="anchor" href="#r-bioconductor-packages-used"></a>
-</h4>
-<p>Bioconductor:</p>
-<ul>
-<li><em><a href="https://bioconductor.org/packages/3.19/CoreGx" class="external-link">CoreGx</a></em></li>
-<li><em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em></li>
-</ul>
-<p>CRAN:</p>
-<ul>
-<li><em><a href="https://CRAN.R-project.org/package=data.table" class="external-link">data.table</a></em></li>
-<li><em><a href="https://CRAN.R-project.org/package=ggplot2" class="external-link">ggplot2</a></em></li>
-</ul>
-</div>
-</div>
-<div class="section level3">
-<h3 class="unnumbered" id="time-outline">Time outline<a class="anchor" aria-label="anchor" href="#time-outline"></a>
-</h3>
-<p>For a 1.5-hr workshop:</p>
-<table class="table">
-<colgroup>
-<col width="90%">
-<col width="9%">
-</colgroup>
-<thead><tr class="header">
-<th>Activity</th>
-<th>Time</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Introduction to CoreGx and PharmacoGx</td>
-<td>5m</td>
-</tr>
-<tr class="even">
-<td>Overview of Data Structures</td>
-<td>15m</td>
-</tr>
-<tr class="odd">
-<td>Loading a <code>PharmacoSet</code> using <em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em>
-or <a href="https://orcestra.ca" class="external-link">orcestra.ca</a>
-</td>
-<td>10m</td>
-</tr>
-<tr class="even">
-<td>Accessing slots of a <code>PharmacoSet</code> using <em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em>
-</td>
-<td>10m</td>
-</tr>
-</tbody>
-</table>
+<!-- 
+Participants expected to have the following required packages installed on their
+machines to be able to run the commands along with the instructors: -->
+<!-- ### _R_ / _Bioconductor_ packages used {-}
+
+Bioconductor:
+
+* *[CoreGx](https://bioconductor.org/packages/3.19/CoreGx)*
+* *[PharmacoGx](https://bioconductor.org/packages/3.19/PharmacoGx)*
+
+CRAN:
+
+* *[data.table](https://CRAN.R-project.org/package=data.table)*
+* *[ggplot2](https://CRAN.R-project.org/package=ggplot2)* -->
+<!-- ## Time outline {-}
+
+For a 1.5-hr workshop:
+
+| Activity                                                   | Time |
+|------------------------------------------------------------|------|
+| Introduction to CoreGx and PharmacoGx                      |  5m  |
+| Overview of Data Structures                                |  15m |
+| Loading a `PharmacoSet` using *[PharmacoGx](https://bioconductor.org/packages/3.19/PharmacoGx)* or [orcestra.ca](https://orcestra.ca) |  10m |
+| Accessing slots of a `PharmacoSet` using *[PharmacoGx](https://bioconductor.org/packages/3.19/PharmacoGx)*           |  10m | -->
 <!-- | How the `TRE` Supports Drug Combinations Data Analysis     |  10m |
 | Using a `DataMapper` to build a Drug Combo PharmacoSet     |  10m |
 | Dose Response Models and Drug Sensitivity measures         |  10m |
@@ -203,60 +172,32 @@ or <a href="https://orcestra.ca" class="external-link">orcestra.ca</a>
 | Biomarker Discovery                                        |  10m |
 | Further Resources                                          |  5m  |
  -->
-</div>
-<div class="section level3">
-<h3 class="unnumbered" id="workshop-goals-and-objectives">Workshop goals and objectives<a class="anchor" aria-label="anchor" href="#workshop-goals-and-objectives"></a>
-</h3>
-<div class="section level4">
-<h4 class="unnumbered" id="learning-goals">Learning goals<a class="anchor" aria-label="anchor" href="#learning-goals"></a>
-</h4>
-<ul>
-<li>Describe pharmacogenomic mono and combination datasets and their
-usefulness in cancer research</li>
-<li>Understand how experimental designs and research questions map onto
-data structures</li>
-<li>Learn how to extract information from these datasets</li>
-<li>Learn how to visualize experimental results from these datasets</li>
-<li>Learn how to model dose-response for both monotherapy and
-combination small compound datasets</li>
-<li>Learn measures to quantify response and synergy in cancer cell-line
-sensitivity screens</li>
-</ul>
-</div>
-<div class="section level4">
-<h4 class="unnumbered" id="learning-objectives">Learning objectives<a class="anchor" aria-label="anchor" href="#learning-objectives"></a>
-</h4>
-<ul>
-<li>Describe use cases for <em><a href="https://bioconductor.org/packages/3.19/CoreGx" class="external-link">CoreGx</a></em> and
-<em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em>
-in pharmacogenomics and beyond</li>
-<li>Understand the structure of the <code>CoreSet</code> and
-<code>PharmacoSet</code> classes to facilitate their use in subsequent
-analyses</li>
-<li>Learn how the <code>TreatmentResponseExperiment</code> provides a
-highly flexible container for storing high-throughput drug combination
-screening data</li>
-<li>Use a <code>TREDataMapper</code> to create a
-<code>TreatmentResponseExperiment</code> and incorporate it into a
-<code>PharmacoSet</code>
-</li>
-<li>Learn to apply arbitrary R functions over a
-<code>TreatmentResponseExperiment</code> using the
-<code>aggregate</code> and <code>endoaggregate</code> methods</li>
-<li>Access the molecular features, dose-response and metadata contained
-within the data structures defined in our packages</li>
-<li>Fit Hill Slope models to dose-response experiments using small
-compound treatments in cell-lines</li>
-<li>Calculate the AAC, AUC, and IC50 metrics for response quantification
-in cell lines</li>
-<li>Compute and store various metrics of drug synergy and antagonism
-using <em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em>
-and the <code>TreatmentResponseExperiment</code>
-</li>
-<li>Learn how to use <code>PharmacoGx</code> to discover univariate
-biomarkers of drug response, resistance, synergy, or antagnoism</li>
-</ul>
-<hr>
+<!-- 
+## Workshop goals and objectives {-}
+
+### Learning goals {-}
+
+* Describe pharmacogenomic mono and combination datasets and their usefulness in cancer research
+* Understand how experimental designs and research questions map onto data structures
+* Learn how to extract information from these datasets
+* Learn how to visualize experimental results from these datasets
+* Learn how to model dose-response for both monotherapy and combination small compound datasets
+* Learn measures to quantify response and synergy in cancer cell-line sensitivity screens
+
+### Learning objectives {-}
+
+* Describe use cases for *[CoreGx](https://bioconductor.org/packages/3.19/CoreGx)* and *[PharmacoGx](https://bioconductor.org/packages/3.19/PharmacoGx)* in pharmacogenomics and beyond
+* Understand the structure of the `CoreSet` and `PharmacoSet` classes to facilitate their use in subsequent analyses
+* Learn how the `TreatmentResponseExperiment` provides a highly flexible container for storing high-throughput drug combination screening data
+* Use a `TREDataMapper` to create a `TreatmentResponseExperiment` and incorporate it into a `PharmacoSet`
+* Learn to apply arbitrary R functions over a `TreatmentResponseExperiment` using the `aggregate` and `endoaggregate` methods
+* Access the molecular features, dose-response and metadata contained within the data structures defined in our packages
+* Fit Hill Slope models to dose-response experiments using small compound treatments in cell-lines
+* Calculate the AAC, AUC, and IC50 metrics for response quantification in cell lines
+* Compute and store various metrics of drug synergy and antagonism using *[PharmacoGx](https://bioconductor.org/packages/3.19/PharmacoGx)* and the `TreatmentResponseExperiment`
+* Learn how to use `PharmacoGx` to discover univariate biomarkers of drug response, resistance, synergy, or antagnoism
+
+---- -->
 </div>
 </div>
 </div>
@@ -308,16 +249,111 @@ the corresponding new function, as per Bioconductor best practices.</p>
 <p><em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em>
 stores drug screening data together with molecular profiling of
 cell-lines in an object called a <code>PharmacoSet</code>, or
-<code>PSet</code> for short. This object inherits for the
+<code>PSet</code> for short.</p>
+<p>Previously, the <code>PharmacoSet</code> class was entirely defined
+by the <code>PharmacoGx</code> package. However, after building the
+<code>RadioGx</code> and <code>ToxicoGx</code> packages, we realized
+that the core data structures could be abstracted out and shared.</p>
+<p>As such, <code>PharmacoSet</code>s now inherit from the
 <code>CoreSet</code> class defined in our package <code>CoreGx</code>,
 which is used to share common datas structure and method across our
 suite of package. The primary use case for <code>PharmacoGx</code> is to
-provide a standardized and highly curated container for high-throughput
-screens in cancer-cell lines, with the goal of enabling discovery of
-biomarkers of treatment response or resistance which can be easily
-compared and validated across large published pharmacogneomic
-datasets.</p>
+:</p>
+<ol style="list-style-type: decimal">
+<li>Provide a standardized and highly curated container for
+high-throughput screens in cancer-cell lines</li>
+<li>Enable discovery of biomarkers of treatment response or
+resistance</li>
+<li>Allow for comparison and validation across large published
+pharmacogneomic datasets</li>
+</ol>
 <hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="overview-of-data-structures">Overview of Data Structures<a class="anchor" aria-label="anchor" href="#overview-of-data-structures"></a>
+</h2>
+<p>The GxSuite of packages make use of various Bioconductor classes for
+storing molecular profile data.</p>
+<div class="section level3">
+<h3 id="coreset-and-pharmacoset">
+<code>CoreSet</code> and <code>PharmacoSet</code><a class="anchor" aria-label="anchor" href="#coreset-and-pharmacoset"></a>
+</h3>
+<div class="float">
+<img src="CoreSet-class.drawio.svg" alt="CoreSet / PharmacoSet class diagram. Objects comprising a CoreSet are enclosed in boxes. The first box indicates the type and name of each object. The second box indicates the structure of an object or class. The third box shows accessor methods from PharmacoGx for that specific object. ‘=&gt;’ represents return and specifies what is returned from that item or method."><div class="figcaption">
+<strong>CoreSet / PharmacoSet class
+diagram</strong>. Objects comprising a <code>CoreSet</code> are enclosed
+in boxes. The first box indicates the type and name of each object. The
+second box indicates the structure of an object or class. The third box
+shows accessor methods from <code>PharmacoGx</code> for that specific
+object. ‘=&gt;’ represents return and specifies what is returned from
+that item or method.</div>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="example-experiment">Example Experiment<a class="anchor" aria-label="anchor" href="#example-experiment"></a>
+</h2>
+<div class="section level3">
+<h3 id="cell-lines-samples">Cell Lines (<code>samples</code>)<a class="anchor" aria-label="anchor" href="#cell-lines-samples"></a>
+</h3>
+<p>The following cell lines are used in the study:</p>
+<ul>
+<li>
+<strong>Cell Line A (CLC-123)</strong>: A breast cancer cell
+line.</li>
+<li>
+<strong>Cell Line B (CLC-456)</strong>: A lung cancer cell
+line.</li>
+<li>
+<strong>Cell Line C (CLC-789)</strong>: A colon cancer cell
+line.</li>
+<li>
+<strong>Cell Line D (CLC-101)</strong>: A melanoma cell line.</li>
+<li>
+<strong>Cell Line E (CLC-202)</strong>: A pancreatic cancer cell
+line.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="drugs-treatments">Drugs (<code>treatments</code>)<a class="anchor" aria-label="anchor" href="#drugs-treatments"></a>
+</h3>
+<p>The following drugs were tested on the cell lines:</p>
+<ul>
+<li>
+<strong>Drug X (Toxo-1)</strong>: A novel chemotherapy drug that
+targets fast-dividing cancer cells.</li>
+<li>
+<strong>Drug Y (Inhi-2)</strong>: A targeted therapy designed to
+block a protein that is commonly overactive in certain cancers.</li>
+<li>
+<strong>Drug Z (Syner-3)</strong>: A combination therapy that
+enhances the effectiveness of Drug X when used together.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="profiles-of-the-samples-molecularprofiles">Profiles of the samples (<code>molecularProfiles</code>)<a class="anchor" aria-label="anchor" href="#profiles-of-the-samples-molecularprofiles"></a>
+</h3>
+<p>We managed to obtain the following molecular profiles for each of the
+cell lines:</p>
+<ol style="list-style-type: decimal">
+<li>RNA Expression (rnaseq)</li>
+<li>DNA Methylation (methylation)</li>
+<li>Mutations (mutation)</li>
+<li>Copy Number Variation (cnv)</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="treatment-responses-treatmentresponse">Treatment Responses (<code>treatmentResponse</code>)<a class="anchor" aria-label="anchor" href="#treatment-responses-treatmentresponse"></a>
+</h3>
+<p>For each sample, the treatments were tested with the following
+doses:</p>
+<ul>
+<li>1 µM</li>
+<li>10 µM</li>
+<li>100 µM</li>
+<li>1000 µM</li>
+</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
