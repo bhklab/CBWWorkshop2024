@@ -3,3 +3,4 @@
 *.egg-info
 docs
 inst/doc
+.Rproj.user

@@ -6,3 +6,5 @@ pixi.lock
 ^docs$
 ^pkgdown$
 ^\.github$
+^.*\.Rproj$
+^\.Rproj\.user$

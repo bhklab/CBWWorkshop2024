@@ -26,13 +26,13 @@ MAE <- BiocStyle::Biocpkg("MultiAssayExperiment")
 ```
 
 
-# Lab 2 Overview {-}
+# Lab 2 Overview
 
 ## Instructor(s) name(s) and contact information {-}
 
 * Jermiah J. Joseph <jermiah.joseph@uhn.ca>
 * ALMAS_ DETAILS
-
+ 
 ## Lab Description {-}
 
 <!-- Lab Practical – Hands-on with pharmacogenomics data  (Jermiah Joseph, Almas Khan)
@@ -69,35 +69,3 @@ suppressPackageStartupMessages({
     library(data.table)
 })
 ```
-
-
-# Getting Started
-
-## Use Cases for `r PGx`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
