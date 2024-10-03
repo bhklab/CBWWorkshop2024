@@ -10,3 +10,4 @@ pixi.lock
 ^\.Rproj\.user$
 ^doc$
 ^Meta$
+^data-raw$

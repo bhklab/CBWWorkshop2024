@@ -100,16 +100,13 @@ print(available[, c("Dataset Name", "PSet Name", "version") ])
 
 ```
 
-The following function from `r PGx` can be used to download any of the available PSets from [orcestra.ca](https://orcestra.ca)
+The following function from `r PGx` can be used to download any of the available PSets from [orcestra.ca](https://orcestra.ca).
 
-``` {r downloadPset, eval=FALSE}
-# this markdown will not run the command as download can take up to 10 minutes
-# PharmacoGx::downloadPSet(name="CCLE_2015",saveDir = "../psets", timeout = 3600, verbose = T)
-``` 
+The command to do so is:
+`PharmacoGx::downloadPSet(name="CCLE_2015",saveDir = "../psets", timeout = 3600, verbose = T)`
 
-
-For convenience, we have created a `PharmacoSet` to be used in this tutorial. 
-We will be interacting with this dataset for the remainder of the tutorial.
+For convenience and in the interest of time, we have created a `PharmacoSet` to be used 
+in this tutorial. We will be interacting with this dataset for the remainder of the tutorial.
 
 ```{r load_pset}
 data(NCI_ALMANAC_2017)
