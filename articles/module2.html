@@ -64,7 +64,7 @@ Joseph</h4>
 Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:jermiah.joseph@uhn.ca" class="email">jermiah.joseph@uhn.ca</a>
       </address>
                   
-            <h4 data-toc-skip class="date">1 October 2024</h4>
+            <h4 data-toc-skip class="date">3 October 2024</h4>
       
 
       <div class="d-none name"><code>module2.Rmd</code></div>
@@ -161,14 +161,13 @@ within the <code>PharmacoSet</code>
 <span><span class="co">#&gt; 15:          GBM          GBM_scr3         2021</span></span>
 <span><span class="co">#&gt; 16:   NCISarcoma   NCISarcoma_2015         2015</span></span></code></pre></div>
 <p>The following function from <em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em>
-can be used to download any of the available PSets from <a href="https://orcestra.ca" class="external-link">orcestra.ca</a></p>
+can be used to download any of the available PSets from <a href="https://orcestra.ca" class="external-link">orcestra.ca</a>.</p>
+<p>The command to do so is:
+<code>PharmacoGx::downloadPSet(name="CCLE_2015",saveDir = "../psets", timeout = 3600, verbose = T)</code></p>
+<p>For convenience and in the interest of time, we have created a
+<code>PharmacoSet</code> to be used in this tutorial. We will be
+interacting with this dataset for the remainder of the tutorial.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># this markdown will not run the command as download can take up to 10 minutes</span></span>
-<span><span class="co"># PharmacoGx::downloadPSet(name="CCLE_2015",saveDir = "../psets", timeout = 3600, verbose = T)</span></span></code></pre></div>
-<p>For convenience, we have created a <code>PharmacoSet</code> to be
-used in this tutorial. We will be interacting with this dataset for the
-remainder of the tutorial.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span></span>
 <span><span class="va">NCI_ALMANAC_2017</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
@@ -199,7 +198,7 @@ data.</p>
 screening experiments where cell lines are treated with a panel of drugs
 at multiple doses and the response is measured using a molecular
 assay.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">slotNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "treatmentResponse" "annotation"        "molecularProfiles"</span></span>
 <span><span class="co">#&gt; [4] "sample"            "treatment"         "datasetType"      </span></span>
@@ -209,7 +208,7 @@ assay.</p>
 </h4>
 <p>We can access the <code>sampleNames</code> of the
 <code>PharmacoSet</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/featureNames.html" class="external-link">sampleNames</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "786-O"       "A-498"       "A-549"       "ACHN"        "BT-549"     </span></span>
 <span><span class="co">#&gt;  [6] "CCRF-CEM"    "COLO 205"    "Caki-1"      "DU145"       "EKVX"       </span></span>
@@ -225,7 +224,7 @@ assay.</p>
 <span><span class="co">#&gt; [56] "TK-10"       "U-251MG"     "UACC-257"    "UACC-62"     "UO-31"</span></span></code></pre></div>
 <p>To get all the metadata associated with the samples, we can access
 the <code>sample</code> slot:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">NCI_ALMANAC_2017</span><span class="op">@</span><span class="va">sample</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    60 obs. of  7 variables:</span></span>
 <span><span class="co">#&gt;  $ sampleid            : chr  "786-O" "A-498" "A-549" "ACHN" ...</span></span>
@@ -243,7 +242,7 @@ samples in this <code>PharmacoSet</code>.</p>
 </h4>
 <p>Similar to the <code>sample</code>s, we can access the
 <code>treatmentNames</code> of the <code>PharmacoSet</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">treatmentNames</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Pralatrexate"                        </span></span>
 <span><span class="co">#&gt; [2] "1,3-Bis(2-chloroethyl)-1-nitrosourea"</span></span>
@@ -253,7 +252,7 @@ samples in this <code>PharmacoSet</code>.</p>
 <span><span class="co">#&gt; [6] "Vincristine"</span></span></code></pre></div>
 <p>To get all the metadata associated with the treatments, we can access
 the <code>treatment</code> slot:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">NCI_ALMANAC_2017</span><span class="op">@</span><span class="va">treatment</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    31 obs. of  5 variables:</span></span>
 <span><span class="co">#&gt;  $ treatmentid            : chr  "Pralatrexate" "1,3-Bis(2-chloroethyl)-1-nitrosourea" "Ixabepilone" "Clofarabine" ...</span></span>
@@ -267,7 +266,7 @@ the <code>treatment</code> slot:</p>
 <h4 id="subset-by-samplenames-andor-treatmentnames">Subset by <code>sampleNames</code> and/or
 <code>treatmentNames</code><a class="anchor" aria-label="anchor" href="#subset-by-samplenames-andor-treatmentnames"></a>
 </h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
 <span>  <span class="va">NCI_ALMANAC_2017</span>, </span>
 <span>  sample <span class="op">=</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
@@ -318,7 +317,7 @@ the <code>treatment</code> slot:</p>
 <h4 id="subsetting-using-sample-and-treatment-metadata">Subsetting using <code>sample</code> and <code>treatment</code>
 metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and-treatment-metadata"></a>
 </h4>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "Kidney"               "Lung"                 "Breast"              </span></span>
 <span><span class="co">#&gt;  [4] "Lymphoid"             "Bowel"                "Prostate"            </span></span>
@@ -356,7 +355,7 @@ metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(6): </span><span style="color: #00BB00;">sampleid bio_rep CELLNAME CELLNBR PANEL PANELNBR</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(1): </span><span style="color: #00BB00;">experiment_metadata</span></span></span></code></pre></div>
 <p>A concise way to subset by <code>sample</code> in one step:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
 <span>  <span class="va">NCI_ALMANAC_2017</span>, </span>
