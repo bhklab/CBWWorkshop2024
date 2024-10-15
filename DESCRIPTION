@@ -34,7 +34,8 @@ Suggests:
     RefManageR,
     sessioninfo,
     testthat,
-    rmdformats
+    rmdformats,
+    meta
 Remotes:
     bhklab/CoreGx,
     bhklab/PharmacoGx
