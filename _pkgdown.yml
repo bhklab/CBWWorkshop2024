@@ -1,4 +1,12 @@
 url: https://bhklab.github.io/CBWWorkshop2024/
 template:
   bootstrap: 5
-
+  
+home:
+  title: "pgxCBW2024Workshop"
+  type: inverse
+  
+navbar:
+  right:
+   - icon: fa-github
+     href: https://bhklab.github.io/CBWWorkshop2024/

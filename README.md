@@ -46,7 +46,7 @@ To view the vignettes, click on the `articles` tab in the package landing page.
 Run to install this package and its dependencies.
 
 ```R
-pak::pkg_install("bhklab/CBWWorkshop2024")
+pak::pkg_install("bhklab/CBWWorkshop2024", dependencies=TRUE)
 ```
 
 ## Contributing
