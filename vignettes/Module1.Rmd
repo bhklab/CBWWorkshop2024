@@ -14,7 +14,7 @@ output:
     self_contained: yes
     toc: true
     toc_float: true
-    toc_depth: 2
+    toc_depth: 3
     code_folding: show
 date: "`r doc_date()`"
 package: "`r pkg_ver('CBWWorkshop2024')`"

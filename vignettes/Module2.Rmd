@@ -52,7 +52,8 @@ MAE <- BiocStyle::Biocpkg("MultiAssayExperiment")
 ## Instructor(s) name(s) and contact information {-}
 
 * Jermiah J. Joseph <jermiah.joseph@uhn.ca>
-* ALMAS_ DETAILS
+* Almas Khan <almas.khan@mail.utoronto.ca>
+* Julia Nguyen <julia.nguyen@uhn.ca>
 
 ## Lab Description {-}
 
@@ -64,7 +65,7 @@ Filter out outliers and missing values -->
 
 ### Learning goals {-}
 
-* Understand the data structure of a PharmacoSet
+* Understand the data structure of a `PharmacoSet`
 * Learn how to access features and metadata from a PharmacoSet
 * Learn how to plot batch effects using PCA and run correction method (SVA)
 * Learn how to filter out outliers and missing values
@@ -92,11 +93,11 @@ suppressPackageStartupMessages({
 ```
 
 
-# Getting Started
+# Setup
 
 ## Use Cases for `r PGx`
 
-*Downloading Data from [orcestra.ca](https://orcestra.ca)
+*Downloading Data from [orcestra.ca](https://orcestra.ca)*
 
 ```{r get_avail_psets}
 available <- PharmacoGx::availablePSets() |>
@@ -110,71 +111,119 @@ print(available[, c("Dataset Name", "PSet Name", "version")])
 The following function from `r PGx` can be used to download any of the available PSets from [orcestra.ca](https://orcestra.ca).
 
 The command to do so is:
-`PharmacoGx::downloadPSet(name="CCLE_2015",saveDir = "../psets", timeout = 3600, verbose = T)`
+``` {r download_pset_orcestra, eval=FALSE}
+PharmacoGx::downloadPSet(
+  name="CCLE_2015",
+  saveDir = "../psets", # change this directory as you see fit
+  timeout = 3600, 
+  verbose = T
+)
+```
 
 For convenience and in the interest of time, we have created a `PharmacoSet` to be used 
 in this tutorial. We will be interacting with this dataset for the remainder of the tutorial.
 
 ```{r load_pset}
-data(NCI_ALMANAC_pset)
-NCI_ALMANAC_pset
+pset <- CBWWorkshop2024::dummy_pset
+pset
 ```
 
-## Understanding the Data Structure
+# Understanding `PharmacoSet` the Data Structure
 
 The `PharmacoSet` class is a container for pharmacogenomic data. 
 
 This pharmacogenomic data is typically generated from high-throughput
 screening experiments where cell lines are treated with a panel of drugs at multiple doses and the response is measured using a molecular assay.
 
-
 ```{r show_pset_structure}
-slotNames(NCI_ALMANAC_pset)
+slotNames(pset)
 ```
 
-### View the `sample`s 
+
+```{r core_set_class, echo=FALSE, fig.wide=TRUE, fig.cap = "**PharmacoSet** class structure" }
+knitr::include_graphics("./CoreSet-class.png")
+
+```
+
+# Metadata slots 
+
+Metadata for cell-lines (`samples`) and drugs (`treatments`) are stored in 
+the `sample` and `treatment` slots, respectively.
+
+These are data frames with rows corresponding to samples or treatments and 
+columns corresponding to metadata fields. The metadata fields are typically a 
+combination of data from the original data source, and curated data from 
+external sources such as [Cellosaurus](https://web.expasy.org/cellosaurus/),
+[DrugBank](https://go.drugbank.com/), and [PubChem](https://pubchem.ncbi.nlm.nih.gov/).
+
+## View the `sample` slot
 
 We can access the `sampleNames` of the `PharmacoSet`:
 
 ```{r show_sample_names}
-PharmacoGx::sampleNames(NCI_ALMANAC_pset)
+PharmacoGx::sampleNames(pset)
 ```
 
 To get all the metadata associated with the samples, we can access the `sample` slot:
 ```{r show_samples}
-NCI_ALMANAC_pset@sample |> str()
+pset@sample |> str()
 ```
+We can see from the `sample` slot that there are 50 samples in this `PharmacoSet`.
 
+## View the `treatment` slot
 
-We can see from the `sample` slot that there are 60 samples in this `PharmacoSet`.
-
-### View the `treatment`s
-
-Similar to the `sample`s, we can access the `treatmentNames` of the `PharmacoSet`:
+Similar to the `sample`, we can access the `treatmentNames` of the `PharmacoSet`:
 
 ```{r show_treatment_names}
-PharmacoGx::treatmentNames(NCI_ALMANAC_pset) |> head()
+PharmacoGx::treatmentNames(pset) |> head()
 ```
 
 To get all the metadata associated with the treatments, we can access the `treatment` slot:
 
 ```{r show_treatments}
-NCI_ALMANAC_pset@treatment |> str()
+pset@treatment |> str()
 ```
-There are also 31 treatments used.
+There are also 22 treatments used.
+
+
+# Molecular Profiles
+
+In `r PGx`, molecular profiles refer to any data that is measured on the 
+samples in the `PharmacoSet`. This can include gene expression, 
+copy number, mutation, or any other type of data that can be measured on 
+a sample.
+
+Each Molecular Data Type (`mDataType`) is stored in a `SummarizedExperiment`.
+All the `SummarizedExperiment` objects are stored in a container called
+a `MultiAssayExperiment` which can be accessed through the 
+`molecularProfiles` slot.
+
+## View the `molecularProfiles` slot
+
+```{r show_molecular_profiles}
+
+pset@molecularProfiles 
+
+
+```
+
+
+
+
+# Subsetting a `PharmacoSet`
 
 
 ### Subset by `sampleNames` and/or `treatmentNames`
 
 ```{r subset_pset}
 PharmacoGx::subsetBySample(
-  NCI_ALMANAC_pset,
-  sample = sampleNames(NCI_ALMANAC_pset)[1:5]
+  pset,
+  sample = sampleNames(pset)[1:5]
 )
 
 PharmacoGx::subsetByTreatment(
-  NCI_ALMANAC_pset,
-  treatment = treatmentNames(NCI_ALMANAC_pset)[1:5]
+  pset,
+  treatment = treatmentNames(pset)[1:5]
 )
 ```
 
@@ -182,16 +231,16 @@ PharmacoGx::subsetByTreatment(
 ### Subsetting using `sample` and `treatment` metadata
 
 ```{r subset_pset_metadata, warning=FALSE}
-unique(NCI_ALMANAC_pset@sample$tissueid)
+unique(pset@sample$tissueid)
 
 tissues_of_interest <- c("Kidney")
-indices <- which(NCI_ALMANAC_pset@sample$tissueid %in% tissues_of_interest)
+indices <- which(pset@sample$tissueid %in% tissues_of_interest)
 
 
-(samples_of_interest <- sampleNames(NCI_ALMANAC_pset)[indices])
+(samples_of_interest <- sampleNames(pset)[indices])
 
 PharmacoGx::subsetBySample(
-  NCI_ALMANAC_pset,
+  pset,
   samples_of_interest
 )
 ```
@@ -199,9 +248,9 @@ A concise way to subset by `sample` in one step:
 
 ```{r subset_pset_metadata2, warning=FALSE}
 PharmacoGx::subsetBySample(
-  NCI_ALMANAC_pset,
-  sample = NCI_ALMANAC_pset@sample[
-    NCI_ALMANAC_pset@sample$tissueid == "Kidney",
+  pset,
+  sample = pset@sample[
+    pset@sample$tissueid == "Kidney",
     "sampleid"
   ]
 )
