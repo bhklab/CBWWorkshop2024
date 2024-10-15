@@ -192,6 +192,7 @@ indices <- which(NCI_ALMANAC_pset@sample$tissueid %in% tissues_of_interest)
 
 PharmacoGx::subsetBySample(
   NCI_ALMANAC_pset,
+  samples_of_interest
 )
 ```
 A concise way to subset by `sample` in one step:
