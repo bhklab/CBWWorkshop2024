@@ -1,3 +1,7 @@
+<!-- badges: start -->
+  [![pkgdown](https://github.com/bhklab/CBWWorkshop2024/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/bhklab/CBWWorkshop2024/actions/workflows/pkgdown.yaml)
+  <!-- badges: end -->
+  
 # Pharmacogenomics CBW 2024 
 
 The Canadian Bioinformatics Workshops (CBW) are a series of hands-on training 
@@ -33,8 +37,8 @@ The workshop will also be published by the [CBW Workshop Website](https://bioinf
 By visiting the [published workshop](https://bhklab.github.io/CBWWorkshop2024/),
 you can see the following modules:
 
-1. [Module 1 Lab: Getting to know multi-omics data (Julia, Nikta, Jermiah)](https://bhklab.github.io/CBWWorkshop2024/articles/module1.html)
-2. [Module 2 Lab: Hands-on with pharmacogenomics data (Jermiah, Almas)](https://bhklab.github.io/CBWWorkshop2024/articles/module2.html)
+1. [Module 1 Lab: Getting to know multi-omics data (Julia, Nikta, Jermiah)](https://bhklab.github.io/CBWWorkshop2024/articles/Module1.html)
+2. [Module 2 Lab: Hands-on with pharmacogenomics data (Jermiah, Almas)](https://bhklab.github.io/CBWWorkshop2024/articles/Module2.html)
 3. [Module 3: Pharmacogenomics for biomarker discovery - Basic analysis (Nikta, Julia)](https://bhklab.github.io/CBWWorkshop2024/articles/Module3.html)
 4. [Module 4: Pharmacogenomics for biomarker discovery - Advanced analysis (Nikta, Julia)](https://bhklab.github.io/CBWWorkshop2024/articles/Module4.html)
 
