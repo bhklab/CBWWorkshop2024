@@ -186,11 +186,14 @@ can be used to download any of the available PSets from <a href="https://orcestr
 <p>The command to do so is:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/downloadPSet.html" class="external-link">downloadPSet</a></span><span class="op">(</span></span>
-<span>  name<span class="op">=</span><span class="st">"CCLE_2015"</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"CCLE_2015"</span>,</span>
 <span>  saveDir <span class="op">=</span> <span class="st">"../psets"</span>, <span class="co"># change this directory as you see fit</span></span>
-<span>  timeout <span class="op">=</span> <span class="fl">3600</span>, </span>
-<span>  verbose <span class="op">=</span> <span class="cn">T</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span>  timeout <span class="op">=</span> <span class="fl">3600</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Note: this may take a while to download as the files are stored in </span></span>
+<span><span class="co"># zenodo and are quite large</span></span></code></pre></div>
 <p>For convenience and in the interest of time, we have created a
 <code>PharmacoSet</code> to be used in this tutorial. We will be
 interacting with this dataset for the remainder of the tutorial.</p>
@@ -199,7 +202,7 @@ interacting with this dataset for the remainder of the tutorial.</p>
 <span><span class="va">pset</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct 15 16:22:05 2024</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">50</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
@@ -207,7 +210,7 @@ interacting with this dataset for the remainder of the tutorial.</p>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 50 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  184 50 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">sensitivity</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(184): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 1000:Nelarabine 4000:Ifosfamide</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(50): </span><span style="color: #00BB00;">786-O A-498 A-549 ... UACC-257 UACC-62 UO-31</span> </span></span>
@@ -236,7 +239,7 @@ structure</div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="metadata-slots">Metadata slots<a class="anchor" aria-label="anchor" href="#metadata-slots"></a>
+<h2 id="metadata">Metadata<a class="anchor" aria-label="anchor" href="#metadata"></a>
 </h2>
 <p>Metadata for cell-lines (<code>samples</code>) and drugs
 (<code>treatments</code>) are stored in the <code>sample</code> and
@@ -314,8 +317,7 @@ the <code>molecularProfiles</code> slot.</p>
 <h3 id="view-the-molecularprofiles-slot">View the <code>molecularProfiles</code> slot<a class="anchor" aria-label="anchor" href="#view-the-molecularprofiles-slot"></a>
 </h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">pset</span><span class="op">@</span><span class="va">molecularProfiles</span> </span>
+<code class="sourceCode R"><span><span class="va">pset</span><span class="op">@</span><span class="va">molecularProfiles</span></span>
 <span><span class="co">#&gt; A MultiAssayExperiment object of 2 listed</span></span>
 <span><span class="co">#&gt;  experiments with user-defined names and respective classes.</span></span>
 <span><span class="co">#&gt;  Containing an ExperimentList class object of length 2:</span></span>
@@ -332,20 +334,64 @@ the <code>molecularProfiles</code> slot.</p>
 </div>
 </div>
 <div class="section level2">
+<h2 id="treatment-response">Treatment Response<a class="anchor" aria-label="anchor" href="#treatment-response"></a>
+</h2>
+<p>The treatment response data was traditionally stored in a
+<code>list</code>. To accelerate analysis, we have developed a new class
+called the <code>TreatmentResponseExperiment</code> (TRE) which has been
+specifically designed to handle high dimensional biological
+stimulus-response data.</p>
+<p><span class="citation">@jermiah</span> ADD DIAGRAM OF TRE CLASS</p>
+<div class="section level3">
+<h3 id="view-the-treatmentresponse-slot">View the <code>treatmentResponse</code> slot<a class="anchor" aria-label="anchor" href="#view-the-treatmentresponse-slot"></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pset</span><span class="op">@</span><span class="va">treatmentResponse</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;TreatmentResponseExperiment&gt; </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  184 50 </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">sensitivity</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(184): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 1000:Nelarabine 4000:Ifosfamide</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(50): </span><span style="color: #00BB00;">786-O A-498 A-549 ... UACC-257 UACC-62 UO-31</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(2): </span><span style="color: #00BB00;">sampleid PANEL</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(0): </span><span style="color: #00BB00;">none</span></span></span></code></pre></div>
+<p>To view all the methods available for the
+<code>TreatmentResponseExperiment</code> class, we can use the
+<code>methods</code> function:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"TreatmentResponseExperiment"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] [                   [[                  [[&lt;-               </span></span>
+<span><span class="co">#&gt;  [4] $                   $&lt;-                 aggregate          </span></span>
+<span><span class="co">#&gt;  [7] assay               assay&lt;-             assayCols          </span></span>
+<span><span class="co">#&gt; [10] assayIndex          assayKeys           assayNames         </span></span>
+<span><span class="co">#&gt; [13] assays              assays&lt;-            buildComboProfiles </span></span>
+<span><span class="co">#&gt; [16] coerce              colData             colData&lt;-          </span></span>
+<span><span class="co">#&gt; [19] colIDs              colMeta             colnames           </span></span>
+<span><span class="co">#&gt; [22] computeZIPdelta     dim                 dimnames           </span></span>
+<span><span class="co">#&gt; [25] endoaggregate       getIntern           idCols             </span></span>
+<span><span class="co">#&gt; [28] mergeAssays         metadata            metadata&lt;-         </span></span>
+<span><span class="co">#&gt; [31] names               reindex             rowData            </span></span>
+<span><span class="co">#&gt; [34] rowData&lt;-           rowIDs              rowMeta            </span></span>
+<span><span class="co">#&gt; [37] rownames            show                subset             </span></span>
+<span><span class="co">#&gt; [40] treatmentResponse&lt;- updateObject       </span></span>
+<span><span class="co">#&gt; see '?methods' for accessing help and source code</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
 <h2 id="subsetting-a-pharmacoset">Subsetting a <code>PharmacoSet</code><a class="anchor" aria-label="anchor" href="#subsetting-a-pharmacoset"></a>
 </h2>
 <div class="section level4">
 <h4 id="subset-by-samplenames-andor-treatmentnames">Subset by <code>sampleNames</code> and/or
 <code>treatmentNames</code><a class="anchor" aria-label="anchor" href="#subset-by-samplenames-andor-treatmentnames"></a>
 </h4>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
 <span>  <span class="va">pset</span>,</span>
 <span>  sample <span class="op">=</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">pset</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct 15 16:22:05 2024</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">5</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
@@ -353,7 +399,7 @@ the <code>molecularProfiles</code> slot.</p>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 5 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  184 5 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">sensitivity</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(184): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 1000:Nelarabine 4000:Ifosfamide</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(5): </span><span style="color: #00BB00;">A-549 HL-60(TB) HOP-62 NCI-H23 SNB-75</span> </span></span>
@@ -366,7 +412,7 @@ the <code>molecularProfiles</code> slot.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct 15 16:22:05 2024</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">50</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
@@ -374,7 +420,7 @@ the <code>molecularProfiles</code> slot.</p>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 50 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  42 50 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">sensitivity</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(42): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 7:Clofarabine 10:Clofarabine</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(50): </span><span style="color: #00BB00;">786-O A-498 A-549 ... UACC-257 UACC-62 UO-31</span> </span></span>
@@ -385,7 +431,7 @@ the <code>molecularProfiles</code> slot.</p>
 <h4 id="subsetting-using-sample-and-treatment-metadata">Subsetting using <code>sample</code> and <code>treatment</code>
 metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and-treatment-metadata"></a>
 </h4>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "Lung"                 "CNS/Brain"            "Myeloid"             </span></span>
 <span><span class="co">#&gt;  [4] "Ovary/Fallopian Tube" "Breast"               "Skin"                </span></span>
@@ -405,7 +451,7 @@ metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct 15 16:22:05 2024</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">4</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
@@ -413,14 +459,14 @@ metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 4 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  184 4 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">sensitivity</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(184): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 1000:Nelarabine 4000:Ifosfamide</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(4): </span><span style="color: #00BB00;">786-O A-498 Caki-1 UO-31</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(2): </span><span style="color: #00BB00;">sampleid PANEL</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(0): </span><span style="color: #00BB00;">none</span></span></span></code></pre></div>
 <p>A concise way to subset by <code>sample</code> in one step:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
 <span>  <span class="va">pset</span>,</span>
 <span>  sample <span class="op">=</span> <span class="va">pset</span><span class="op">@</span><span class="va">sample</span><span class="op">[</span></span>
@@ -430,7 +476,7 @@ metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct 15 16:22:05 2024</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">4</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
@@ -438,7 +484,7 @@ metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 4 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  184 4 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">sensitivity</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(184): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 1000:Nelarabine 4000:Ifosfamide</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(4): </span><span style="color: #00BB00;">786-O A-498 Caki-1 UO-31</span> </span></span>
