@@ -230,7 +230,7 @@ matrix such that:
 
 Below, we show a example of such matrix using dummy data
 
-```{r example expr_matrix}
+```{r example_expr_matrix}
 dummy_data <- setNames(as.data.frame(replicate(5, rnorm(5))), paste0("Sample", 1:5))
 rownames(dummy_data) <- paste0("Feature", 1:5)
 dummy_data
@@ -239,7 +239,7 @@ dummy_data
 Let's revisit the RNA-Seq example. The data is currently in a long format (i.e. there
 is one row for each sample-feature observation). 
 
-```{r get_rnaseq}
+```{r get_rnaseq2}
 GDSC_rnaseq |> head()
 GDSC_rnaseq |> dim()
 
@@ -253,7 +253,7 @@ length(unique(GDSC_rnaseq$gene_id))
 We want to convert this into a wide format such that each row is a gene, each column 
 is a sample, and the values are the gene expression.
 
-```{r dcast}
+```{r dcast_rna}
 expr <- reshape2::dcast(GDSC_rnaseq, gene_id ~ model_name, value.var = "fpkm")
 rownames(expr) <- expr$gene_id
 expr$gene_id <- NULL
@@ -277,7 +277,7 @@ more appropriate.
 Recall that the driver mutations data was not presented as a continuous numeric values.
 One method to prepare this data is to binarize the mutation status.
 
-```{r get_driver_mutations}
+```{r get_driver_mutations2}
 GDSC_drivers |> head()
 ```
 
@@ -288,7 +288,7 @@ The code below again casts the long data frame into a wide format. This time we 
 an aggregate function `length()`, which returns the number of rows (mutation events)
 for each gene-cell line pair. This was done by passing the option `fun.aggregate = length`
 
-```{r get_driver_mutations}
+```{r process_driver_mutations}
 expr <- reshape2::dcast(GDSC_drivers, gene_symbol ~ model_id, value.var = "cdna_mutation", fun.aggregate = length)
 rownames(expr) <- expr$gene_symbol
 expr$gene_symbol <- NULL
@@ -311,7 +311,7 @@ become much more informative of drug response.
 Let's revisit our methylation data. Recall that each row is a CpG site. There are
 1000 CpG sites. 
 
-```{r get_methylation}
+```{r get_methylation2}
 GDSC_methylation[1:5,1:5]
 
 GDSC_methylation |> dim()
