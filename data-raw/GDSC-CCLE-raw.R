@@ -7,6 +7,8 @@ GDSC_rnaseq <- read.csv("data-raw/GDSC-raw/GDSC_rnaseq_sanger.csv")
 GDSC_gene_identifiers <- read.csv("data-raw/GDSC-raw/GDSC_gene_identifiers.csv")
 GDSC_model_list <- read.csv("data-raw/GDSC-raw/GDSC_model_list.csv")
 GDSC_methylation <- read.csv("data-raw/GDSC-raw/GDSC_methylation.csv")
+rownames(GDSC_methylation) <- GDSC_methylation$V1
+GDSC_methylation$V1 <- NULL
 GDSC_methylation_model_list <- read.csv("data-raw/GDSC-raw/GDSC_methylation_model_list.csv")
 GDSC_drug_response <- as.data.frame(fread("data-raw/GDSC-raw/GDSC2_fitted_dose_response.tsv"))
 
