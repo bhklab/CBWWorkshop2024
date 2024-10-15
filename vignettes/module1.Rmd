@@ -333,6 +333,7 @@ signatures |> head()
 
 Each of the 1000 CpG sites was randomly assigned to one of 10 signatures.
 
+<<<<<<< HEAD
 Next we want to quantify the signature for each cell line. For simplicity, 
 we will sum the beta values for across each CpG for each signature.
 
@@ -354,6 +355,7 @@ rownames(sScores) <- paste0("Signature", 1:10)
 colnames(sScores) <- colnames(GDSC_methylation)
 
 sScores[1:10,1:5]
+
 ```
 
 We now have a new expression matrix, this time of the 10 defined signatures for
