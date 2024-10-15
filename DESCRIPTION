@@ -3,7 +3,8 @@ Title: CBW Workshop 2024: Pharmacogenomics Data Analysis
 Version: 0.0.0.9010
 Authors@R: c(
     person("Jermiah", "Joseph", , "jermiahjoseph98@gmail.com", role = c("aut", "cre")),
-    person("Julia", "Ngyugen", role = "aut")
+    person("Julia", "Nguyen", role = "aut"),
+    person("Nikta", "Feizi", role = "aut")
   )
 Description: This workshop delves into the rapidly advancing field of personalized cancer
   treatment, emphasizing how treatments can be tailored to individual patients

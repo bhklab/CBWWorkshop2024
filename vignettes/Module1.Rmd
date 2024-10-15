@@ -343,6 +343,23 @@ Next we want to quantify the signature for each cell line. Again for simplicity,
 we will sum the beta values for across each CpG for each signature.
 
 ```{r quantify_signatures}
+sScores <- data.frame(matrix(NA, nrow = 0, ncol = 100))
+
+for (s in c(1:10)) {
+  
+  # get CpGs within each signature
+  cpgs <- signatures[signatures$Signature == s,]$CpG
+  mSig <- GDSC_methylation[rownames(GDSC_methylation) %in% cpgs,]
+  
+  # compute sum of beta values for each cell line
+  sSum <- colSums(mSig)
+  sScores <- rbind(sScores, sSum)
+}
+
+rownames(sScores) <- paste0("Signature", 1:10)
+colnames(sScores) <- colnames(GDSC_methylation)
+
+sScores[1:10,1:5]
 ```
 
 We now have a new expression matrix, this time of the 10 defined signatures for
