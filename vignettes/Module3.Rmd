@@ -90,11 +90,11 @@ In this workshop, we will explore data integration and comparative analysis usin
 We start by loading the necessary libraries for this analysis.
 
 ```{r load_libraries, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
-library(Biobase)                 # Core Bioconductor class for gene expression data
-library(SummarizedExperiment)    # Core Bioconductor class for summarized data
-library(S4Vectors)               # Core Bioconductor class for handling S4 objects
-library(PharmacoGx)              # Package for analyzing pharmacogenomic datasets
-library(pander)                  # Package for nicely formatted tables
+library(Biobase) # Core Bioconductor class for gene expression data
+library(SummarizedExperiment) # Core Bioconductor class for summarized data
+library(S4Vectors) # Core Bioconductor class for handling S4 objects
+library(PharmacoGx) # Package for analyzing pharmacogenomic datasets
+library(pander) # Package for nicely formatted tables
 ```
 
 ## Load GDSC and CCLE Datasets
@@ -119,7 +119,7 @@ commonGenes <- intersect(fNames(GDSCsmall, "rna"), fNames(CCLEsmall, "rna"))
 Next, we identify the common cell lines and drugs between **GDSC** and **CCLE**.
 
 ```{r intersect_pset}
-common <- intersectPSet(list('CCLE'=CCLEsmall, 'GDSC'=GDSCsmall), intersectOn=c("cell.lines", "drugs"), strictIntersect=TRUE)
+common <- intersectPSet(list("CCLE" = CCLEsmall, "GDSC" = GDSCsmall), intersectOn = c("cell.lines", "drugs"), strictIntersect = TRUE)
 ```
 
 ## Summarize Drug Sensitivity Profiles
@@ -128,12 +128,12 @@ We summarize drug sensitivity profiles (AUC and IC50) for each dataset. The **su
 
 ```{r summarize_profiles}
 # Summary statistics for AUC
-GDSC.auc <- summarizeSensitivityProfiles(common$GDSC, sensitivity.measure='auc_published', summary.stat="median", verbose=FALSE)
-CCLE.auc <- summarizeSensitivityProfiles(common$CCLE, sensitivity.measure='auc_published', summary.stat="median", verbose=FALSE)
+GDSC.auc <- summarizeSensitivityProfiles(common$GDSC, sensitivity.measure = "auc_published", summary.stat = "median", verbose = FALSE)
+CCLE.auc <- summarizeSensitivityProfiles(common$CCLE, sensitivity.measure = "auc_published", summary.stat = "median", verbose = FALSE)
 
 # Summary statistics for IC50
-GDSC.ic50 <- summarizeSensitivityProfiles(common$GDSC, sensitivity.measure='ic50_published', summary.stat="median", verbose=FALSE)
-CCLE.ic50 <- summarizeSensitivityProfiles(common$CCLE, sensitivity.measure='ic50_published', summary.stat="median", verbose=FALSE)
+GDSC.ic50 <- summarizeSensitivityProfiles(common$GDSC, sensitivity.measure = "ic50_published", summary.stat = "median", verbose = FALSE)
+CCLE.ic50 <- summarizeSensitivityProfiles(common$CCLE, sensitivity.measure = "ic50_published", summary.stat = "median", verbose = FALSE)
 ```
 
 ## Summarize Gene Expression Profiles
@@ -141,8 +141,8 @@ CCLE.ic50 <- summarizeSensitivityProfiles(common$CCLE, sensitivity.measure='ic50
 We summarize gene expression data for the genes that are common between **GDSC** and **CCLE**.
 
 ```{r summarize_expression}
-GDSCexpression <- summarizeMolecularProfiles(common$GDSC, cellNames(common$GDSC), mDataType="rna", features=commonGenes, verbose=FALSE)
-CCLEexpression <- summarizeMolecularProfiles(common$CCLE, cellNames(common$CCLE), mDataType="rna", features=commonGenes, verbose=FALSE)
+GDSCexpression <- summarizeMolecularProfiles(common$GDSC, cellNames(common$GDSC), mDataType = "rna", features = commonGenes, verbose = FALSE)
+CCLEexpression <- summarizeMolecularProfiles(common$CCLE, cellNames(common$CCLE), mDataType = "rna", features = commonGenes, verbose = FALSE)
 ```
 
 ## Correlation Analysis Between GDSC and CCLE
@@ -155,18 +155,18 @@ cc <- cellNames(common[[1]])
 
 # Correlation of gene expression
 ge.cor <- sapply(cc, function(x, d1, d2) {
-  stats::cor(d1[, x], d2[, x], method="spearman", use="pairwise.complete.obs")
-}, d1=assay(GDSCexpression, 1), d2=assay(CCLEexpression, 1))
+  stats::cor(d1[, x], d2[, x], method = "spearman", use = "pairwise.complete.obs")
+}, d1 = assay(GDSCexpression, 1), d2 = assay(CCLEexpression, 1))
 
 # Correlation of IC50 values
 ic50.cor <- sapply(cc, function(x, d1, d2) {
-  stats::cor(d1[, x], d2[, x], method="spearman", use="pairwise.complete.obs")
-}, d1=GDSC.ic50, d2=CCLE.ic50)
+  stats::cor(d1[, x], d2[, x], method = "spearman", use = "pairwise.complete.obs")
+}, d1 = GDSC.ic50, d2 = CCLE.ic50)
 
 # Correlation of AUC values
 auc.cor <- sapply(cc, function(x, d1, d2) {
-  stats::cor(d1[, x], d2[, x], method="spearman", use="pairwise.complete.obs")
-}, d1=GDSC.auc, d2=CCLE.auc)
+  stats::cor(d1[, x], d2[, x], method = "spearman", use = "pairwise.complete.obs")
+}, d1 = GDSC.auc, d2 = CCLE.auc)
 ```
 
 ## Statistical Comparison
@@ -174,8 +174,8 @@ auc.cor <- sapply(cc, function(x, d1, d2) {
 We compare the correlations using **Wilcoxon signed-rank tests** to see if there are significant differences between the gene expression correlations and the drug sensitivity correlations.
 
 ```{r wilcox_tests}
-w1 <- stats::wilcox.test(x=ge.cor, y=auc.cor, conf.int=TRUE, exact=FALSE)
-w2 <- stats::wilcox.test(x=ge.cor, y=ic50.cor, conf.int=TRUE, exact=FALSE)
+w1 <- stats::wilcox.test(x = ge.cor, y = auc.cor, conf.int = TRUE, exact = FALSE)
+w2 <- stats::wilcox.test(x = ge.cor, y = ic50.cor, conf.int = TRUE, exact = FALSE)
 
 # Display p-values
 yylim <- c(-1, 1)
@@ -187,14 +187,15 @@ ss <- sprintf("GE vs. AUC = %.1E\nGE vs. IC50 = %.1E", w1$p.value, w2$p.value)
 The results are visualized using boxplots to compare the correlations across gene expression, AUC, and IC50.
 
 ```{r boxplot_results}
-boxplot(list("GE"=ge.cor, "AUC"=auc.cor, "IC50"=ic50.cor),
-        main="Concordance between cell lines",
-        ylab=expression(R[s]),
-        sub=ss,
-        ylim=yylim,
-        col="lightgrey",
-        pch=20,
-        border="black")
+boxplot(list("GE" = ge.cor, "AUC" = auc.cor, "IC50" = ic50.cor),
+  main = "Concordance between cell lines",
+  ylab = expression(R[s]),
+  sub = ss,
+  ylim = yylim,
+  col = "lightgrey",
+  pch = 20,
+  border = "black"
+)
 ```
 
 ## Drug Sensitivity Signature
@@ -205,32 +206,34 @@ We calculate drug sensitivity signatures using gene expression and mutation data
 features <- fNames(CCLEsmall, "rna")[which(featureInfo(CCLEsmall, "rna")$Symbol == "NQO1")]
 
 # Gene expression signature
-sig.rna <- drugSensitivitySig(object=CCLEsmall,
-                              mDataType="rna",
-                              drugs=c("17-AAG"),
-                              features=features,
-                              sensitivity.measure="auc_published",
-                              molecular.summary.stat="median",
-                              sensitivity.summary.stat="median",
-                              verbose=FALSE)
+sig.rna <- drugSensitivitySig(
+  object = CCLEsmall,
+  mDataType = "rna",
+  drugs = c("17-AAG"),
+  features = features,
+  sensitivity.measure = "auc_published",
+  molecular.summary.stat = "median",
+  sensitivity.summary.stat = "median",
+  verbose = FALSE
+)
 
 # Mutation signature
-sig.mut <- drugSensitivitySig(object=CCLEsmall,
-                              mDataType="mutation",
-                              drugs=c("PD-0325901"),
-                              features="BRAF",
-                              sensitivity.measure="auc_published",
-                              molecular.summary.stat="and",
-                              sensitivity.summary.stat="median",
-                              verbose=FALSE)
+sig.mut <- drugSensitivitySig(
+  object = CCLEsmall,
+  mDataType = "mutation",
+  drugs = c("PD-0325901"),
+  features = "BRAF",
+  sensitivity.measure = "auc_published",
+  molecular.summary.stat = "and",
+  sensitivity.summary.stat = "median",
+  verbose = FALSE
+)
 
 # Combine and display results
 sig <- rbind(sig.rna, sig.mut)
 rownames(sig) <- c("17-AAG + NQO1", "PD-0325901 + BRAF")
 colnames(sig) <- dimnames(sig.mut)[[3]]
-pander::pandoc.table(t(sig), style = "rmarkdown", caption='P Value of Gene-Drug Association')
-
-
+pander::pandoc.table(t(sig), style = "rmarkdown", caption = "P Value of Gene-Drug Association")
 ```
 
 

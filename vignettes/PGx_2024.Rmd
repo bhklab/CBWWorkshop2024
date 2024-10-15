@@ -139,14 +139,14 @@ For a 1.5-hr workshop:
 ---- -->
 
 ```{r global_knitr_opts, echo=FALSE}
-knitr::opts_chunk$set(echo=TRUE, include=TRUE, warning=FALSE, message=TRUE)
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE, message = TRUE)
 ```
 
 ```{r load_packages, eval=F, echo=FALSE, include=FALSE}
 suppressPackageStartupMessages({
-    # library(PharmacoGx)
-    # library(data.table)
-    # library(ggplot2)
+  # library(PharmacoGx)
+  # library(data.table)
+  # library(ggplot2)
 })
 ```
 

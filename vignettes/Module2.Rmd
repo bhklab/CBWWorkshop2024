@@ -80,14 +80,14 @@ Filter out outliers and missing values -->
 ----
 
 ```{r global_knitr_opts, echo=FALSE}
-knitr::opts_chunk$set(echo=TRUE, include=TRUE, warning=FALSE, message=TRUE)
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE, message = TRUE)
 ```
 
 ```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
 suppressPackageStartupMessages({
-    library(CBWWorkshop2024)
-    library(PharmacoGx)
-    library(data.table)
+  library(CBWWorkshop2024)
+  library(PharmacoGx)
+  library(data.table)
 })
 ```
 
@@ -99,13 +99,12 @@ suppressPackageStartupMessages({
 *Downloading Data from [orcestra.ca](https://orcestra.ca)
 
 ```{r get_avail_psets}
-available <- PharmacoGx::availablePSets() |> 
+available <- PharmacoGx::availablePSets() |>
   data.table::as.data.table()
 
 print(names(available))
 
-print(available[, c("Dataset Name", "PSet Name", "version") ])
-
+print(available[, c("Dataset Name", "PSet Name", "version")])
 ```
 
 The following function from `r PGx` can be used to download any of the available PSets from [orcestra.ca](https://orcestra.ca).
@@ -169,12 +168,12 @@ There are also 31 treatments used.
 
 ```{r subset_pset}
 PharmacoGx::subsetBySample(
-  NCI_ALMANAC_2017, 
+  NCI_ALMANAC_2017,
   sample = sampleNames(NCI_ALMANAC_2017)[1:5]
 )
 
 PharmacoGx::subsetByTreatment(
-  NCI_ALMANAC_2017, 
+  NCI_ALMANAC_2017,
   treatment = treatmentNames(NCI_ALMANAC_2017)[1:5]
 )
 ```
@@ -186,24 +185,23 @@ PharmacoGx::subsetByTreatment(
 unique(NCI_ALMANAC_2017@sample$tissueid)
 
 tissues_of_interest <- c("Kidney")
-indices  <- which(NCI_ALMANAC_2017@sample$tissueid %in% tissues_of_interest)
+indices <- which(NCI_ALMANAC_2017@sample$tissueid %in% tissues_of_interest)
 
 
 (samples_of_interest <- sampleNames(NCI_ALMANAC_2017)[indices])
 
 PharmacoGx::subsetBySample(
-  NCI_ALMANAC_2017, 
+  NCI_ALMANAC_2017,
   sample = samples_of_interest
 )
 ```
 A concise way to subset by `sample` in one step:
 
 ```{r subset_pset_metadata2, warning=FALSE}
-
 PharmacoGx::subsetBySample(
-  NCI_ALMANAC_2017, 
+  NCI_ALMANAC_2017,
   sample = NCI_ALMANAC_2017@sample[
-    NCI_ALMANAC_2017@sample$tissueid == "Kidney", 
+    NCI_ALMANAC_2017@sample$tissueid == "Kidney",
     "sampleid"
   ]
 )
