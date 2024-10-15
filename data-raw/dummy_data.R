@@ -8,7 +8,8 @@ data("NCI60_molecular_data")
 
 allsampleids <- NCI60_molecular_data$sampleid
 
-sampleids <- allsampleids[seq(1, length(allsampleids), by = 2)]
+# take 50 random samples
+sampleids <- allsampleids[sample(1:length(allsampleids), 50, replace = FALSE)]
 
 num_samples <- length(sampleids)
 
@@ -17,19 +18,65 @@ gene_ids <- paste0("GENE", sprintf("%03d", 1:100))  # 100 fake Gencode gene IDs
 
 dummy_sampleMetadata <- NCI_ALMANAC_sample_metadata[sampleids,]
 
+# CREATING DATA
+
 # Create a matrix of TPM normalized counts with random values between 0 and 100
 tpm_matrix <- matrix(
   runif(num_samples * length(gene_ids), 0, 100), 
   nrow = length(gene_ids),
   dimnames = list(gene_ids, sampleids)
 )
-dummy_se <- SummarizedExperiment::SummarizedExperiment(
+
+# Create a matrix with an intentional batch effect
+batch1 <- sample(colnames(tpm_matrix), size = 25)
+
+batch_rna <- tpm_matrix
+batch_rna[,colnames(batch_rna) %in% batch1] <- batch_rna[,colnames(batch_rna) %in% batch1] * 1.2
+
+# tpm_matrix <- as.data.frame(t(tpm_matrix))
+# batch_rna <- as.data.frame(t(batch_rna))
+# 
+# org_pca <- prcomp(tpm_matrix)
+# org_pca <- as.data.frame(org_pca$x)
+# 
+# new_pca <- prcomp(batch_rna)
+# new_pca <- as.data.frame(new_pca$x)
+# 
+# org_pca$label <- ifelse(rownames(org_pca) %in% batch1, "Batch1", "Batch2") 
+# 
+# new_pca$label <- ifelse(rownames(new_pca) %in% batch1, "Batch1", "Batch2")
+# 
+# library(ggplot2)
+# library(ggpubr)
+# p1 <- ggplot(org_pca, aes(x = PC1, y = PC2, color = label)) + geom_point()
+# p2 <- ggplot(new_pca, aes(x = PC1, y = PC2, color = label)) + geom_point()
+# ggarrange(p1, p2, nrow = 2)
+
+rnaseq_tpm_se <- SummarizedExperiment::SummarizedExperiment(
   assays=list(exprs=tpm_matrix),
-  colData=data.frame(sampleid=sampleids, batchid=1)
+  colData=data.frame(sampleid=sampleids, batchid=1),
+  metadata=list(
+    annotation="rnaseq"
+  )
 )
 
-dummy_mae <- MultiAssayExperiment(
-  experiments=list("rnaseq.tpm"=dummy_se), 
+# batchid should be 1 for samples in batch1 and 2 otherwise
+batch_colData <- data.frame(sampleid=sampleids, batchid=1)
+batch_colData$batchid[!batch_colData$sampleid %in% batch1] <- 2
+
+rnaseq_tpm_batch_se <- SummarizedExperiment::SummarizedExperiment(
+  assays=list(exprs=batch_rna),
+  colData=batch_colData,
+  metadata=list(
+    annotation="rnaseq"
+  )
+)
+
+dummy_mae <- MultiAssayExperiment::MultiAssayExperiment(
+  experiments=list(
+    "rnaseq.tpm"=rnaseq_tpm_se,
+    "rnaseq.tpm.batch"=rnaseq_tpm_batch_se
+    ), 
   colData = dummy_sampleMetadata
 )
 
@@ -117,3 +164,35 @@ usethis::use_data(dummy_pset, overwrite = TRUE)
 # 
 # 
 # dummy_mae <- NCI60_molecular_data[, sampleids]
+# 
+# 
+
+message("Fitting treatment response curves")
+# 
+# tre |> CoreGx::endoaggregate(
+#   {
+#     # mean_viability <- mean(viability)
+#     # 
+#     # list(
+#     #   mean_viability=mean_viability,
+#     #   std_viability=sd(viability)
+#     # )
+#     fit <- PharmacoGx::logLogisticRegression(treatmentdose, viability,
+#                                              viability_as_pct=FALSE)
+#     ic50 <- PharmacoGx::computeIC50(treatmentdose, Hill_fit=fit)
+#     aac <- PharmacoGx::computeAUC(treatmentdose, Hill_fit=fit)
+#     list(
+#       HS=fit[["HS"]],
+#       E_inf = fit[["E_inf"]],
+#       EC50 = fit[["EC50"]],
+#       Rsq=as.numeric(unlist(attributes(fit))),
+#       aac_recomputed=aac,
+#       ic50_recomputed=ic50
+#     )
+#   },
+#   assay="raw",
+#   target="profiles",
+#   enlist=FALSE,
+#   by=c("treatmentid", "sampleid"),
+#   nthread=8
+# ) -> tre_fit

@@ -1,8 +1,10 @@
 Package: CBWWorkshop2024
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("Jermiah", "Joseph", , "jermiahjoseph98@gmail.com", role = c("aut", "cre"))
+Title: CBW Workshop 2024: Pharmacogenomics Data Analysis 
+Version: 0.0.0.9001
+Authors@R: c(
+    person("Jermiah", "Joseph", , "jermiahjoseph98@gmail.com", role = c("aut", "cre")),
+    person("Julia", "Ngyugen", role = "aut")
+  )
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -23,8 +25,8 @@ Suggests:
     sessioninfo,
     testthat
 Remotes:
-    bhklab/CoreGx@devel,
-    bhklab/PharmacoGx@development
+    bhklab/CoreGx,
+    bhklab/PharmacoGx
 VignetteBuilder: knitr
 URL: https://bhklab.github.io/CBWWorkshop2024/
 Depends: 
