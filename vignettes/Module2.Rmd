@@ -81,7 +81,9 @@ Filter out outliers and missing values -->
 ----
 
 ```{r global_knitr_opts, echo=FALSE}
-knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE, message = TRUE)
+knitr::opts_chunk$set(
+  echo = TRUE, include = TRUE, warning = FALSE, message = TRUE
+)
 ```
 
 ```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
@@ -113,11 +115,14 @@ The following function from `r PGx` can be used to download any of the available
 The command to do so is:
 ``` {r download_pset_orcestra, eval=FALSE}
 PharmacoGx::downloadPSet(
-  name="CCLE_2015",
+  name = "CCLE_2015",
   saveDir = "../psets", # change this directory as you see fit
-  timeout = 3600, 
-  verbose = T
+  timeout = 3600,
+  verbose = TRUE
 )
+
+# Note: this may take a while to download as the files are stored in 
+# zenodo and are quite large
 ```
 
 For convenience and in the interest of time, we have created a `PharmacoSet` to be used 
@@ -142,10 +147,9 @@ slotNames(pset)
 
 ```{r core_set_class, echo=FALSE, fig.wide=TRUE, fig.cap = "**PharmacoSet** class structure" }
 knitr::include_graphics("./CoreSet-class.png")
-
 ```
 
-# Metadata slots 
+# Metadata 
 
 Metadata for cell-lines (`samples`) and drugs (`treatments`) are stored in 
 the `sample` and `treatment` slots, respectively.
@@ -201,17 +205,33 @@ a `MultiAssayExperiment` which can be accessed through the
 ## View the `molecularProfiles` slot
 
 ```{r show_molecular_profiles}
-
-pset@molecularProfiles 
-
-
+pset@molecularProfiles
 ```
 
 
+# Treatment Response
 
+The treatment response data was traditionally stored in a `list`. To accelerate
+analysis, we have developed a new class called the `TreatmentResponseExperiment`
+(TRE) which has been specifically designed to handle high dimensional biological
+stimulus-response data.
+
+@jermiah ADD DIAGRAM OF TRE CLASS
+
+## View the `treatmentResponse` slot
+
+```{r show_treatment_response}
+pset@treatmentResponse
+```
+
+To view all the methods available for the `TreatmentResponseExperiment` class,
+we can use the `methods` function:
+
+```{r show_tre_methods}
+methods(class = "TreatmentResponseExperiment")
+```
 
 # Subsetting a `PharmacoSet`
-
 
 ### Subset by `sampleNames` and/or `treatmentNames`
 
@@ -226,7 +246,6 @@ PharmacoGx::subsetByTreatment(
   treatment = treatmentNames(pset)[1:5]
 )
 ```
-
 
 ### Subsetting using `sample` and `treatment` metadata
 
@@ -244,6 +263,8 @@ PharmacoGx::subsetBySample(
   samples_of_interest
 )
 ```
+
+
 A concise way to subset by `sample` in one step:
 
 ```{r subset_pset_metadata2, warning=FALSE}

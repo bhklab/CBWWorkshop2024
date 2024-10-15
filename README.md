@@ -1,6 +1,7 @@
 <!-- badges: start -->
   [![pkgdown](https://github.com/bhklab/CBWWorkshop2024/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/bhklab/CBWWorkshop2024/actions/workflows/pkgdown.yaml)
-  <!-- badges: end -->
+  ![GitHub R package version](https://img.shields.io/github/r-package/v/bhklab/CBWWorkshop2024?label=pkg-version&color=green)
+<!-- badges: end -->
   
 # Pharmacogenomics CBW 2024 
 

@@ -143,7 +143,7 @@ dummy_tre |> CoreGx::endoaggregate(
     #   std_viability=sd(viability)
     # )
     fit <- PharmacoGx::logLogisticRegression(treatmentdose, viability,
-                                             viability_as_pct=FALSE)
+                                             viability_as_pct=TRUE)
     ic50 <- PharmacoGx::computeIC50(treatmentdose, Hill_fit=fit)
     aac <- PharmacoGx::computeAUC(treatmentdose, Hill_fit=fit)
     list(
