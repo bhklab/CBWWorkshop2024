@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBWWorkshop2024</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,7 +99,10 @@ information<a class="anchor" aria-label="anchor" href="#instructors-names-and-co
 <ul>
 <li>Jermiah J. Joseph <a href="mailto:jermiah.joseph@uhn.ca" class="email">jermiah.joseph@uhn.ca</a>
 </li>
-<li>ALMAS_ DETAILS</li>
+<li>Almas Khan <a href="mailto:almas.khan@mail.utoronto.ca" class="email">almas.khan@mail.utoronto.ca</a>
+</li>
+<li>Julia Nguyen <a href="mailto:julia.nguyen@uhn.ca" class="email">julia.nguyen@uhn.ca</a>
+</li>
 </ul>
 </div>
 <div class="section level3">
@@ -114,7 +117,8 @@ Filter out outliers and missing values -->
 <h4 class="unnumbered" id="learning-goals">Learning goals<a class="anchor" aria-label="anchor" href="#learning-goals"></a>
 </h4>
 <ul>
-<li>Understand the data structure of a PharmacoSet</li>
+<li>Understand the data structure of a <code>PharmacoSet</code>
+</li>
 <li>Learn how to access features and metadata from a PharmacoSet</li>
 <li>Learn how to plot batch effects using PCA and run correction method
 (SVA)</li>
@@ -144,12 +148,12 @@ within the <code>PharmacoSet</code>
 </div>
 </div>
 <div class="section level2">
-<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <div class="section level3">
 <h3 id="use-cases-for-pharmacogx">Use Cases for <em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em><a class="anchor" aria-label="anchor" href="#use-cases-for-pharmacogx"></a>
 </h3>
-<p>*Downloading Data from <a href="https://orcestra.ca" class="external-link">orcestra.ca</a></p>
+<p><em>Downloading Data from <a href="https://orcestra.ca" class="external-link">orcestra.ca</a></em></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">available</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/availablePSets.html" class="external-link">availablePSets</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -179,226 +183,267 @@ within the <code>PharmacoSet</code>
 <span><span class="co">#&gt; 16:   NCISarcoma   NCISarcoma_2015         2015</span></span></code></pre></div>
 <p>The following function from <em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em>
 can be used to download any of the available PSets from <a href="https://orcestra.ca" class="external-link">orcestra.ca</a>.</p>
-<p>The command to do so is:
-<code>PharmacoGx::downloadPSet(name="CCLE_2015",saveDir = "../psets", timeout = 3600, verbose = T)</code></p>
+<p>The command to do so is:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/downloadPSet.html" class="external-link">downloadPSet</a></span><span class="op">(</span></span>
+<span>  name<span class="op">=</span><span class="st">"CCLE_2015"</span>,</span>
+<span>  saveDir <span class="op">=</span> <span class="st">"../psets"</span>, <span class="co"># change this directory as you see fit</span></span>
+<span>  timeout <span class="op">=</span> <span class="fl">3600</span>, </span>
+<span>  verbose <span class="op">=</span> <span class="cn">T</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>For convenience and in the interest of time, we have created a
 <code>PharmacoSet</code> to be used in this tutorial. We will be
 interacting with this dataset for the remainder of the tutorial.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span></span>
-<span><span class="va">NCI_ALMANAC_pset</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pset</span> <span class="op">&lt;-</span> <span class="fu">CBWWorkshop2024</span><span class="fu">::</span><span class="va"><a href="../reference/dummy_pset.html">dummy_pset</a></span></span>
+<span><span class="va">pset</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">NCI_ALMANAC_2017</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct  1 15:34:48 2024</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">60</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">50</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 4: </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 54609 rows and 59 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">mirna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 417 rows and 59 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [3] </span><span style="color: #BB0000;">rnaseq.comp</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 59 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [4] </span><span style="color: #BB0000;">rnaseq.iso</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 59 columns </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rnaseq.tpm</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 50 columns </span></span></span>
+<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 50 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  10080 62 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(3): </span><span style="color: #BB0000;">response profiles assay_metadata</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(10080): </span><span style="color: #00BB00;">1,3-Bis(2-chloroethyl)-1-nitrosourea::0.05:NA:1 1,3-Bis(2-chloroethyl)-1-nitrosourea::0.15:NA:1 ... Vorinostat:Vincristine:1:0.01:1 Vorinostat:Vincristine:1:0.1:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(9): </span><span style="color: #00BB00;">treatment1id treatment2id treatment1dose ... CONC2 NSC2 CONCINDEX2</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(62): </span><span style="color: #00BB00;">786-O:1 A-498:1 A-549:1 ... UACC-257:1 UACC-62:1 UO-31:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(6): </span><span style="color: #00BB00;">sampleid bio_rep CELLNAME CELLNBR PANEL PANELNBR</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(1): </span><span style="color: #00BB00;">experiment_metadata</span></span></span></code></pre></div>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  184 50 </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(184): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 1000:Nelarabine 4000:Ifosfamide</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(50): </span><span style="color: #00BB00;">786-O A-498 A-549 ... UACC-257 UACC-62 UO-31</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(2): </span><span style="color: #00BB00;">sampleid PANEL</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(0): </span><span style="color: #00BB00;">none</span></span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="understanding-the-data-structure">Understanding the Data Structure<a class="anchor" aria-label="anchor" href="#understanding-the-data-structure"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="understanding-pharmacoset-the-data-structure">Understanding <code>PharmacoSet</code> the Data Structure<a class="anchor" aria-label="anchor" href="#understanding-pharmacoset-the-data-structure"></a>
+</h2>
 <p>The <code>PharmacoSet</code> class is a container for pharmacogenomic
 data.</p>
 <p>This pharmacogenomic data is typically generated from high-throughput
 screening experiments where cell lines are treated with a panel of drugs
 at multiple doses and the response is measured using a molecular
 assay.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">slotNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">slotNames</span><span class="op">(</span><span class="va">pset</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "treatmentResponse" "annotation"        "molecularProfiles"</span></span>
 <span><span class="co">#&gt; [4] "sample"            "treatment"         "datasetType"      </span></span>
 <span><span class="co">#&gt; [7] "perturbation"      "curation"</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="view-the-samples">View the <code>sample</code>s<a class="anchor" aria-label="anchor" href="#view-the-samples"></a>
-</h4>
+<div class="float">
+<img src="CoreSet-class.png" alt="PharmacoSet class structure"><div class="figcaption">
+<strong>PharmacoSet</strong> class
+structure</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="metadata-slots">Metadata slots<a class="anchor" aria-label="anchor" href="#metadata-slots"></a>
+</h2>
+<p>Metadata for cell-lines (<code>samples</code>) and drugs
+(<code>treatments</code>) are stored in the <code>sample</code> and
+<code>treatment</code> slots, respectively.</p>
+<p>These are data frames with rows corresponding to samples or
+treatments and columns corresponding to metadata fields. The metadata
+fields are typically a combination of data from the original data
+source, and curated data from external sources such as <a href="https://web.expasy.org/cellosaurus/" class="external-link">Cellosaurus</a>, <a href="https://go.drugbank.com/" class="external-link">DrugBank</a>, and <a href="https://pubchem.ncbi.nlm.nih.gov/" class="external-link">PubChem</a>.</p>
+<div class="section level3">
+<h3 id="view-the-sample-slot">View the <code>sample</code> slot<a class="anchor" aria-label="anchor" href="#view-the-sample-slot"></a>
+</h3>
 <p>We can access the <code>sampleNames</code> of the
 <code>PharmacoSet</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/featureNames.html" class="external-link">sampleNames</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "786-O"       "A-498"       "A-549"       "ACHN"        "BT-549"     </span></span>
-<span><span class="co">#&gt;  [6] "CCRF-CEM"    "COLO 205"    "Caki-1"      "DU145"       "EKVX"       </span></span>
-<span><span class="co">#&gt; [11] "HCC2998"     "HCT 116"     "HCT 15"      "HL-60(TB)"   "HOP-62"     </span></span>
-<span><span class="co">#&gt; [16] "HOP-92"      "HT-29"       "Hs 578T"     "IGROV-1"     "K-562"      </span></span>
-<span><span class="co">#&gt; [21] "KM12"        "LOX-IMVI"    "M14"         "MCF-7"       "MDA-MB-231" </span></span>
-<span><span class="co">#&gt; [26] "MDA-MB-435"  "MDA-MB-468"  "MOLT-4"      "Malme-3M"    "NCI-ADR-RES"</span></span>
-<span><span class="co">#&gt; [31] "NCI-H226"    "NCI-H23"     "NCI-H322M"   "NCI-H460"    "NCI-H522"   </span></span>
-<span><span class="co">#&gt; [36] "OVCAR-3"     "OVCAR-4"     "OVCAR-5"     "OVCAR-8"     "PC-3"       </span></span>
-<span><span class="co">#&gt; [41] "RPMI-8226"   "RXF 393L"    "SF268"       "SF295"       "SF539"      </span></span>
-<span><span class="co">#&gt; [46] "SK-MEL-2"    "SK-MEL-28"   "SK-MEL-5"    "SK-OV-3"     "SN12C"      </span></span>
-<span><span class="co">#&gt; [51] "SNB-19"      "SNB-75"      "SR"          "SW620"       "T-47D"      </span></span>
-<span><span class="co">#&gt; [56] "TK-10"       "U-251MG"     "UACC-257"    "UACC-62"     "UO-31"</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/featureNames.html" class="external-link">sampleNames</a></span><span class="op">(</span><span class="va">pset</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "NCI-H23"     "HOP-62"      "SNB-75"      "HL-60(TB)"   "A-549"      </span></span>
+<span><span class="co">#&gt;  [6] "SF268"       "SNB-19"      "SF295"       "OVCAR-5"     "U-251MG"    </span></span>
+<span><span class="co">#&gt; [11] "MCF-7"       "MDA-MB-231"  "MDA-MB-435"  "BT-549"      "SK-MEL-5"   </span></span>
+<span><span class="co">#&gt; [16] "MOLT-4"      "DU145"       "NCI-ADR-RES" "OVCAR-3"     "COLO 205"   </span></span>
+<span><span class="co">#&gt; [21] "SK-OV-3"     "CCRF-CEM"    "SR"          "IGROV-1"     "SW620"      </span></span>
+<span><span class="co">#&gt; [26] "Hs 578T"     "HCT 116"     "UACC-62"     "EKVX"        "HCT 15"     </span></span>
+<span><span class="co">#&gt; [31] "OVCAR-8"     "UACC-257"    "SF539"       "UO-31"       "M14"        </span></span>
+<span><span class="co">#&gt; [36] "KM12"        "T-47D"       "Malme-3M"    "Caki-1"      "A-498"      </span></span>
+<span><span class="co">#&gt; [41] "SK-MEL-28"   "RPMI-8226"   "NCI-H460"    "NCI-H322M"   "NCI-H226"   </span></span>
+<span><span class="co">#&gt; [46] "K-562"       "786-O"       "SK-MEL-2"    "HCC2998"     "NCI-H522"</span></span></code></pre></div>
 <p>To get all the metadata associated with the samples, we can access
 the <code>sample</code> slot:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 'data.frame':    60 obs. of  7 variables:</span></span>
-<span><span class="co">#&gt;  $ sampleid            : chr  "786-O" "A-498" "A-549" "ACHN" ...</span></span>
-<span><span class="co">#&gt;  $ tissueid            : chr  "Kidney" "Kidney" "Lung" "Kidney" ...</span></span>
-<span><span class="co">#&gt;  $ cellosaurus_disease : chr  "Renal cell carcinoma" "Renal cell carcinoma" "Lung adenocarcinoma" "Papillary renal cell carcinoma" ...</span></span>
-<span><span class="co">#&gt;  $ cellosaurus_id      : chr  "CVCL_1051" "CVCL_1056" "CVCL_0023" "CVCL_1067" ...</span></span>
-<span><span class="co">#&gt;  $ NCI_ALMANAC.sampleid: chr  "786-0" "A498" "A549/ATCC" "ACHN" ...</span></span>
-<span><span class="co">#&gt;  $ NCI_ALMANAC.disease : chr  "Renal Cancer" "Renal Cancer" "Non-Small Cell Lung Cancer" "Renal Cancer" ...</span></span>
-<span><span class="co">#&gt;  $ pharmacodb_cid      : chr  "7860_28_2019" "A498_47_2019" "A549_48_2019" "ACHN_54_2019" ...</span></span></code></pre></div>
-<p>We can see from the <code>sample</code> slot that there are 60
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pset</span><span class="op">@</span><span class="va">sample</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'data.frame':    50 obs. of  7 variables:</span></span>
+<span><span class="co">#&gt;  $ sampleid            : chr  "NCI-H23" "HOP-62" "SNB-75" "HL-60(TB)" ...</span></span>
+<span><span class="co">#&gt;  $ tissueid            : chr  "Lung" "Lung" "CNS/Brain" "Myeloid" ...</span></span>
+<span><span class="co">#&gt;  $ cellosaurus_disease : chr  "Lung adenocarcinoma" "Lung adenocarcinoma" "Glioblastoma" "Acute myeloid leukemia" ...</span></span>
+<span><span class="co">#&gt;  $ cellosaurus_id      : chr  "CVCL_1547" "CVCL_1285" "CVCL_1706" "CVCL_A794" ...</span></span>
+<span><span class="co">#&gt;  $ NCI_ALMANAC.sampleid: chr  "NCI-H23" "HOP-62" "SNB-75" "HL-60(TB)" ...</span></span>
+<span><span class="co">#&gt;  $ NCI_ALMANAC.disease : chr  "Non-Small Cell Lung Cancer" "Non-Small Cell Lung Cancer" "CNS Cancer" "Leukemia" ...</span></span>
+<span><span class="co">#&gt;  $ pharmacodb_cid      : chr  "NCIH23_1085_2019" "HOP62_561_2019" "SNB75_1430_2019" "HL-60(TB)6502021_" ...</span></span></code></pre></div>
+<p>We can see from the <code>sample</code> slot that there are 50
 samples in this <code>PharmacoSet</code>.</p>
 </div>
-<div class="section level4">
-<h4 id="view-the-treatments">View the <code>treatment</code>s<a class="anchor" aria-label="anchor" href="#view-the-treatments"></a>
-</h4>
-<p>Similar to the <code>sample</code>s, we can access the
+<div class="section level3">
+<h3 id="view-the-treatment-slot">View the <code>treatment</code> slot<a class="anchor" aria-label="anchor" href="#view-the-treatment-slot"></a>
+</h3>
+<p>Similar to the <code>sample</code>, we can access the
 <code>treatmentNames</code> of the <code>PharmacoSet</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">treatmentNames</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Pralatrexate"                        </span></span>
-<span><span class="co">#&gt; [2] "1,3-Bis(2-chloroethyl)-1-nitrosourea"</span></span>
-<span><span class="co">#&gt; [3] "Ixabepilone"                         </span></span>
-<span><span class="co">#&gt; [4] "Clofarabine"                         </span></span>
-<span><span class="co">#&gt; [5] "Dasatinib"                           </span></span>
-<span><span class="co">#&gt; [6] "Vincristine"</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">treatmentNames</a></span><span class="op">(</span><span class="va">pset</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Ixabepilone" "Clofarabine" "Dasatinib"   "Vincristine" "Imiquimod"  </span></span>
+<span><span class="co">#&gt; [6] "Paclitaxel"</span></span></code></pre></div>
 <p>To get all the metadata associated with the treatments, we can access
 the <code>treatment</code> slot:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">treatment</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 'data.frame':    31 obs. of  5 variables:</span></span>
-<span><span class="co">#&gt;  $ treatmentid            : chr  "Pralatrexate" "1,3-Bis(2-chloroethyl)-1-nitrosourea" "Ixabepilone" "Clofarabine" ...</span></span>
-<span><span class="co">#&gt;  $ NCI_ALMANAC.treatmentid: chr  "pralatrexate" "Carmustine" "Ixabepilone" "Clofarabine" ...</span></span>
-<span><span class="co">#&gt;  $ cid                    : int  148121 2578 6445540 119182 3062316 5978 457193 57469 36314 13342 ...</span></span>
-<span><span class="co">#&gt;  $ smiles                 : chr  "C#CCC(CC1=CN=C2C(=N1)C(=NC(=N2)N)N)C3=CC=C(C=C3)C(=O)NC(CCC(=O)O)C(=O)O" "C(CCl)NC(=O)N(CCCl)N=O" "CC1CCCC2(C(O2)CC(NC(=O)CC(C(C(=O)C(C1O)C)(C)C)O)C(=CC3=CSC(=N3)C)C)C" "Nc1nc(Cl)nc2n(cnc12)C3OC(CO)C(O)C3F" ...</span></span>
-<span><span class="co">#&gt;  $ inchikey               : chr  "OGSBUKJUDHAQEA-WMCAAGNKSA-N" "DLGOEMSEDOSKAD-UHFFFAOYSA-N" "FABUFPQFXZVHFB-PVYNADRNSA-N" "WDDPHFBMKLOVOX-UHFFFAOYSA-N" ...</span></span></code></pre></div>
-<p>There are also 31 treatments used.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pset</span><span class="op">@</span><span class="va">treatment</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'data.frame':    22 obs. of  3 variables:</span></span>
+<span><span class="co">#&gt;  $ treatmentid: chr  "Ixabepilone" "Clofarabine" "Dasatinib" "Vincristine" ...</span></span>
+<span><span class="co">#&gt;  $ cid        : int  6445540 119182 3062316 5978 57469 36314 13342 54611422 2141 176871 ...</span></span>
+<span><span class="co">#&gt;  $ inchikey   : chr  "FABUFPQFXZVHFB-PVYNADRNSA-N" "WDDPHFBMKLOVOX-UHFFFAOYSA-N" "ZBNZXTGUTAYRHI-UHFFFAOYSA-N" "" ...</span></span></code></pre></div>
+<p>There are also 22 treatments used.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="molecular-profiles">Molecular Profiles<a class="anchor" aria-label="anchor" href="#molecular-profiles"></a>
+</h2>
+<p>In <em><a href="https://bioconductor.org/packages/3.19/PharmacoGx" class="external-link">PharmacoGx</a></em>,
+molecular profiles refer to any data that is measured on the samples in
+the <code>PharmacoSet</code>. This can include gene expression, copy
+number, mutation, or any other type of data that can be measured on a
+sample.</p>
+<p>Each Molecular Data Type (<code>mDataType</code>) is stored in a
+<code>SummarizedExperiment</code>. All the
+<code>SummarizedExperiment</code> objects are stored in a container
+called a <code>MultiAssayExperiment</code> which can be accessed through
+the <code>molecularProfiles</code> slot.</p>
+<div class="section level3">
+<h3 id="view-the-molecularprofiles-slot">View the <code>molecularProfiles</code> slot<a class="anchor" aria-label="anchor" href="#view-the-molecularprofiles-slot"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">pset</span><span class="op">@</span><span class="va">molecularProfiles</span> </span>
+<span><span class="co">#&gt; A MultiAssayExperiment object of 2 listed</span></span>
+<span><span class="co">#&gt;  experiments with user-defined names and respective classes.</span></span>
+<span><span class="co">#&gt;  Containing an ExperimentList class object of length 2:</span></span>
+<span><span class="co">#&gt;  [1] rnaseq.tpm: SummarizedExperiment with 100 rows and 50 columns</span></span>
+<span><span class="co">#&gt;  [2] rnaseq.tpm.batch: SummarizedExperiment with 100 rows and 50 columns</span></span>
+<span><span class="co">#&gt; Functionality:</span></span>
+<span><span class="co">#&gt;  experiments() - obtain the ExperimentList instance</span></span>
+<span><span class="co">#&gt;  colData() - the primary/phenotype DataFrame</span></span>
+<span><span class="co">#&gt;  sampleMap() - the sample coordination DataFrame</span></span>
+<span><span class="co">#&gt;  `$`, `[`, `[[` - extract colData columns, subset, or experiment</span></span>
+<span><span class="co">#&gt;  *Format() - convert into a long or wide DataFrame</span></span>
+<span><span class="co">#&gt;  assays() - convert ExperimentList to a SimpleList of matrices</span></span>
+<span><span class="co">#&gt;  exportClass() - save data to flat files</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="subsetting-a-pharmacoset">Subsetting a <code>PharmacoSet</code><a class="anchor" aria-label="anchor" href="#subsetting-a-pharmacoset"></a>
+</h2>
 <div class="section level4">
 <h4 id="subset-by-samplenames-andor-treatmentnames">Subset by <code>sampleNames</code> and/or
 <code>treatmentNames</code><a class="anchor" aria-label="anchor" href="#subset-by-samplenames-andor-treatmentnames"></a>
 </h4>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
-<span>  <span class="va">NCI_ALMANAC_pset</span>,</span>
-<span>  sample <span class="op">=</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span>  <span class="va">pset</span>,</span>
+<span>  sample <span class="op">=</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">pset</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">NCI_ALMANAC_2017</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct  1 15:34:48 2024</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">5</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 4: </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 54609 rows and 5 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">mirna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 417 rows and 5 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [3] </span><span style="color: #BB0000;">rnaseq.comp</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 5 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [4] </span><span style="color: #BB0000;">rnaseq.iso</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 5 columns </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rnaseq.tpm</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 5 columns </span></span></span>
+<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 5 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  9352 5 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(3): </span><span style="color: #BB0000;">response profiles assay_metadata</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(9352): </span><span style="color: #00BB00;">1,3-Bis(2-chloroethyl)-1-nitrosourea::0.05:NA:1 1,3-Bis(2-chloroethyl)-1-nitrosourea::0.15:NA:1 ... Vorinostat:Vincristine:1:0.01:1 Vorinostat:Vincristine:1:0.1:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(9): </span><span style="color: #00BB00;">treatment1id treatment2id treatment1dose ... CONC2 NSC2 CONCINDEX2</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(5): </span><span style="color: #00BB00;">786-O:1 A-498:1 A-549:1 ACHN:1 BT-549:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(6): </span><span style="color: #00BB00;">sampleid bio_rep CELLNAME CELLNBR PANEL PANELNBR</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(1): </span><span style="color: #00BB00;">experiment_metadata</span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  184 5 </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(184): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 1000:Nelarabine 4000:Ifosfamide</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(5): </span><span style="color: #00BB00;">A-549 HL-60(TB) HOP-62 NCI-H23 SNB-75</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(2): </span><span style="color: #00BB00;">sampleid PANEL</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(0): </span><span style="color: #00BB00;">none</span></span></span>
 <span></span>
 <span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetByTreatment</a></span><span class="op">(</span></span>
-<span>  <span class="va">NCI_ALMANAC_pset</span>,</span>
-<span>  treatment <span class="op">=</span> <span class="fu">treatmentNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span>  <span class="va">pset</span>,</span>
+<span>  treatment <span class="op">=</span> <span class="fu">treatmentNames</span><span class="op">(</span><span class="va">pset</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">NCI_ALMANAC_2017</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct  1 15:34:48 2024</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">60</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">50</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 4: </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 54609 rows and 59 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">mirna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 417 rows and 59 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [3] </span><span style="color: #BB0000;">rnaseq.comp</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 59 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [4] </span><span style="color: #BB0000;">rnaseq.iso</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 59 columns </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rnaseq.tpm</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 50 columns </span></span></span>
+<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 50 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  1519 61 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(3): </span><span style="color: #BB0000;">response profiles assay_metadata</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(1519): </span><span style="color: #00BB00;">1,3-Bis(2-chloroethyl)-1-nitrosourea:Clofarabine:0.2:0.001:1 1,3-Bis(2-chloroethyl)-1-nitrosourea:Clofarabine:0.2:0.01:1 ... Vorinostat:Clofarabine:1:0.01:1 Vorinostat:Clofarabine:1:0.1:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(9): </span><span style="color: #00BB00;">treatment1id treatment2id treatment1dose ... CONC2 NSC2 CONCINDEX2</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(61): </span><span style="color: #00BB00;">786-O:1 A-498:1 A-549:1 ... UACC-257:1 UACC-62:1 UO-31:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(6): </span><span style="color: #00BB00;">sampleid bio_rep CELLNAME CELLNBR PANEL PANELNBR</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(1): </span><span style="color: #00BB00;">experiment_metadata</span></span></span></code></pre></div>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  42 50 </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(42): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 7:Clofarabine 10:Clofarabine</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(50): </span><span style="color: #00BB00;">786-O A-498 A-549 ... UACC-257 UACC-62 UO-31</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(2): </span><span style="color: #00BB00;">sampleid PANEL</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(0): </span><span style="color: #00BB00;">none</span></span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="subsetting-using-sample-and-treatment-metadata">Subsetting using <code>sample</code> and <code>treatment</code>
 metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and-treatment-metadata"></a>
 </h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "Kidney"               "Lung"                 "Breast"              </span></span>
-<span><span class="co">#&gt;  [4] "Lymphoid"             "Bowel"                "Prostate"            </span></span>
-<span><span class="co">#&gt;  [7] "Myeloid"              "Ovary/Fallopian Tube" "Skin"                </span></span>
-<span><span class="co">#&gt; [10] "Pleura"               "CNS/Brain"</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "Lung"                 "CNS/Brain"            "Myeloid"             </span></span>
+<span><span class="co">#&gt;  [4] "Ovary/Fallopian Tube" "Breast"               "Skin"                </span></span>
+<span><span class="co">#&gt;  [7] "Lymphoid"             "Prostate"             "Bowel"               </span></span>
+<span><span class="co">#&gt; [10] "Kidney"               "Pleura"</span></span>
 <span></span>
 <span><span class="va">tissues_of_interest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Kidney"</span><span class="op">)</span></span>
-<span><span class="va">indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">tissues_of_interest</span><span class="op">)</span></span>
+<span><span class="va">indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">tissues_of_interest</span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">samples_of_interest</span> <span class="op">&lt;-</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span><span class="op">[</span><span class="va">indices</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "786-O"    "A-498"    "ACHN"     "Caki-1"   "RXF 393L" "SN12C"    "TK-10"   </span></span>
-<span><span class="co">#&gt; [8] "UO-31"</span></span>
+<span><span class="op">(</span><span class="va">samples_of_interest</span> <span class="op">&lt;-</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">pset</span><span class="op">)</span><span class="op">[</span><span class="va">indices</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "UO-31"  "Caki-1" "A-498"  "786-O"</span></span>
 <span></span>
 <span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
-<span>  <span class="va">NCI_ALMANAC_pset</span>,</span>
+<span>  <span class="va">pset</span>,</span>
 <span>  <span class="va">samples_of_interest</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">NCI_ALMANAC_2017</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct  1 15:34:48 2024</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">8</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">4</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 4: </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 54609 rows and 8 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">mirna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 417 rows and 8 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [3] </span><span style="color: #BB0000;">rnaseq.comp</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 8 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [4] </span><span style="color: #BB0000;">rnaseq.iso</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 8 columns </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rnaseq.tpm</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 4 columns </span></span></span>
+<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 4 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  9436 8 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(3): </span><span style="color: #BB0000;">response profiles assay_metadata</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(9436): </span><span style="color: #00BB00;">1,3-Bis(2-chloroethyl)-1-nitrosourea::0.05:NA:1 1,3-Bis(2-chloroethyl)-1-nitrosourea::0.15:NA:1 ... Vorinostat:Vincristine:1:0.01:1 Vorinostat:Vincristine:1:0.1:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(9): </span><span style="color: #00BB00;">treatment1id treatment2id treatment1dose ... CONC2 NSC2 CONCINDEX2</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(8): </span><span style="color: #00BB00;">786-O:1 A-498:1 ACHN:1 ... SN12C:1 TK-10:1 UO-31:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(6): </span><span style="color: #00BB00;">sampleid bio_rep CELLNAME CELLNBR PANEL PANELNBR</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(1): </span><span style="color: #00BB00;">experiment_metadata</span></span></span></code></pre></div>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  184 4 </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(184): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 1000:Nelarabine 4000:Ifosfamide</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(4): </span><span style="color: #00BB00;">786-O A-498 Caki-1 UO-31</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(2): </span><span style="color: #00BB00;">sampleid PANEL</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(0): </span><span style="color: #00BB00;">none</span></span></span></code></pre></div>
 <p>A concise way to subset by <code>sample</code> in one step:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
-<span>  <span class="va">NCI_ALMANAC_pset</span>,</span>
-<span>  sample <span class="op">=</span> <span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span><span class="op">[</span></span>
-<span>    <span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op">==</span> <span class="st">"Kidney"</span>,</span>
+<span>  <span class="va">pset</span>,</span>
+<span>  sample <span class="op">=</span> <span class="va">pset</span><span class="op">@</span><span class="va">sample</span><span class="op">[</span></span>
+<span>    <span class="va">pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op">==</span> <span class="st">"Kidney"</span>,</span>
 <span>    <span class="st">"sampleid"</span></span>
 <span>  <span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">NCI_ALMANAC_2017</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct  1 15:34:48 2024</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">8</span> </span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">dummy_pset</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Mon Oct 14 22:53:50 2024</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Number of samples: </span> <span style="color: #00BB00;">4</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Molecular profiles: &lt;MultiAssayExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 4: </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 54609 rows and 8 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">mirna</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 417 rows and 8 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [3] </span><span style="color: #BB0000;">rnaseq.comp</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 8 columns </span></span></span>
-<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [4] </span><span style="color: #BB0000;">rnaseq.iso</span> <span style="color: #00BB00;">: RangedSummarizedExperiment with 23808 rows and 8 columns </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">ExperimentList class object of length 2: </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [1] </span><span style="color: #BB0000;">rnaseq.tpm</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 4 columns </span></span></span>
+<span><span class="co"><span style="color: #00BB00;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;"> [2] </span><span style="color: #BB0000;">rnaseq.tpm.batch</span> <span style="color: #00BB00;">: SummarizedExperiment with 100 rows and 4 columns </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #BBBB00; font-weight: bold; font-style: italic;">Treatment response: &lt;TreatmentResponseExperiment&gt; </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  9436 8 </span></span></span>
-<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(3): </span><span style="color: #BB0000;">response profiles assay_metadata</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(9436): </span><span style="color: #00BB00;">1,3-Bis(2-chloroethyl)-1-nitrosourea::0.05:NA:1 1,3-Bis(2-chloroethyl)-1-nitrosourea::0.15:NA:1 ... Vorinostat:Vincristine:1:0.01:1 Vorinostat:Vincristine:1:0.1:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(9): </span><span style="color: #00BB00;">treatment1id treatment2id treatment1dose ... CONC2 NSC2 CONCINDEX2</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(8): </span><span style="color: #00BB00;">786-O:1 A-498:1 ACHN:1 ... SN12C:1 TK-10:1 UO-31:1</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(6): </span><span style="color: #00BB00;">sampleid bio_rep CELLNAME CELLNBR PANEL PANELNBR</span> </span></span>
-<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(1): </span><span style="color: #00BB00;">experiment_metadata</span></span></span></code></pre></div>
-</div>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  184 4 </span></span></span>
+<span><span class="co"><span style="color: #BBBB00; font-weight: bold;">#&gt; </span>   <span style="color: #BBBB00; font-weight: bold;">assays(1): </span><span style="color: #BB0000;">raw</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rownames(184): </span><span style="color: #00BB00;">1e-07:Ixabepilone 1e-06:Ixabepilone ... 1000:Nelarabine 4000:Ifosfamide</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">rowData(3): </span><span style="color: #00BB00;">treatmentdose treatmentid CONC1</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colnames(4): </span><span style="color: #00BB00;">786-O A-498 Caki-1 UO-31</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">colData(2): </span><span style="color: #00BB00;">sampleid PANEL</span> </span></span>
+<span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(0): </span><span style="color: #00BB00;">none</span></span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -408,7 +453,7 @@ metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Jermiah Joseph, Julia Ngyugen.</p>
+  <p>Developed by Jermiah Joseph, Julia Nguyen, Nikta Feizi.</p>
 </div>
 
 <div class="pkgdown-footer-right">
