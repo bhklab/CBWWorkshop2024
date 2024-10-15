@@ -2,7 +2,13 @@
 
 # Setup
 
-Run `devtools::install(".")` to install this package and its dependencies.
+## Installing from GitHub
+Run 
+```R
+pak::pkg_install("bhklab/CBWWorkshop2024")
+``` 
+
+to install this package and its dependencies.
 
 
 # Adding to the workshop
