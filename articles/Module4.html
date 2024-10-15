@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBWWorkshop2024</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -117,9 +117,9 @@ its characteristics.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Summary statistics</span></span>
 <span><span class="va">gene</span> <span class="op">&lt;-</span> <span class="st">"ENSG00000003987"</span></span>
-<span><span class="va">gdsc_rna_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span><span class="va">GDSCsmall</span>, mDataType <span class="op">=</span> <span class="st">'rna'</span>, features <span class="op">=</span> <span class="va">gene</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">gdsc_rna_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span><span class="va">GDSCsmall</span>, mDataType <span class="op">=</span> <span class="st">"rna"</span>, features <span class="op">=</span> <span class="va">gene</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</span></span>
-<span><span class="va">ccle_rna_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span><span class="va">CCLEsmall</span>, mDataType <span class="op">=</span> <span class="st">'rna'</span>, features <span class="op">=</span> <span class="va">gene</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">ccle_rna_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span><span class="va">CCLEsmall</span>, mDataType <span class="op">=</span> <span class="st">"rna"</span>, features <span class="op">=</span> <span class="va">gene</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Distribution plots</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span>, <span class="fu">aes_string</span><span class="op">(</span>x <span class="op">=</span> <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -140,24 +140,26 @@ of interest, e.g., <code>GeneX</code>.</p>
 check the assumptions of the model.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Function to compute effect size and check model diagnostics</span></span>
-<span><span class="va">computeEffectSize</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">study</span>, <span class="va">exp_data</span>, <span class="va">drug_response</span>, <span class="va">drug</span> <span class="op">=</span> <span class="st">"Erlotinib"</span>, <span class="va">gene</span> <span class="op">=</span><span class="st">"ENSG00000003987"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  </span>
-<span>  <span class="va">drug_response</span> <span class="op">=</span> <span class="va">drug_response</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">select</span><span class="op">(</span><span class="fu">all_of</span><span class="op">(</span><span class="va">drug</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">drug_response</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">drug_response</span><span class="op">)</span> <span class="co"># this contains auc values</span></span>
-<span>    </span>
-<span>  <span class="va">model_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">drug_response</span>, <span class="va">exp_data</span>, by <span class="op">=</span> <span class="st">"row.names"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cells"</span>, <span class="st">"auc"</span>, <span class="st">"GeneExpr"</span><span class="op">)</span></span>
-<span>  </span>
+<span><span class="va">computeEffectSize</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">study</span>, <span class="va">exp_data</span>, <span class="va">drug_response</span>, <span class="va">drug</span> <span class="op">=</span> <span class="st">"Erlotinib"</span>, <span class="va">gene</span> <span class="op">=</span> <span class="st">"ENSG00000003987"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">drug_response</span> <span class="op">&lt;-</span> <span class="va">drug_response</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">select</span><span class="op">(</span><span class="fu">all_of</span><span class="op">(</span><span class="va">drug</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">drug_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">drug_response</span><span class="op">)</span> <span class="co"># this contains auc values</span></span>
+<span></span>
+<span>  <span class="va">model_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">drug_response</span>, <span class="va">exp_data</span>, by <span class="op">=</span> <span class="st">"row.names"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cells"</span>, <span class="st">"auc"</span>, <span class="st">"GeneExpr"</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">auc</span> <span class="op">~</span> <span class="va">GeneExpr</span>, data <span class="op">=</span> <span class="va">model_data</span><span class="op">)</span></span>
-<span>  <span class="va">coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">'GeneExpr'</span>, <span class="op">]</span></span>
-<span>  <span class="va">effect</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>EffectSize <span class="op">=</span> <span class="va">coef</span><span class="op">[</span><span class="st">'Estimate'</span><span class="op">]</span>, SE <span class="op">=</span> <span class="va">coef</span><span class="op">[</span><span class="st">'Std. Error'</span><span class="op">]</span>, Study <span class="op">=</span> <span class="va">study</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">effect</span><span class="op">)</span> <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="va">coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"GeneExpr"</span>, <span class="op">]</span></span>
+<span>  <span class="va">effect</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>EffectSize <span class="op">=</span> <span class="va">coef</span><span class="op">[</span><span class="st">"Estimate"</span><span class="op">]</span>, SE <span class="op">=</span> <span class="va">coef</span><span class="op">[</span><span class="st">"Std. Error"</span><span class="op">]</span>, Study <span class="op">=</span> <span class="va">study</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">effect</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">effect</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Compute effect sizes</span></span>
-<span><span class="va">ccle_effect</span> <span class="op">&lt;-</span> <span class="fu">computeEffectSize</span><span class="op">(</span>study <span class="op">=</span> <span class="st">"ccle"</span>, exp_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span> , drug_response <span class="op">=</span> <span class="va">ccle_drug_data_auc</span><span class="op">)</span></span>
-<span><span class="va">gdsc_effect</span> <span class="op">&lt;-</span> <span class="fu">computeEffectSize</span><span class="op">(</span>study <span class="op">=</span> <span class="st">"gdsc"</span>, exp_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">gdsc_rna_data</span><span class="op">)</span> , drug_response <span class="op">=</span> <span class="va">gdsc_drug_data_auc</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">ccle_effect</span> <span class="op">&lt;-</span> <span class="fu">computeEffectSize</span><span class="op">(</span>study <span class="op">=</span> <span class="st">"ccle"</span>, exp_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span>, drug_response <span class="op">=</span> <span class="va">ccle_drug_data_auc</span><span class="op">)</span></span>
+<span><span class="va">gdsc_effect</span> <span class="op">&lt;-</span> <span class="fu">computeEffectSize</span><span class="op">(</span>study <span class="op">=</span> <span class="st">"gdsc"</span>, exp_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">gdsc_rna_data</span><span class="op">)</span>, drug_response <span class="op">=</span> <span class="va">gdsc_drug_data_auc</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="combine-effect-sizes-and-perform-meta-analysis">Combine Effect Sizes and Perform Meta-Analysis<a class="anchor" aria-label="anchor" href="#combine-effect-sizes-and-perform-meta-analysis"></a>
@@ -193,11 +195,11 @@ sizes.</p>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="va">forest_data</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">EffectSize</span>, y <span class="op">=</span> <span class="va">Study</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_errorbarh</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">LowerCI</span>, xmax <span class="op">=</span> <span class="va">UpperCI</span><span class="op">)</span>, height <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">meta.result</span><span class="op">$</span><span class="va">TE.random</span>, linetype <span class="op">=</span> <span class="st">'dashed'</span>, color <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">meta.result</span><span class="op">$</span><span class="va">TE.random</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">labs</span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">'Meta-Analysis of GeneX Expression and Drug Response'</span>,</span>
-<span>    x <span class="op">=</span> <span class="st">'Effect Size'</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">'Study'</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Meta-Analysis of GeneX Expression and Drug Response"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Effect Size"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Study"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
@@ -210,25 +212,24 @@ sizes.</p>
 <p>We will now conduct a subgroup analysis using a subset of the
 <code>CCLEsmall</code> dataset.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># TODO: To debug:</span></span>
+<code class="sourceCode R"><span><span class="co"># TODO: To debug:</span></span>
 <span></span>
 <span><span class="co"># Load dataset</span></span>
 <span><span class="co"># data("CCLEsmall")</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># # Extract drugs and cells</span></span>
 <span><span class="co"># CCLEdrugs &lt;- treatmentNames(CCLEsmall)</span></span>
 <span><span class="co"># CCLEcells &lt;- sampleNames(CCLEsmall)</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># # Subset to a specific drug and cell line</span></span>
 <span><span class="co"># pSet &lt;- subsetTo(CCLEsmall, drugs = CCLEdrugs[1], cells = CCLEcells[1])</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># # Display subset</span></span>
 <span><span class="co"># dim(pSet)</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># # Subgroup analysis for tissue-specific biomarker</span></span>
 <span><span class="co"># gene.expr &lt;- summarizeMolecularProfiles(pSet, mDataType = 'rna', features = gene)</span></span>
-<span><span class="co"># ccle_effect &lt;- computeEffectSize(study = "ccle", exp_data = t(gene.expr) , drug_response = drug.response) </span></span></code></pre></div>
+<span><span class="co"># ccle_effect &lt;- computeEffectSize(study = "ccle", exp_data = t(gene.expr) , drug_response = drug.response)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="interactive-exercise">Interactive Exercise<a class="anchor" aria-label="anchor" href="#interactive-exercise"></a>

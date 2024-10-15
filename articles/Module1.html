@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBWWorkshop2024</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -320,7 +320,7 @@ the RNA-Seq data.</p>
 <p>Below are some examples of other available variables that may be of
 interest for downstream analysis.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">GDSC_model_list</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'model_id'</span>, <span class="st">'model_name'</span>, <span class="st">'tissue'</span>, <span class="st">'ploidy_wes'</span>, <span class="st">'mutational_burden'</span>, <span class="st">'gender'</span>, <span class="st">'ethnicity'</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">GDSC_model_list</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"model_id"</span>, <span class="st">"model_name"</span>, <span class="st">"tissue"</span>, <span class="st">"ploidy_wes"</span>, <span class="st">"mutational_burden"</span>, <span class="st">"gender"</span>, <span class="st">"ethnicity"</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    model_id model_name                      tissue ploidy_wes mutational_burden</span></span>
 <span><span class="co">#&gt; 1 SIDM01774      PK-59                    Pancreas   3.510751             24.79</span></span>
 <span><span class="co">#&gt; 2 SIDM00192   SNU-1033             Large Intestine   2.780367             23.29</span></span>
@@ -422,7 +422,7 @@ used to predict response.</p>
 <p>Load in the methylation matrix from GDSC:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span></span>
-<span><span class="va">GDSC_methylation</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="va">GDSC_methylation</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                          X8359018054_R03C01 X8359018053_R04C02</span></span>
 <span><span class="co">#&gt; chr1:1051178-1052445              0.3733729          0.4144962</span></span>
 <span><span class="co">#&gt; chr1:109824313-109824526          0.4644322          0.5959816</span></span>
@@ -484,7 +484,7 @@ sample names</p>
 <span><span class="co">#&gt;  100</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">Sample_Name</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span>, <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="va">GDSC_methylation</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="va">GDSC_methylation</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                               A673       RT4   8-MG-BA  U-118-MG CHAGO-K-1</span></span>
 <span><span class="co">#&gt; chr1:1051178-1052445     0.3733729 0.4144962 0.2892333 0.3023764 0.3880624</span></span>
 <span><span class="co">#&gt; chr1:109824313-109824526 0.4644322 0.5959816 0.5048080 0.4594520 0.5114854</span></span>
@@ -542,7 +542,7 @@ expression.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">expr</span><span class="op">$</span><span class="va">gene_id</span></span>
 <span><span class="va">expr</span><span class="op">$</span><span class="va">gene_id</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span></span>
-<span><span class="va">expr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
+<span><span class="va">expr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
 <span><span class="co">#&gt;            A388  A427 BB65-RCC Becker BICR78 C-33-A Ca-Ski Ca9-22 CCK-81 CHL-1</span></span>
 <span><span class="co">#&gt; SIDG00082  0.01  0.29     0.04   0.15   0.03   0.01   0.01   0.01   0.94  1.23</span></span>
 <span><span class="co">#&gt; SIDG00106 25.95 16.45     8.19  13.88  14.04  10.99  16.42   9.04   9.37 14.86</span></span>
@@ -606,7 +606,7 @@ pair. This was done by passing the option
 <span><span class="va">expr</span><span class="op">[</span><span class="st">"RGPD3"</span>, <span class="st">"SIDM02101"</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
 <span></span>
-<span><span class="va">expr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
+<span><span class="va">expr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
 <span><span class="co">#&gt;       SIDM00001 SIDM00002 SIDM00003 SIDM00006 SIDM00007 SIDM00008 SIDM00009</span></span>
 <span><span class="co">#&gt; ABCB1         0         0         0         0         0         0         0</span></span>
 <span><span class="co">#&gt; ABI1          0         0         0         0         0         0         0</span></span>
@@ -633,7 +633,7 @@ but when combined become much more informative of drug response.</p>
 <p>Let’s revisit our methylation data. Recall that each row is a CpG
 site. There are 1000 CpG sites.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">GDSC_methylation</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="va">GDSC_methylation</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                               A673       RT4   8-MG-BA  U-118-MG CHAGO-K-1</span></span>
 <span><span class="co">#&gt; chr1:1051178-1052445     0.3733729 0.4144962 0.2892333 0.3023764 0.3880624</span></span>
 <span><span class="co">#&gt; chr1:109824313-109824526 0.4644322 0.5959816 0.5048080 0.4594520 0.5114854</span></span>
@@ -650,9 +650,11 @@ involved in pathway Y).</p>
 <p>For simplicity, we can define some arbituary signatures from our CpG
 sites.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> </span>
-<span><span class="va">signatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>CpG <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span>, </span>
-<span>                         Signature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/gl.html" class="external-link">gl</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">100</span>, length <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">signatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  CpG <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span>,</span>
+<span>  Signature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/gl.html" class="external-link">gl</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">100</span>, length <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">signatures</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                        CpG Signature</span></span>
 <span><span class="co">#&gt; 1     chr1:1051178-1052445         5</span></span>

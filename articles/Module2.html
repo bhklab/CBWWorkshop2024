@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBWWorkshop2024</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -151,14 +151,14 @@ within the <code>PharmacoSet</code>
 </h3>
 <p>*Downloading Data from <a href="https://orcestra.ca" class="external-link">orcestra.ca</a></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">available</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/availablePSets.html" class="external-link">availablePSets</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">available</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/availablePSets.html" class="external-link">availablePSets</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">available</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Dataset Name" "Date Created" "PSet Name"    "version"      "type"        </span></span>
 <span><span class="co">#&gt; [6] "publication"  "DOI"          "Download"</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">available</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Dataset Name"</span>, <span class="st">"PSet Name"</span>, <span class="st">"version"</span><span class="op">)</span> <span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">available</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Dataset Name"</span>, <span class="st">"PSet Name"</span>, <span class="st">"version"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     Dataset Name         PSet Name      version</span></span>
 <span><span class="co">#&gt;           &lt;char&gt;            &lt;char&gt;       &lt;char&gt;</span></span>
 <span><span class="co">#&gt;  1:         GDSC GDSC_2020(v2-8.2) 2020(v2-8.2)</span></span>
@@ -185,8 +185,8 @@ can be used to download any of the available PSets from <a href="https://orcestr
 <code>PharmacoSet</code> to be used in this tutorial. We will be
 interacting with this dataset for the remainder of the tutorial.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span></span>
-<span><span class="va">NCI_ALMANAC_2017</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span></span>
+<span><span class="va">NCI_ALMANAC_pset</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">NCI_ALMANAC_2017</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">Date Created: </span><span style="color: #00BB00;">Tue Oct  1 15:34:48 2024</span> </span></span>
@@ -216,7 +216,7 @@ screening experiments where cell lines are treated with a panel of drugs
 at multiple doses and the response is measured using a molecular
 assay.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">slotNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">slotNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "treatmentResponse" "annotation"        "molecularProfiles"</span></span>
 <span><span class="co">#&gt; [4] "sample"            "treatment"         "datasetType"      </span></span>
 <span><span class="co">#&gt; [7] "perturbation"      "curation"</span></span></code></pre></div>
@@ -226,7 +226,7 @@ assay.</p>
 <p>We can access the <code>sampleNames</code> of the
 <code>PharmacoSet</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/featureNames.html" class="external-link">sampleNames</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/featureNames.html" class="external-link">sampleNames</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "786-O"       "A-498"       "A-549"       "ACHN"        "BT-549"     </span></span>
 <span><span class="co">#&gt;  [6] "CCRF-CEM"    "COLO 205"    "Caki-1"      "DU145"       "EKVX"       </span></span>
 <span><span class="co">#&gt; [11] "HCC2998"     "HCT 116"     "HCT 15"      "HL-60(TB)"   "HOP-62"     </span></span>
@@ -242,7 +242,7 @@ assay.</p>
 <p>To get all the metadata associated with the samples, we can access
 the <code>sample</code> slot:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">NCI_ALMANAC_2017</span><span class="op">@</span><span class="va">sample</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    60 obs. of  7 variables:</span></span>
 <span><span class="co">#&gt;  $ sampleid            : chr  "786-O" "A-498" "A-549" "ACHN" ...</span></span>
 <span><span class="co">#&gt;  $ tissueid            : chr  "Kidney" "Kidney" "Lung" "Kidney" ...</span></span>
@@ -260,7 +260,7 @@ samples in this <code>PharmacoSet</code>.</p>
 <p>Similar to the <code>sample</code>s, we can access the
 <code>treatmentNames</code> of the <code>PharmacoSet</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">treatmentNames</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">treatmentNames</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Pralatrexate"                        </span></span>
 <span><span class="co">#&gt; [2] "1,3-Bis(2-chloroethyl)-1-nitrosourea"</span></span>
 <span><span class="co">#&gt; [3] "Ixabepilone"                         </span></span>
@@ -270,7 +270,7 @@ samples in this <code>PharmacoSet</code>.</p>
 <p>To get all the metadata associated with the treatments, we can access
 the <code>treatment</code> slot:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">NCI_ALMANAC_2017</span><span class="op">@</span><span class="va">treatment</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">treatment</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    31 obs. of  5 variables:</span></span>
 <span><span class="co">#&gt;  $ treatmentid            : chr  "Pralatrexate" "1,3-Bis(2-chloroethyl)-1-nitrosourea" "Ixabepilone" "Clofarabine" ...</span></span>
 <span><span class="co">#&gt;  $ NCI_ALMANAC.treatmentid: chr  "pralatrexate" "Carmustine" "Ixabepilone" "Clofarabine" ...</span></span>
@@ -285,8 +285,8 @@ the <code>treatment</code> slot:</p>
 </h4>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
-<span>  <span class="va">NCI_ALMANAC_2017</span>, </span>
-<span>  sample <span class="op">=</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span>  <span class="va">NCI_ALMANAC_pset</span>,</span>
+<span>  sample <span class="op">=</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">NCI_ALMANAC_2017</span> </span></span>
@@ -308,8 +308,8 @@ the <code>treatment</code> slot:</p>
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(1): </span><span style="color: #00BB00;">experiment_metadata</span></span></span>
 <span></span>
 <span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetByTreatment</a></span><span class="op">(</span></span>
-<span>  <span class="va">NCI_ALMANAC_2017</span>, </span>
-<span>  treatment <span class="op">=</span> <span class="fu">treatmentNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span>  <span class="va">NCI_ALMANAC_pset</span>,</span>
+<span>  treatment <span class="op">=</span> <span class="fu">treatmentNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">NCI_ALMANAC_2017</span> </span></span>
@@ -335,23 +335,23 @@ the <code>treatment</code> slot:</p>
 metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and-treatment-metadata"></a>
 </h4>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "Kidney"               "Lung"                 "Breast"              </span></span>
 <span><span class="co">#&gt;  [4] "Lymphoid"             "Bowel"                "Prostate"            </span></span>
 <span><span class="co">#&gt;  [7] "Myeloid"              "Ovary/Fallopian Tube" "Skin"                </span></span>
 <span><span class="co">#&gt; [10] "Pleura"               "CNS/Brain"</span></span>
 <span></span>
 <span><span class="va">tissues_of_interest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Kidney"</span><span class="op">)</span></span>
-<span><span class="va">indices</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">tissues_of_interest</span><span class="op">)</span></span>
+<span><span class="va">indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">tissues_of_interest</span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">samples_of_interest</span> <span class="op">&lt;-</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_2017</span><span class="op">)</span><span class="op">[</span><span class="va">indices</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">samples_of_interest</span> <span class="op">&lt;-</span> <span class="fu">sampleNames</span><span class="op">(</span><span class="va">NCI_ALMANAC_pset</span><span class="op">)</span><span class="op">[</span><span class="va">indices</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "786-O"    "A-498"    "ACHN"     "Caki-1"   "RXF 393L" "SN12C"    "TK-10"   </span></span>
 <span><span class="co">#&gt; [8] "UO-31"</span></span>
 <span></span>
 <span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
-<span>  <span class="va">NCI_ALMANAC_2017</span>, </span>
-<span>  sample <span class="op">=</span> <span class="va">samples_of_interest</span></span>
+<span>  <span class="va">NCI_ALMANAC_pset</span>,</span>
+<span>  <span class="va">samples_of_interest</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">#&gt; Name: </span><span style="color: #00BB00;">NCI_ALMANAC_2017</span> </span></span>
@@ -373,11 +373,10 @@ metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and
 <span><span class="co">#&gt;    <span style="color: #BBBB00; font-weight: bold;">metadata(1): </span><span style="color: #00BB00;">experiment_metadata</span></span></span></code></pre></div>
 <p>A concise way to subset by <code>sample</code> in one step:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
-<span>  <span class="va">NCI_ALMANAC_2017</span>, </span>
-<span>  sample <span class="op">=</span> <span class="va">NCI_ALMANAC_2017</span><span class="op">@</span><span class="va">sample</span><span class="op">[</span></span>
-<span>    <span class="va">NCI_ALMANAC_2017</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op">==</span> <span class="st">"Kidney"</span>, </span>
+<code class="sourceCode R"><span><span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-utils.html" class="external-link">subsetBySample</a></span><span class="op">(</span></span>
+<span>  <span class="va">NCI_ALMANAC_pset</span>,</span>
+<span>  sample <span class="op">=</span> <span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span><span class="op">[</span></span>
+<span>    <span class="va">NCI_ALMANAC_pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op">==</span> <span class="st">"Kidney"</span>,</span>
 <span>    <span class="st">"sampleid"</span></span>
 <span>  <span class="op">]</span></span>
 <span><span class="op">)</span></span>
