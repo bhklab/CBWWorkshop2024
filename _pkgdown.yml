@@ -10,3 +10,39 @@ navbar:
   right:
    - icon: fa-github
      href: https://bhklab.github.io/CBWWorkshop2024/
+
+#####################################################################
+# Articles
+#####################################################################
+articles:
+- title: Introduction
+  navbar: Introduction
+  contents:
+  - PGx_2024
+
+- title: Module Labs
+  navbar: Module Labs
+  contents:
+  - Module1
+  - Module2
+  - Module3
+  - Module4
+
+# - title: Samples
+#   navbar: Annotating Samples
+#   contents:
+#   - Cellosaurus
+#   - OncoTree
+# 
+# - title: Compounds
+#   navbar: Annotating Compounds
+#   contents:
+#   - PubChemAPI
+#   - Unichem
+#   - ChEMBL
+# 
+# - title: Pipelines
+#   navbar: Pipeline Tutorials
+#   contents:
+#   - articles/AnnotationStandards
+#   - articles/CTRP-Treatment-Annotation

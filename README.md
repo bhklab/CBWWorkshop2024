@@ -35,8 +35,8 @@ you can see the following modules:
 
 1. [Module 1 Lab: Getting to know multi-omics data (Julia, Nikta, Jermiah)](https://bhklab.github.io/CBWWorkshop2024/articles/module1.html)
 2. [Module 2 Lab: Hands-on with pharmacogenomics data (Jermiah, Almas)](https://bhklab.github.io/CBWWorkshop2024/articles/module2.html)
-3. Module 3: Pharmacogenomics for biomarker discovery - Basic analysis (Nikta, Julia)
-4. Module 4: Pharmacogenomics for biomarker discovery - Advanced analysis (Nikta, Julia)
+3. [Module 3: Pharmacogenomics for biomarker discovery - Basic analysis (Nikta, Julia)](https://bhklab.github.io/CBWWorkshop2024/articles/Module3.html)
+4. [Module 4: Pharmacogenomics for biomarker discovery - Advanced analysis (Nikta, Julia)](https://bhklab.github.io/CBWWorkshop2024/articles/Module4.html)
 
 To view the vignettes, click on the `articles` tab in the package landing page.
 
@@ -48,6 +48,13 @@ Run to install this package and its dependencies.
 ```R
 pak::pkg_install("bhklab/CBWWorkshop2024", dependencies=TRUE)
 ```
+
+> [!NOTE]  
+> You may need to install the `pak` package first. `pak` is a ["Fresh Approach to R Package Installation"](https://pak.r-lib.org/). You can install it by running:
+> ```R
+> install.packages("pak")
+> ```
+
 
 ## Contributing
 

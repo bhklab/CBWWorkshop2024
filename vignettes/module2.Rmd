@@ -5,6 +5,14 @@ author:
     email: jermiah.joseph@uhn.ca
     affiliation:
         - &pm Princess Margaret Cancer Centre
+  - name: Almas Khan
+    email: almas.khan@mail.utoronto.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
+  - name: Julia Nguyen
+    email: julia.nguyen@uhn.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
 output: 
   BiocStyle::html_document:
     self_contained: yes
