@@ -28,6 +28,24 @@ articles:
   - Module3
   - Module4
 
+#####################################################################
+# References for functions
+#####################################################################
+reference:
+- title: Data Objects
+  subtitle: Randomly Generated Data
+  contents:
+  - dummy_pset
+
+- subtitle: NCI Data
+  contents:
+  - NCI_ALMANAC_sample_metadata
+  - NCI_ALMANAC_treatment_metadata
+  - NCI_ALMANAC_raw
+  - NCI60_molecular_data
+  - NCI_ALMANAC_pset
+
+
 # - title: Samples
 #   navbar: Annotating Samples
 #   contents:

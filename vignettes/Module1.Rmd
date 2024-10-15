@@ -76,15 +76,15 @@ Exploring feature extraction techniques to define biomarkers from (epi)genomic d
 ----
 
 ```{r global_knitr_opts, echo=FALSE}
-knitr::opts_chunk$set(echo=TRUE, include=TRUE, warning=FALSE, message=TRUE)
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE, message = TRUE)
 ```
 
 ```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
 suppressPackageStartupMessages({
-    library(CBWWorkshop2024)
-    library(PharmacoGx)
-    library(data.table)
-    library(reshape2)
+  library(CBWWorkshop2024)
+  library(PharmacoGx)
+  library(data.table)
+  library(reshape2)
 })
 ```
 
@@ -154,7 +154,7 @@ Below are some examples of other available variables that may be of interest for
 downstream analysis. 
 
 ```{r get_model_traits}
-GDSC_model_list[,c('model_id', 'model_name', 'tissue', 'ploidy_wes', 'mutational_burden', 'gender', 'ethnicity')] |> head()
+GDSC_model_list[, c("model_id", "model_name", "tissue", "ploidy_wes", "mutational_burden", "gender", "ethnicity")] |> head()
 ```
 
 
@@ -200,7 +200,7 @@ Load in the methylation matrix from GDSC:
 
 ```{r get_methylation}
 data(GDSC_methylation)
-GDSC_methylation[1:5,1:5]
+GDSC_methylation[1:5, 1:5]
 ```
 
 This data has already been processed into a matrix. Notice though that the sample
@@ -215,7 +215,7 @@ GDSC_methylation_model_list$sampleid <- paste0("X", GDSC_methylation_model_list$
 colnames(GDSC_methylation) %in% GDSC_methylation_model_list$sampleid |> table()
 
 colnames(GDSC_methylation) <- GDSC_methylation_model_list$Sample_Name[match(colnames(GDSC_methylation), GDSC_methylation_model_list$sampleid)]
-GDSC_methylation[1:5,1:5]
+GDSC_methylation[1:5, 1:5]
 ```
 
 We have provided a few other subsetted datasets. A full list is available from
@@ -262,7 +262,7 @@ expr <- reshape2::dcast(GDSC_rnaseq, gene_id ~ model_name, value.var = "fpkm")
 rownames(expr) <- expr$gene_id
 expr$gene_id <- NULL
 
-expr[1:5,1:10]
+expr[1:5, 1:10]
 
 expr |> dim()
 ```
@@ -299,7 +299,7 @@ expr$gene_symbol <- NULL
 
 expr["RGPD3", "SIDM02101"]
 
-expr[1:5,1:10]
+expr[1:5, 1:10]
 ```
 
 There was one mutation event on the `RGPD3` gene in the `SIDM02101` cell line model,
@@ -316,7 +316,7 @@ Let's revisit our methylation data. Recall that each row is a CpG site. There ar
 1000 CpG sites. 
 
 ```{r get_methylation2}
-GDSC_methylation[1:5,1:5]
+GDSC_methylation[1:5, 1:5]
 
 GDSC_methylation |> dim()
 ```
@@ -329,9 +329,11 @@ located on promoters of genes involved in pathway Y).
 For simplicity, we can define some arbituary signatures from our CpG sites.
 
 ```{r define_signatures}
-set.seed(123) 
-signatures <- data.frame(CpG = rownames(GDSC_methylation), 
-                         Signature = sample(gl(10, 100, length = 1000)))
+set.seed(123)
+signatures <- data.frame(
+  CpG = rownames(GDSC_methylation),
+  Signature = sample(gl(10, 100, length = 1000))
+)
 signatures |> head()
 ```
 

@@ -1,0 +1,57 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\makeatletter\@ifl@t@r\fmtversion{2018/04/01}{}{\usepackage[utf8]{inputenc}}\makeatother
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `CBWWorkshop2024'}}
+\par\bigskip{\large \today}
+\end{center}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {CBWWorkshop2024: CBW Workshop 2024: Pharmacogenomics Data Analysis}}}{}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdfauthor = {Jermiah Joseph; Julia Ngyugen}}}{}
+\begin{description}
+\raggedright{}
+\item[Title]\AsIs{CBW Workshop 2024: Pharmacogenomics Data Analysis}
+\item[Version]\AsIs{0.0.0.9006}
+\item[Description]\AsIs{This workshop delves into the rapidly advancing field of personalized cancer
+treatment, emphasizing how treatments can be tailored to individual patients
+based on their unique molecular profiles. Participants will gain a foundational 
+understanding of pharmacogenomics, focusing specifically on cancer biomarker 
+analysis, and will be guided through a comprehensive workflow from basic 
+concepts to advanced biomarker discovery techniques. Participants will be 
+introduced to the [`PharmacoGx` package](https://www.bioconductor.org/packages/release/bioc/html/PharmacoGx.html) 
+and how to use it to analyze pharmacogenomics data.
+Through hands-on tutorials and practical exercises, participants will learn how 
+to extract, analyze, and visualize data to identify robust cancer biomarkers, 
+with transferable skills applicable to other areas of disease research.}
+\item[License]\AsIs{MIT + file LICENSE}
+\item[Encoding]\AsIs{UTF-8}
+\item[Roxygen]\AsIs{list(markdown = TRUE)}
+\item[RoxygenNote]\AsIs{7.3.1}
+\item[LazyData]\AsIs{true}
+\item[Imports]\AsIs{CoreGx,
+PharmacoGx,
+MultiAssayExperiment,
+data.table}
+\item[Suggests]\AsIs{knitr,
+rmarkdown,
+BiocStyle,
+pkgdown,
+RefManageR,
+sessioninfo,
+testthat,
+rmdformats,
+meta,
+pander}
+\item[Remotes]\AsIs{bhklab/CoreGx,
+bhklab/PharmacoGx}
+\item[VignetteBuilder]\AsIs{knitr}
+\item[URL]\AsIs{}\url{https://bhklab.github.io/CBWWorkshop2024/}\AsIs{}
+\item[BugReports]\AsIs{}\url{https://github.com/bhklab/CBWWorkshop2024/issues}\AsIs{}
+\item[Depends]\AsIs{R (>= 2.10)}
+\end{description}
+\Rdcontents{Contents}
