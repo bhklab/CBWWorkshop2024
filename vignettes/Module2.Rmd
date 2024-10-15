@@ -116,8 +116,8 @@ For convenience and in the interest of time, we have created a `PharmacoSet` to 
 in this tutorial. We will be interacting with this dataset for the remainder of the tutorial.
 
 ```{r load_pset}
-data(NCI_ALMANAC_2017)
-NCI_ALMANAC_2017
+data(NCI_ALMANAC_pset)
+NCI_ALMANAC_pset
 ```
 
 ## Understanding the Data Structure
@@ -129,7 +129,7 @@ screening experiments where cell lines are treated with a panel of drugs at mult
 
 
 ```{r show_pset_structure}
-slotNames(NCI_ALMANAC_2017)
+slotNames(NCI_ALMANAC_pset)
 ```
 
 ### View the `sample`s 
@@ -137,12 +137,12 @@ slotNames(NCI_ALMANAC_2017)
 We can access the `sampleNames` of the `PharmacoSet`:
 
 ```{r show_sample_names}
-PharmacoGx::sampleNames(NCI_ALMANAC_2017)
+PharmacoGx::sampleNames(NCI_ALMANAC_pset)
 ```
 
 To get all the metadata associated with the samples, we can access the `sample` slot:
 ```{r show_samples}
-NCI_ALMANAC_2017@sample |> str()
+NCI_ALMANAC_pset@sample |> str()
 ```
 
 
@@ -153,13 +153,13 @@ We can see from the `sample` slot that there are 60 samples in this `PharmacoSet
 Similar to the `sample`s, we can access the `treatmentNames` of the `PharmacoSet`:
 
 ```{r show_treatment_names}
-PharmacoGx::treatmentNames(NCI_ALMANAC_2017) |> head()
+PharmacoGx::treatmentNames(NCI_ALMANAC_pset) |> head()
 ```
 
 To get all the metadata associated with the treatments, we can access the `treatment` slot:
 
 ```{r show_treatments}
-NCI_ALMANAC_2017@treatment |> str()
+NCI_ALMANAC_pset@treatment |> str()
 ```
 There are also 31 treatments used.
 
@@ -168,13 +168,13 @@ There are also 31 treatments used.
 
 ```{r subset_pset}
 PharmacoGx::subsetBySample(
-  NCI_ALMANAC_2017,
-  sample = sampleNames(NCI_ALMANAC_2017)[1:5]
+  NCI_ALMANAC_pset,
+  sample = sampleNames(NCI_ALMANAC_pset)[1:5]
 )
 
 PharmacoGx::subsetByTreatment(
-  NCI_ALMANAC_2017,
-  treatment = treatmentNames(NCI_ALMANAC_2017)[1:5]
+  NCI_ALMANAC_pset,
+  treatment = treatmentNames(NCI_ALMANAC_pset)[1:5]
 )
 ```
 
@@ -182,16 +182,16 @@ PharmacoGx::subsetByTreatment(
 ### Subsetting using `sample` and `treatment` metadata
 
 ```{r subset_pset_metadata, warning=FALSE}
-unique(NCI_ALMANAC_2017@sample$tissueid)
+unique(NCI_ALMANAC_pset@sample$tissueid)
 
 tissues_of_interest <- c("Kidney")
-indices <- which(NCI_ALMANAC_2017@sample$tissueid %in% tissues_of_interest)
+indices <- which(NCI_ALMANAC_pset@sample$tissueid %in% tissues_of_interest)
 
 
-(samples_of_interest <- sampleNames(NCI_ALMANAC_2017)[indices])
+(samples_of_interest <- sampleNames(NCI_ALMANAC_pset)[indices])
 
 PharmacoGx::subsetBySample(
-  NCI_ALMANAC_2017,
+  NCI_ALMANAC_pset,
   sample = samples_of_interest
 )
 ```
@@ -199,9 +199,9 @@ A concise way to subset by `sample` in one step:
 
 ```{r subset_pset_metadata2, warning=FALSE}
 PharmacoGx::subsetBySample(
-  NCI_ALMANAC_2017,
-  sample = NCI_ALMANAC_2017@sample[
-    NCI_ALMANAC_2017@sample$tissueid == "Kidney",
+  NCI_ALMANAC_pset,
+  sample = NCI_ALMANAC_pset@sample[
+    NCI_ALMANAC_pset@sample$tissueid == "Kidney",
     "sampleid"
   ]
 )
