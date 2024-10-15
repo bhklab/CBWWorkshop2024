@@ -12,8 +12,8 @@
 <link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="CBW Workshop 2024: Pharmacogenomics Data Analysis">
-<meta name="description" content="What the package does (one paragraph).">
-<meta property="og:description" content="What the package does (one paragraph).">
+<meta name="description" content="This workshop delves into the rapidly advancing field of personalized cancer treatment, emphasizing how treatments can be tailored to individual patients based on their unique molecular profiles. Participants will gain a foundational understanding of pharmacogenomics, focusing specifically on cancer biomarker analysis, and will be guided through a comprehensive workflow from basic concepts to advanced biomarker discovery techniques. Participants will be introduced to the [`PharmacoGx` package](https://www.bioconductor.org/packages/release/bioc/html/PharmacoGx.html) and how to use it to analyze pharmacogenomics data. Through hands-on tutorials and practical exercises, participants will learn how to extract, analyze, and visualize data to identify robust cancer biomarkers, with transferable skills applicable to other areas of disease research.">
+<meta property="og:description" content="This workshop delves into the rapidly advancing field of personalized cancer treatment, emphasizing how treatments can be tailored to individual patients based on their unique molecular profiles. Participants will gain a foundational understanding of pharmacogenomics, focusing specifically on cancer biomarker analysis, and will be guided through a comprehensive workflow from basic concepts to advanced biomarker discovery techniques. Participants will be introduced to the [`PharmacoGx` package](https://www.bioconductor.org/packages/release/bioc/html/PharmacoGx.html) and how to use it to analyze pharmacogenomics data. Through hands-on tutorials and practical exercises, participants will learn how to extract, analyze, and visualize data to identify robust cancer biomarkers, with transferable skills applicable to other areas of disease research.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">CBWWorkshop2024</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,16 +54,20 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="workshop">Workshop<a class="anchor" aria-label="anchor" href="#workshop"></a>
+<div class="page-header"><h1 id="pharmacogenomics-cbw-2024">Pharmacogenomics CBW 2024<a class="anchor" aria-label="anchor" href="#pharmacogenomics-cbw-2024"></a>
 </h1></div>
+<p>The Canadian Bioinformatics Workshops (CBW) are a series of hands-on training sessions that provide bioinformatics training to biologists, researchers, and other professionals.</p>
+<p>Each workshop is designed to provide both theoretical knowledge and practical experience, ensuring participants leave with the skills and tools to apply bioinformatics techniques to their own research.</p>
 <div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+<h2 id="overview-pharmacogenomics-data-analysis">Overview: Pharmacogenomics Data Analysis<a class="anchor" aria-label="anchor" href="#overview-pharmacogenomics-data-analysis"></a>
 </h2>
+<p>This workshop delves into the rapidly advancing field of personalized cancer treatment, emphasizing how treatments can be tailored to individual patients based on their unique molecular profiles. Participants will gain a foundational understanding of pharmacogenomics, focusing specifically on cancer biomarker analysis, and will be guided through a comprehensive workflow from basic concepts to advanced biomarker discovery techniques. Participants will be introduced to the <a href="https://www.bioconductor.org/packages/release/bioc/html/PharmacoGx.html" class="external-link"><code>PharmacoGx</code> package</a> and how to use it to analyze pharmacogenomics data. Through hands-on tutorials and practical exercises, participants will learn how to extract, analyze, and visualize data to identify robust cancer biomarkers, with transferable skills applicable to other areas of disease research.</p>
 <p>Note: This workshop is accompanied by 4 presentations.</p>
-<p>In this R Package, there are 4 vignettes which correspond to 4 modules of the workshop.</p>
+<p><em>Distribution</em>: The workshop is developed as an R package. The package contains vignettes, and data that correspond to the workshop modules.</p>
+<p>The workshop will also be published by the <a href="https://bioinformaticsdotca.github.io/PGX_2024" class="external-link">CBW Workshop Website</a></p>
 <p>By visiting the <a href="https://bhklab.github.io/CBWWorkshop2024/">published workshop</a>, you can see the following modules:</p>
 <ol style="list-style-type: decimal">
-<li>Module 1 Lab: Getting to know multi-omics data (Julia, Nikta, Jermiah)</li>
+<li><a href="https://bhklab.github.io/CBWWorkshop2024/articles/module1.html">Module 1 Lab: Getting to know multi-omics data (Julia, Nikta, Jermiah)</a></li>
 <li><a href="https://bhklab.github.io/CBWWorkshop2024/articles/module2.html">Module 2 Lab: Hands-on with pharmacogenomics data (Jermiah, Almas)</a></li>
 <li>Module 3: Pharmacogenomics for biomarker discovery - Basic analysis (Nikta, Julia)</li>
 <li>Module 4: Pharmacogenomics for biomarker discovery - Advanced analysis (Nikta, Julia)</li>
@@ -71,23 +75,32 @@
 <p>To view the vignettes, click on the <code>articles</code> tab in the package landing page.</p>
 </div>
 <div class="section level2">
-<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+<h2 id="setup-for-workshop-participants">Setup for Workshop Participants<a class="anchor" aria-label="anchor" href="#setup-for-workshop-participants"></a>
 </h2>
 <div class="section level3">
 <h3 id="installing-from-github">Installing from GitHub<a class="anchor" aria-label="anchor" href="#installing-from-github"></a>
 </h3>
-<p>Run</p>
+<p>Run to install this package and its dependencies.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"bhklab/CBWWorkshop2024"</span><span class="op">)</span></span></code></pre></div>
-<p>to install this package and its dependencies.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
 <div class="section level3">
+<h3 id="section"></h3>
+</div>
+<div class="section level3">
 <h3 id="adding-to-the-repo">Adding to the repo<a class="anchor" aria-label="anchor" href="#adding-to-the-repo"></a>
 </h3>
+<ol start="0" style="list-style-type: decimal">
+<li>Installing developer tools</li>
+</ol>
+<p>If you haven’t worked with R packages before, some packages make life a lot easier. You can do install them by running the following command in R:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pkgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"devtools"</span>, <span class="st">"usethis"</span>, <span class="st">"roxygen2"</span>, <span class="st">"testthat"</span>, <span class="st">"biocthis"</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="va">pkgs</span><span class="op">)</span></span></code></pre></div>
 <ol style="list-style-type: decimal">
 <li>Clone the repository and create a new branch</li>
 </ol>
@@ -97,11 +110,17 @@ git checkout -b &lt;your-branch-name&gt;</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Add your changes</li>
 </ol>
+<p>Example 1: add yourself as an author to the package</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">use_author</span><span class="op">(</span><span class="st">"firstname"</span>, <span class="st">"secondname"</span>, role<span class="op">=</span><span class="st">"aut"</span><span class="op">)</span></span>
+<span><span class="co"># your name should now appear in the description file</span></span></code></pre></div>
+<p>Example 2: Add a new vignette</p>
 <pre><code><span><span class="co"># Make a new Vignette</span></span>
 <span><span class="fu">biocthis</span><span class="fu">::</span><span class="fu">use_bioc_vignette</span><span class="op">(</span><span class="st">"Module3"</span>, <span class="st">"Module 3: TITLE"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Your vignette should be in the vignettes folder</span></span>
-<span><span class="co"># Make a bunch of changes, atleast delete all the content and add your own</span></span></code></pre>
+<span><span class="co"># Make a bunch of changes, atleast delete all the auto-generated</span></span>
+<span><span class="co"># and add your own content</span></span></code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Commit and push your changes</li>
 </ol>
@@ -123,7 +142,7 @@ git pull</code></pre>
 <p>Then, merge the changes into your branch</p>
 <pre><code>git checkout &lt;your-branch-name&gt;
 git merge origin/main</code></pre>
-<p>If there are conflicts, you will need to resolve them before you can merge the changes. See this helpful guide on resolving conflicts: <a href="https://docs.github.com/en/github/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line" class="external-link">https://docs.github.com/en/github/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line</a></p>
+<p>If there are conflicts, you will need to resolve them before you can merge the changes. <a href="https://docs.github.com/en/github/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line" class="external-link">See this helpful guide on resolving conflicts:</a></p>
 </div>
 </div>
 </div>
