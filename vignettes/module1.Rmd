@@ -1,8 +1,12 @@
 ---
 title: "Module 1: Introduction to pharmacogenomics"
 author:
-  - name: Jermiah Joseph, Nikta Feizi, Julia Nguyen
+  - name: Julia Nguyen
     email: julia.nguyen@uhn.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
+  - name: Jermiah J. Joseph
+    email: jermiah.joseph@uhn.ca
     affiliation:
         - &pm Princess Margaret Cancer Centre
 output: 

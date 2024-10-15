@@ -42,5 +42,7 @@ Remotes:
     bhklab/PharmacoGx
 VignetteBuilder: knitr
 URL: https://bhklab.github.io/CBWWorkshop2024/
+BugReports: https://github.com/bhklab/CBWWorkshop2024/issues
 Depends: 
     R (>= 2.10)
+
