@@ -9,7 +9,7 @@ data("NCI60_molecular_data")
 allsampleids <- NCI60_molecular_data$sampleid
 
 # take 50 random samples
-sampleids <- allsampleids[sample(1:seq_along(allsampleids), 50, replace = FALSE)]
+sampleids <- allsampleids[sample(seq_along(allsampleids), 50, replace = FALSE)]
 
 num_samples <- length(sampleids)
 
@@ -61,7 +61,7 @@ dummy_mae <- MultiAssayExperiment::MultiAssayExperiment(
   colData = dummy_sampleMetadata
 )
 
-usethis::use_data(dummy_mae, overwrite = TRUE)
+# usethis::use_data(dummy_mae, overwrite = TRUE)
 
 data("NCI_ALMANAC_raw")
 data("NCI_ALMANAC_treatment_metadata")
@@ -108,7 +108,7 @@ guess <- CoreGx::guessMapping(
 
 CoreGx::rowDataMap(tremapper) <- guess$rowDataMap
 CoreGx::colDataMap(tremapper) <- guess$colDataMap
-CoreGx::assayMap(tremapper) <- list(raw = guess$assayMap)
+CoreGx::assayMap(tremapper) <- list(sensitivity = guess$assayMap)
 
 (dummy_tre <- CoreGx::metaConstruct(tremapper))
 
@@ -133,31 +133,30 @@ usethis::use_data(dummy_pset, overwrite = TRUE)
 #
 
 message("Fitting treatment response curves")
-#
-# tre |> CoreGx::endoaggregate(
-#   {
-#     # mean_viability <- mean(viability)
-#     #
-#     # list(
-#     #   mean_viability=mean_viability,
-#     #   std_viability=sd(viability)
-#     # )
-#     fit <- PharmacoGx::logLogisticRegression(treatmentdose, viability,
-#                                              viability_as_pct=FALSE)
-#     ic50 <- PharmacoGx::computeIC50(treatmentdose, Hill_fit=fit)
-#     aac <- PharmacoGx::computeAUC(treatmentdose, Hill_fit=fit)
-#     list(
-#       HS=fit[["HS"]],
-#       E_inf = fit[["E_inf"]],
-#       EC50 = fit[["EC50"]],
-#       Rsq=as.numeric(unlist(attributes(fit))),
-#       aac_recomputed=aac,
-#       ic50_recomputed=ic50
-#     )
-#   },
-#   assay="raw",
-#   target="profiles",
-#   enlist=FALSE,
-#   by=c("treatmentid", "sampleid"),
-#   nthread=8
-# ) -> tre_fit
+
+dummy_tre |> CoreGx::endoaggregate(
+  {
+    # mean_viability <- mean(viability)
+    #
+    # list(
+    #   mean_viability=mean_viability,
+    #   std_viability=sd(viability)
+    # )
+    fit <- PharmacoGx::logLogisticRegression(treatmentdose, viability,
+                                             viability_as_pct=FALSE)
+    ic50 <- PharmacoGx::computeIC50(treatmentdose, Hill_fit=fit)
+    aac <- PharmacoGx::computeAUC(treatmentdose, Hill_fit=fit)
+    list(
+      HS=fit[["HS"]],
+      E_inf = fit[["E_inf"]],
+      EC50 = fit[["EC50"]],
+      Rsq=as.numeric(unlist(attributes(fit))),
+      aac_recomputed=aac,
+      ic50_recomputed=ic50
+    )
+  },
+  assay="sensitivity",
+  target="profiles",
+  enlist=FALSE,
+  by=c("treatmentid", "sampleid")
+) -> tre_fit
