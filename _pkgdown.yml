@@ -9,7 +9,7 @@ home:
 navbar:
   right:
    - icon: fa-github
-     href: https://bhklab.github.io/CBWWorkshop2024/
+     href: https://github.com/bhklab/CBWWorkshop2024
 
 #####################################################################
 # Articles
