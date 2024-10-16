@@ -125,7 +125,7 @@ PharmacoGx::downloadPSet(
 )
 
 # Note: this may take a while to download as the files are stored in 
-# zenodo and are quite large
+# Zenodo and are quite large
 ```
 
 For convenience and in the interest of time, we have created a `PharmacoSet` to be used 
@@ -136,7 +136,7 @@ pset <- CBWWorkshop2024::dummy_pset
 pset
 ```
 
-# Understanding `PharmacoSet` the Data Structure
+# Understanding the `PharmacoSet` Data Structure
 
 The `PharmacoSet` class is a container for pharmacogenomic data. 
 
@@ -298,7 +298,7 @@ The `TreatmentResponseExperiment` class has been designed to facilitate
 more than just storing data efficiently. Once the data is curated and
 stored safely inside our object, we are ready to start answering questions.
 
-First, lets extract the `TRE` to work with:
+First, let's extract the `TRE` to work with:
 
 ```{r extract_tre}
 
@@ -323,7 +323,7 @@ tre  |>
 ```
 
 You can also use the `subset` function to subset the `TreatmentResponseExperiment` object
-before performing an `aggregate`.
+before performing `aggregate`.
 
 Additionally, you can even `subset` over the result of an `aggregate` operation.
 
@@ -385,7 +385,7 @@ show(new_tre)
 head(new_tre$tech_rep_counts[order(-N)])
 ```
 
-Lets use this method to summarize the technical replicates by taking the mean
+Let's use this method to summarize the technical replicates by taking the mean
 of the `viability` values for each unique combination of `treatmentid`, `treatmentdose`, `sampleid`, and `bio_rep`.
 
 ```{r tre_endoaggregate2}
@@ -465,7 +465,7 @@ tre_profiled <- tre_avged |>
 )
 ```
 
-Lets look at the profiles we have computed:
+Let's look at the profiles we have computed:
 
 ```{r tre_profiled}
 
@@ -525,7 +525,7 @@ num_observations <- ncol(tpm_matrix)
 num_NA / num_observations
 ```
 
-Now we now that 50% of samples have an `NA` value rather than an expression level
+Now we know that 50% of samples have an `NA` value rather than an expression level
 for `GENE002`. This can be indicative of some technical issue. Let's remove this 
 gene from downstream analysis.
 
@@ -535,7 +535,7 @@ any(is.na(tpm_matrix))
 ```
 
 In the last line of code, we check if there were any remaining `NA` values. Since
-there is none, we can move on to visualizing our data.
+there are none, we can move on to visualizing our data.
 
 ### Principal component analysis for outlier removal
 
@@ -567,7 +567,7 @@ print(dim(org_pca))
 org_pca[1:5,1:5]
 ```
 
-To visualize the data, we plot the first two principal components (PCs)
+To visualize the data, we plot the first two principal components (PCs).
 
 ```{r plot_PCs_batch}
 # add batch labels
