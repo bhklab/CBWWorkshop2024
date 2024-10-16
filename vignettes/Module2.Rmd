@@ -643,7 +643,7 @@ the results to the original PCA visualization.
 
 Don't forget to transpose the adjusted counts matrix!
 
-```{r pca_batch}
+```{r pca_adj_batch}
 # perform PCA on adjusted matrix
 adj_pca <- prcomp(t(adj_tpm_matrix))$x |> as.data.frame() 
 adj_pca$Batch <- meta$batchid[match(rownames(adj_pca), meta$sampleid)] |> as.factor()
