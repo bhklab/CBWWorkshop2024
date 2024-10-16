@@ -1,10 +1,14 @@
 ---
 title: "Module 4: Pharmacogenomics for biomarker discovery - Advanced analysis"
 author: 
-  - name: Your name
+  - name: Julia Nguyen
+    email: julia.nguyen@uhn.ca
     affiliation:
-    - Your institution
-    email: your.email@somewhere.com
+        - &pm Princess Margaret Cancer Centre
+  - name: Nikta Feizi
+    email: nikta.feizi@uhn.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
 output: 
   BiocStyle::html_document:
     self_contained: yes

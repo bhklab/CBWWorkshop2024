@@ -9,6 +9,10 @@ author:
     email: jermiah.joseph@uhn.ca
     affiliation:
         - &pm Princess Margaret Cancer Centre
+  - name: Nikta Feizi
+    email: nikta.feizi@uhn.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
 output: 
   BiocStyle::html_document:
     self_contained: yes
@@ -47,8 +51,8 @@ MAE <- BiocStyle::Biocpkg("MultiAssayExperiment")
 
 ## Instructor(s) name(s) and contact information {-}
 
-* Jermiah Joseph
-* Nikta Feizi
+* Jermiah Joseph <jermiah.joseph@uhn.ca>
+* Nikta Feizi <nikta.feizi@uhn.ca>
 * Julia Nguyen <julia.nguyen@uhn.ca>
 
 ## Lab Description {-}
