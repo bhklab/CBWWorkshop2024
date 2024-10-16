@@ -45,6 +45,22 @@ reference:
   - NCI60_molecular_data
   - NCI_ALMANAC_pset
 
+- subtitle: GDSC Molecular Profiles
+  contents:
+  - GDSC_gene_identifiers
+  - GDSC_model_list
+  - GDSC_drivers
+  - GDSC_rnaseq
+  - GDSC_methylation_model_list
+  - GDSC_methylation
+  - GDSC_drug_response
+
+- subtitle: CCLE Molecular Profiles
+  contents:
+  - CCLE_model_list
+  - CCLE_chromatin
+  - CCLE_rrpa
+  - CCLE_metabolomics
 
 # - title: Samples
 #   navbar: Annotating Samples
