@@ -222,6 +222,7 @@ analysis, we have developed a new class called the `TreatmentResponseExperiment`
 (TRE) which has been specifically designed to handle high dimensional biological
 stimulus-response data.
 
+<span style="color:red; font-size: large; font-weight: bold;">TODO</span>
 @jermiah ADD DIAGRAM OF TRE CLASS
 
 ## View the `treatmentResponse` slot
@@ -356,6 +357,7 @@ tre |>
   )
 ```
 
+<span style="color:red; font-size: large; font-weight: bold;">TODO</span>
 @Julia do we want to plot the technical replicates for a specific treatment? 
 
 idk if that applies here but
@@ -398,6 +400,9 @@ tre_avged <- tre |>
   )
 str(tre_avged$mean_sensitivity)
 ```
+
+<span style="color:red; font-size: large; font-weight: bold;">TODO</span>
+heading below
 
 ### A nice subheading for computing AAC, IC50 etc.
 
@@ -468,6 +473,7 @@ Let's look at the profiles we have computed:
 tre_profiled$profiles
 ```
 
+<span style="color:red; font-size: large; font-weight: bold;">TODO</span>
 @Julia what can I do with these? can I plot or something cool?
 
 ```{r box_plot}
