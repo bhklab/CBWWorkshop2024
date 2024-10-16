@@ -10,11 +10,6 @@ author:
     affiliation:
         - &pm Princess Margaret Cancer Centre
 output: 
-  revealjs::revealjs_presentation:
-    keep_md: true
-    theme: solarized
-    highlight: pygments
-    center: false
   BiocStyle::html_document:
     self_contained: yes
     toc: true
@@ -198,7 +193,6 @@ a `MultiAssayExperiment` which can be accessed through the
 
 ```{r SummarizedExperiment_schema, echo=FALSE, fig.wide=TRUE, fig.cap = "**SummarizedExperiment** and **MultiAssayExperiment** classes."}
 knitr::include_graphics("./MultiAssayExperiment_SummarizedExperiment_schematics.png")
-
 ```
 ## View the `molecularProfiles` slot
 
@@ -419,9 +413,7 @@ tre_avged <- tre  |>
 str(tre_avged$mean_sensitivity)
 ```
 
-
-
-## A nice subheading for computing AAC, IC50 etc.
+## Computing profiles
 
 ```{r tre_endoaggregate3, warning=FALSE}
 
@@ -457,7 +449,7 @@ To determine a safe, and optimal number of threads to use, we can use the
 `CoreGx::optimizeCoreGx` function which will tell us a safe number of threads.
 
 NOTE: The following two code chunks will not be evaluated in this vignette as it
-mawy take some time. 
+may take some time. 
 
 ```{r determine_nthreads, warning=FALSE, eval=FALSE}
 
@@ -468,7 +460,7 @@ Depending on your device, this number may vary.
 Let's use a conservative number of threads for this example.
 
 ```{r tre_endoaggregate4, warning=FALSE, eval=FALSE}
-THREADS <- 2 # github runners provide 2c 
+THREADS <- 6 # github runners provide 2c 
   
 tre_profiled <- tre_avged |> 
   endoaggregate(
@@ -480,7 +472,12 @@ tre_profiled <- tre_avged |>
         HS = fit[["HS"]], E_inf = fit[["E_inf"]]/100, EC50 = fit[["EC50"]],
         Rsq = as.numeric(unlist(attributes(fit))),
         AAC = AAC,
-        IC50 = IC50
+        IC50 = IC50,
+        mindose = min(treatmentdose),
+        maxdose = max(treatmentdose),
+        numdose = length(unique(treatmentdose)),
+        minviability = min(viability),
+        maxviability = max(viability)
       )
     },
     assay="mean_sensitivity",
@@ -494,6 +491,7 @@ tre_profiled <- tre_avged |>
 Lets look at the profiles we have computed:
 
 ```{r tre_profiled}
+show(tre_profiled)
 
 tre_profiled$profiles
 ```
