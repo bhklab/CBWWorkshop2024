@@ -80,7 +80,12 @@ Exploring feature extraction techniques to define biomarkers from (epi)genomic d
 ----
 
 ```{r global_knitr_opts, echo=FALSE}
-knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE, message = TRUE)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  include = TRUE,
+  warning = FALSE,
+  message = TRUE
+)
 ```
 
 ```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
@@ -215,10 +220,15 @@ provided annotation file to map back to the sample names.
 data(GDSC_methylation_model_list)
 GDSC_methylation_model_list |> head()
 
-GDSC_methylation_model_list$sampleid <- paste0("X", GDSC_methylation_model_list$Sentrix_ID, "_", GDSC_methylation_model_list$Sentrix_Position)
+GDSC_methylation_model_list$sampleid <- paste0(
+  "X", GDSC_methylation_model_list$Sentrix_ID,
+  "_", GDSC_methylation_model_list$Sentrix_Position
+)
 colnames(GDSC_methylation) %in% GDSC_methylation_model_list$sampleid |> table()
 
-colnames(GDSC_methylation) <- GDSC_methylation_model_list$Sample_Name[match(colnames(GDSC_methylation), GDSC_methylation_model_list$sampleid)]
+colnames(GDSC_methylation) <- GDSC_methylation_model_list$Sample_Name[
+  match(colnames(GDSC_methylation), GDSC_methylation_model_list$sampleid)
+]
 GDSC_methylation[1:5, 1:5]
 ```
 
@@ -232,6 +242,7 @@ We encourage independent exploration of these datasets.
 
 To facilitate downstream pharmacogenomic analysis, we want to create an expression
 matrix such that:
+
 * Features are the rows
 * Samples are the columns
 * Feature expression as the individual values
@@ -239,7 +250,10 @@ matrix such that:
 Below, we show a example of such matrix using dummy data.
 
 ```{r example_expr_matrix}
-dummy_data <- setNames(as.data.frame(replicate(5, rnorm(5))), paste0("Sample", 1:5))
+dummy_data <- setNames(
+  as.data.frame(replicate(5, rnorm(5))),
+  paste0("Sample", 1:5)
+)
 rownames(dummy_data) <- paste0("Feature", 1:5)
 dummy_data
 ```
@@ -290,14 +304,19 @@ GDSC_drivers |> head()
 ```
 
 Looking at the first row, we can see that there is a mutation on the `RGPD3` gene in 
-the `SIDM02101` cell line model. We would represent such mutation events wtih `1`. 
+the `SIDM02101` cell line model. We would represent such mutation events wtih `1`.
 
 The code below again casts the long data frame into a wide format. This time we specify
 an aggregate function `length()`, which returns the number of rows (mutation events)
 for each gene-cell line pair. This was done by passing the option `fun.aggregate = length`.
 
 ```{r process_driver_mutations}
-expr <- reshape2::dcast(GDSC_drivers, gene_symbol ~ model_id, value.var = "cdna_mutation", fun.aggregate = length)
+expr <- reshape2::dcast(
+  GDSC_drivers,
+  gene_symbol ~ model_id,
+  value.var = "cdna_mutation",
+  fun.aggregate = length
+)
 rownames(expr) <- expr$gene_symbol
 expr$gene_symbol <- NULL
 
@@ -314,17 +333,16 @@ Mutation events are relatively sparse, so we see `0` for the majority of the mat
 ### Signature extraction
 
 There are cases when individual features have low predictive power, but when combined 
-become much more informative of drug response. 
+become much more informative of drug response.
 
 Let's revisit our methylation data. Recall that each row is a CpG site. There are
-1000 CpG sites. 
+1000 CpG sites.
 
 ```{r get_methylation2}
 GDSC_methylation[1:5, 1:5]
 
 GDSC_methylation |> dim()
 ```
-
 
 Signatures refer to combinations of features that form some pattern with biological 
 relevance. For example, you may choose to define a signature X to represent CpG sites
@@ -350,11 +368,10 @@ we will sum the beta values across each CpG for each signature.
 sScores <- data.frame(matrix(NA, nrow = 0, ncol = 100))
 
 for (s in c(1:10)) {
-  
   # get CpGs within each signature
-  cpgs <- signatures[signatures$Signature == s,]$CpG
-  mSig <- GDSC_methylation[rownames(GDSC_methylation) %in% cpgs,]
-  
+  cpgs <- signatures[signatures$Signature == s, ]$CpG
+  mSig <- GDSC_methylation[rownames(GDSC_methylation) %in% cpgs, ]
+
   # compute sum of beta values for each cell line
   sSum <- colSums(mSig)
   sScores <- rbind(sScores, sSum)
@@ -363,7 +380,7 @@ for (s in c(1:10)) {
 rownames(sScores) <- paste0("Signature", 1:10)
 colnames(sScores) <- colnames(GDSC_methylation)
 
-sScores[1:10,1:5]
+sScores[1:10, 1:5]
 ```
 
 We now have a new expression matrix, this time of the 10 defined signatures for
