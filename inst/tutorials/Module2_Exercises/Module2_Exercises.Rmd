@@ -1,6 +1,10 @@
 ---
 title: "Module2: Exercises"
 output:
+  revealjs::revealjs_presentation:
+    theme: solarized
+    highlight: pygments
+    center: false
   BiocStyle::html_document:
     self_contained: yes
     toc: true
@@ -14,7 +18,7 @@ description: >
 
 ```{r global_knitr_opts, echo=FALSE}
 knitr::opts_chunk$set(
-  echo = TRUE, include = TRUE, warning = FALSE, message = TRUE
+  echo = FALSE, include = TRUE, warning = FALSE, message = TRUE
 )
 ```
 
@@ -71,6 +75,8 @@ Subset the PSet to include only data for the sample "NCI-H322M"
 pset |> subsetBySample("NCI-H322M")
 ```
 
+## Subsetting the PSet
+
 Subset the PSet to include only data for samples where:
 
 * The `NCI_ALMANAC.disease` is "Non-Small Cell Lung Cancer"
@@ -87,7 +93,7 @@ pset |> subsetBySample(
 ```
 
 
-# Data Transformation
+# Subset and Aggregate
 
 Load the `NCI_ALMANAC_TRE` object provided by this workshop.
 
@@ -162,6 +168,41 @@ tre  |>
 ```
 
 
+## Endoaggregation
+
+Use `endoaggregate` to summarize the data by taking the mean of the `viability` values
+
+
+## Endoaggregate `TreatmentResponseExperiment` mean viability
+
+Use `endoaggregate` to get a `TreatmentResponseExperiment` with a new assay 
+called `summary_viability` that summarizes the viability data with:
+1. The `mean` 
+2. The `median` 
+3. The `std` 
+3. The `min` 
+4. The `max` 
+
+The col names can be 
+* `mean_viability`
+* `median_viability` 
+* etc. 
+
+Note: you will have to determine what to aggregate over based on the data you have
+
+```{r tre_endoaggregate_exercise}
+tre |>
+  endoaggregate(
+    mean_viability = mean(viability),
+    median_viability = median(viability),
+    min_viability = min(viability),
+    max_viability = max(viability),
+    std_viability = sd(viability),
+    by = c("treatmentid", "sampleid", "bio_rep", "dose"),
+    assay="sensitivity",
+    target="summary_viability"
+  ) 
+```
 
 
 

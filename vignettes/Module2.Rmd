@@ -400,9 +400,6 @@ tre_avged <- tre |>
 str(tre_avged$mean_sensitivity)
 ```
 
-<span style="color:red; font-size: large; font-weight: bold;">TODO</span>
-heading below
-
 ## Computing profiles
 
 ```{r tre_endoaggregate3, warning=FALSE}
