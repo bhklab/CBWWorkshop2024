@@ -26,7 +26,10 @@ Imports:
     CoreGx,
     PharmacoGx,
     MultiAssayExperiment,
-    data.table
+    data.table,
+    ggplot2,
+    ggpubr,
+    sva
 Suggests:
     knitr,
     rmarkdown,

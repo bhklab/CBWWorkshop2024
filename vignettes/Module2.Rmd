@@ -474,28 +474,18 @@ tre_profiled$profiles
 
 @Julia what can I do with these? can I plot or something cool?
 
-```{r waterfall_plot}
+```{r box_plot}
+#tre_profiled$profiles
 
-tre_profiled$profiles
+#TODO: add code to make box plots for AAC and IC50 per drug
 
-
-# order by CI
-    toPlot <- toPlot[order(toPlot$ci),]
-    toPlot$rank <- 1:nrow(toPlot)
-
-    toPlot$rank <- as.factor(toPlot$rank)
-    toPlot$drug <- as.factor(toPlot$drug)
-
-    p <- ggplot(toPlot, aes(x = ci - 0.5, y = rank)) +
-    geom_col(aes(fill = type), color = "black") + scale_x_continuous(limits = c(-0.5, 0.5), labels = function(x) x + 0.5) +
-    scale_y_discrete(breaks = toPlot$rank, labels = toPlot$drug) + geom_vline(xintercept = 0) +
-    scale_fill_manual("Association", values = pal2) + theme_classic() + 
-    theme(plot.title = element_text(hjust = 0.5)) + 
-    labs(y = "Drug", title = signature, x = "Concordance Index (CI)") 
 ```
 
 
 ## Quality Control of Pharmacogenomic Datasets
+
+For the remainder of the lab, we will go over some quick case scenarios that require
+quality control. We will load in new molecular profile.
 
 
 ### Checking for missing values
