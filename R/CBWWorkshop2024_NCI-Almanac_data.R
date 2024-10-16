@@ -75,6 +75,26 @@
 #' @format `data.frame` object
 "NCI_ALMANAC_treatment_metadata"
 
+#' A `TreatmentResponseExperiment` containing RNA microarray, mircoRNA and RNA
+#' sequencing data from the NCI60, subset to cell-lines in NCI-ALMANAC
+#'
+#' This data has been precurated for inclusion in the NCI60_2021 PharmacoSet,
+#' hosted on www.ORCESTRA.ca and downloadable from `PharmacoGx` via the
+#' `downloadPSet` function. This data has already been subset to contain only
+#' cancer cell-lines also present in the NCI-ALMANAC dataset.
+#'
+#' @references
+#' 1. Shoemaker, R. H. (2006). The NCI60 human tumour cell line anticancer drug screen. Nature Reviews Cancer, 6(10), 813–823. https://doi.org/10.1038/nrc1951
+#' 2. Holbeck, S. L., Camalier, R., Crowell, J. A., Govindharajulu, J. P., Hollingshead, M., Anderson, L. W., Polley, E., Rubinstein, L., Srivastava, A., Wilsker, D., Collins, J. M., & Doroshow, J. H. (2017). The National Cancer Institute ALMANAC: A Comprehensive Screening Resource for the Detection of Anticancer Drug Pairs with Enhanced Therapeutic Activity. Cancer Research, 77(13), 3564–3576. https://doi.org/10.1158/0008-5472.CAN-17-0489
+#'
+#' @docType data
+#' @name NCI_ALMANAC_TRE
+#' @usage data(NCI_ALMANAC_TRE)
+#' @usage CBWWorkshop2024::NCI_ALMANAC_TRE
+#' @keywords datasets
+#' @format `TreatmentResponseExperiment` object
+"NCI_ALMANAC_TRE"
+
 #' The final `PharmacoSet` object containing the multiple parts of the NCI-ALMANAC
 #' dataset.
 #' 

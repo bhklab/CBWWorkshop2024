@@ -1,6 +1,6 @@
 Package: CBWWorkshop2024
 Title: CBW Workshop 2024: Pharmacogenomics Data Analysis 
-Version: 0.0.0.9019
+Version: 0.0.0.9020
 Authors@R: c(
     person("Jermiah", "Joseph", , "jermiahjoseph98@gmail.com", role = c("aut", "cre")),
     person("Julia", "Nguyen", role = "aut"),
@@ -51,4 +51,4 @@ VignetteBuilder: knitr
 URL: https://bhklab.github.io/CBWWorkshop2024/
 BugReports: https://github.com/bhklab/CBWWorkshop2024/issues
 Depends: 
-    R (>= 4.3.0)
+    R (>= 4.0.0)

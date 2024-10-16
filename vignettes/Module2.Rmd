@@ -363,24 +363,6 @@ proceed with the data.
 One common approach is to summarize the technical replicates into a single value,
 this can be done by taking the mean, median, or any other summary statistic.
 
-### Exercise 
-
-* Use `aggregate` to summarize the data by taking the mean of the `viability` values
-* Aggregate over the `treatmentid`, `sampleid`, `bio_rep`, and `treatmentdose`
-* Then, count the number of doses for each unique combination of `treatmentid`, `sampleid`, and `bio_rep`
-* Plot the histogram of the number of doses
-
-```{r tre_aggregate_exercise}
-tre |>
-  aggregate(
-    assay = "sensitivity",
-    viability = mean(viability),
-    by = c("treatmentid", "sampleid", "bio_rep", "treatmentdose")
-  ) |>
-  _[, .N, by = c("treatmentid", "sampleid", "bio_rep")] |>
-  with(expr = hist(N, main = "Histogram of Number of Doses", xlab = "Number of Doses"))
-```
-
 ## `Endoaggregate`
 
 In the interest of computation time and resources, we want to summarize the
