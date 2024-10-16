@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBWWorkshop2024</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9019</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9021</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -613,32 +613,6 @@ want to proceed with the data.</p>
 single value, this can be done by taking the mean, median, or any other
 summary statistic.</p>
 </div>
-<div class="section level4">
-<h4 id="exercise">Exercise<a class="anchor" aria-label="anchor" href="#exercise"></a>
-</h4>
-<ul>
-<li>Use <code>aggregate</code> to summarize the data by taking the mean
-of the <code>viability</code> values</li>
-<li>Aggregate over the <code>treatmentid</code>, <code>sampleid</code>,
-<code>bio_rep</code>, and <code>treatmentdose</code>
-</li>
-<li>Then, count the number of doses for each unique combination of
-<code>treatmentid</code>, <code>sampleid</code>, and
-<code>bio_rep</code>
-</li>
-<li>Plot the histogram of the number of doses</li>
-</ul>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tre</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span></span>
-<span>    assay <span class="op">=</span> <span class="st">"sensitivity"</span>,</span>
-<span>    viability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">viability</span><span class="op">)</span>,</span>
-<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span>, <span class="st">"treatmentdose"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="va">_</span><span class="op">[</span>, <span class="va">.N</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span>expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">N</span>, main <span class="op">=</span> <span class="st">"Histogram of Number of Doses"</span>, xlab <span class="op">=</span> <span class="st">"Number of Doses"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Module2_files/figure-html/tre_aggregate_exercise-1.png" width="700"></p>
-</div>
 </div>
 <div class="section level3">
 <h3 id="endoaggregate">
@@ -653,7 +627,7 @@ method.</p>
 <p>This method will perform similar to the <code>aggregate</code>
 method, but will return a <code>TreatmentResponseExperiment</code>
 object with the summarized data as another assay.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_tre</span> <span class="op">&lt;-</span> <span class="va">tre</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">endoaggregate</span><span class="op">(</span></span>
 <span>    N <span class="op">=</span> <span class="va">.N</span>,</span>
@@ -670,7 +644,7 @@ object with the summarized data as another assay.</p>
 <span><span class="co">##    <span style="color: #BBBB00; font-weight: bold;">colnames(52): </span><span style="color: #00BB00;">786-O:1 A-498:1 A-549:1 ... UACC-257:1 UACC-62:1 UO-31:1</span> </span></span>
 <span><span class="co">##    <span style="color: #BBBB00; font-weight: bold;">colData(3): </span><span style="color: #00BB00;">sampleid bio_rep PANEL</span> </span></span>
 <span><span class="co">##    <span style="color: #BBBB00; font-weight: bold;">metadata(0): </span><span style="color: #00BB00;">none</span></span></span></code></pre>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">new_tre</span><span class="op">$</span><span class="va">tech_rep_counts</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="va">N</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##    treatmentdose treatmentid    sampleid bio_rep     N</span></span>
 <span><span class="co">##            &lt;num&gt;      &lt;char&gt;      &lt;char&gt;   &lt;int&gt; &lt;int&gt;</span></span>
@@ -684,7 +658,7 @@ object with the summarized data as another assay.</p>
 the mean of the <code>viability</code> values for each unique
 combination of <code>treatmentid</code>, <code>treatmentdose</code>,
 <code>sampleid</code>, and <code>bio_rep</code>.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tre_avged</span> <span class="op">&lt;-</span> <span class="va">tre</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">endoaggregate</span><span class="op">(</span></span>
 <span>    viability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">viability</span><span class="op">)</span>,</span>
@@ -701,13 +675,11 @@ combination of <code>treatmentid</code>, <code>treatmentdose</code>,
 <span><span class="co">##  $ viability    : num  98 99.7 99.3 96 103.7 ...</span></span>
 <span><span class="co">##  - attr(*, "sorted")= chr [1:4] "treatmentdose" "treatmentid" "sampleid" "bio_rep"</span></span>
 <span><span class="co">##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;</span></span></code></pre>
-<p><span style="color:red; font-size: large; font-weight: bold;">TODO</span>
-heading below</p>
 </div>
 <div class="section level3">
 <h3 id="computing-profiles">Computing profiles<a class="anchor" aria-label="anchor" href="#computing-profiles"></a>
 </h3>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tre_profiled</span> <span class="op">&lt;-</span> <span class="va">tre_avged</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">endoaggregate</span><span class="op">(</span></span>
 <span>    <span class="op">{</span></span>
@@ -738,11 +710,11 @@ the <code><a href="https://rdrr.io/pkg/CoreGx/man/optimizeCoreGx.html" class="ex
 safe number of threads.</p>
 <p>NOTE: The following two code chunks will not be evaluated in this
 vignette as it may take some time.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">CoreGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/optimizeCoreGx.html" class="external-link">optimizeCoreGx</a></span><span class="op">(</span><span class="va">tre_avged</span><span class="op">)</span></span></code></pre></div>
 <p>Depending on your device, this number may vary. Let’s use a
 conservative number of threads for this example.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">THREADS</span> <span class="op">&lt;-</span> <span class="fl">6</span> <span class="co"># github runners provide 2c</span></span>
 <span></span>
 <span><span class="va">tre_profiled</span> <span class="op">&lt;-</span> <span class="va">tre_avged</span> <span class="op">|&gt;</span></span>
@@ -770,7 +742,7 @@ conservative number of threads for this example.</p>
 <span>    nthread <span class="op">=</span> <span class="va">THREADS</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>Let’s look at the profiles we have computed:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">show</span><span class="op">(</span><span class="va">tre_profiled</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;TreatmentResponseExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">## </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  4847 52 </span></span></span>
@@ -780,7 +752,7 @@ conservative number of threads for this example.</p>
 <span><span class="co">##    <span style="color: #BBBB00; font-weight: bold;">colnames(52): </span><span style="color: #00BB00;">786-O:1 A-498:1 A-549:1 ... UACC-257:1 UACC-62:1 UO-31:1</span> </span></span>
 <span><span class="co">##    <span style="color: #BBBB00; font-weight: bold;">colData(3): </span><span style="color: #00BB00;">sampleid bio_rep PANEL</span> </span></span>
 <span><span class="co">##    <span style="color: #BBBB00; font-weight: bold;">metadata(0): </span><span style="color: #00BB00;">none</span></span></span></code></pre>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tre_profiled</span><span class="op">$</span><span class="va">profiles</span></span></code></pre></div>
 <pre><code><span><span class="co">## Key: &lt;treatmentid, sampleid, bio_rep&gt;</span></span>
 <span><span class="co">##      treatmentid sampleid bio_rep    HS      E_inf  EC50       Rsq       AAC</span></span>
@@ -809,7 +781,7 @@ conservative number of threads for this example.</p>
 <span><span class="co">## 149:         NA</span></span>
 <span><span class="co">## 150: 0.02680624</span></span>
 <span><span class="co">## 151:         NA</span></span></code></pre>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># tre_profiled$profiles</span></span>
 <span></span>
 <span><span class="co"># TODO: add code to make box plots for AAC and IC50 per drug</span></span></code></pre></div>
@@ -824,7 +796,7 @@ profile.</p>
 <div class="section level3">
 <h3 id="checking-for-missing-values">Checking for missing values<a class="anchor" aria-label="anchor" href="#checking-for-missing-values"></a>
 </h3>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get molecular profile</span></span>
 <span><span class="va">tpm_matrix</span> <span class="op">&lt;-</span> <span class="va">pset</span><span class="op">@</span><span class="va">molecularProfiles</span><span class="op">[[</span><span class="st">"rnaseq.tpm.batch"</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">assay</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -836,7 +808,7 @@ profile.</p>
 <span><span class="co">## GENE003 85.2218882 103.63729   8.646855  86.64833 42.742828</span></span>
 <span><span class="co">## GENE004  0.0749728  89.58816  19.705347  45.51081 75.588726</span></span>
 <span><span class="co">## GENE005 57.0379889  80.19416  92.440089  53.37649 66.238551</span></span></code></pre>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get metadata</span></span>
 <span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="va">pset</span><span class="op">@</span><span class="va">molecularProfiles</span><span class="op">[[</span><span class="st">"rnaseq.tpm.batch"</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu">colData</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">meta</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -853,11 +825,11 @@ profile.</p>
 values. Let’s look for this gene.</p>
 <p>The code below will quantify the number of <code>NA</code> values in
 each row (gene).</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">tpm_matrix</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## GENE001 GENE002 GENE003 GENE004 GENE005 GENE006 </span></span>
 <span><span class="co">##       0      25       0       0       0       0</span></span></code></pre>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># print only genes with NA values</span></span>
 <span><span class="va">sum_NA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">tpm_matrix</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">sum_NA</span><span class="op">[</span><span class="va">sum_NA</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span></span></code></pre></div>
@@ -867,7 +839,7 @@ each row (gene).</p>
 important to consider the proportion of <code>NA</code> values relative
 to the number of observations. We can quickly calculate the
 proportion:</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">num_NA</span> <span class="op">&lt;-</span> <span class="va">sum_NA</span><span class="op">[</span><span class="va">sum_NA</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">num_observations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span></span>
 <span></span>
@@ -878,7 +850,7 @@ proportion:</p>
 than an expression level for <code>GENE002</code>. This can be
 indicative of some technical issue. Let’s remove this gene from
 downstream analysis.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tpm_matrix</span> <span class="op">&lt;-</span> <span class="va">tpm_matrix</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span> <span class="op">==</span> <span class="st">"GENE002"</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] FALSE</span></span></code></pre>
@@ -890,7 +862,7 @@ visualizing our data.</p>
 <h3 id="principal-component-analysis-for-outlier-removal">Principal component analysis for outlier removal<a class="anchor" aria-label="anchor" href="#principal-component-analysis-for-outlier-removal"></a>
 </h3>
 <p>Let’s quickly take a look at our expression matrix again.</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##            NCI-H23    HOP-62     SNB-75 HL-60(TB)     A-549</span></span>
 <span><span class="co">## GENE001 90.5370190  75.59677 104.525210  42.18450  9.391661</span></span>
@@ -903,7 +875,7 @@ visualizing our data.</p>
 <p>Since we want to do PCA to visualize the <em>samples</em>, we need to
 transpose the matrix so that the attributes of the samples (genes) are
 the columns instead.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">t_tpm_matrix</span> <span class="op">&lt;-</span> <span class="va">tpm_matrix</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -916,12 +888,12 @@ the columns instead.</p>
 <span><span class="co">## A-549       9.391661  42.742828 75.5887260 66.23855 44.45274</span></span></code></pre>
 <p>Once the expression matrix is in the correct format, we can perform
 PCA using the <code>prcomp</code> function.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">org_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="va">t_tpm_matrix</span><span class="op">)</span><span class="op">$</span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">org_pca</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 50 50</span></span></code></pre>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">org_pca</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##                  PC1       PC2       PC3        PC4       PC5</span></span>
 <span><span class="co">## NCI-H23   -44.039730 -45.92050  63.97547  -9.390331  42.39060</span></span>
@@ -931,7 +903,7 @@ PCA using the <code>prcomp</code> function.</p>
 <span><span class="co">## A-549       8.510913  84.27694  59.59322  -9.085760  29.08710</span></span></code></pre>
 <p>To visualize the data, we plot the first two principal components
 (PCs).</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># add batch labels</span></span>
 <span><span class="va">org_pca</span><span class="op">$</span><span class="va">Batch</span> <span class="op">&lt;-</span> <span class="va">meta</span><span class="op">$</span><span class="va">batchid</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">org_pca</span><span class="op">)</span>, <span class="va">meta</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -947,7 +919,7 @@ PCA using the <code>prcomp</code> function.</p>
 <p>There is a very obvious outlier in our data. We can quantitatively
 identify this outlier by identifying samples that lie beyond a threshold
 of <code>1.5 * IQR</code> of the first and fourth quartiles.</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># extract PC scores for given PC</span></span>
 <span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="va">org_pca</span><span class="op">[[</span><span class="st">"PC1"</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
@@ -963,7 +935,7 @@ of <code>1.5 * IQR</code> of the first and fourth quartiles.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Outlier for PC1:"</span>, <span class="va">outlier</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Outlier for PC1: T-47D"</span></span></code></pre>
 <p>Let’s remove <code>T-47D</code> and re-plot our data.</p>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remove outlier</span></span>
 <span><span class="va">outlier</span> <span class="op">&lt;-</span> <span class="st">"T-47D"</span></span>
 <span><span class="va">tpm_matrix</span><span class="op">[[</span><span class="va">outlier</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
@@ -990,7 +962,7 @@ cluster by batch. This is indicative of a potential batch effect.</p>
 <p>When we have a known batch, we can adjust for it directly. One method
 is to use the <code>ComBat()</code> function from the <code>sva</code>
 package.</p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># adjust for known batch</span></span>
 <span><span class="va">adj_tpm_matrix</span> <span class="op">&lt;-</span> <span class="fu">ComBat</span><span class="op">(</span></span>
 <span>  dat <span class="op">=</span> <span class="va">tpm_matrix</span>,</span>
@@ -1004,7 +976,7 @@ package.</p>
 <pre><code><span><span class="co">## Fitting L/S model and finding priors</span></span></code></pre>
 <pre><code><span><span class="co">## Finding parametric adjustments</span></span></code></pre>
 <pre><code><span><span class="co">## Adjusting the Data</span></span></code></pre>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adj_tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##           NCI-H23   HOP-62    SNB-75 HL-60(TB)     A-549</span></span>
 <span><span class="co">## GENE001 81.991219 68.65465 94.477925  46.14868  9.844954</span></span>
@@ -1016,7 +988,7 @@ package.</p>
 matrix. We will compare the results to the original PCA
 visualization.</p>
 <p>Don’t forget to transpose the adjusted counts matrix!</p>
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># perform PCA on adjusted matrix</span></span>
 <span><span class="va">adj_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">adj_tpm_matrix</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">adj_pca</span><span class="op">$</span><span class="va">Batch</span> <span class="op">&lt;-</span> <span class="va">meta</span><span class="op">$</span><span class="va">batchid</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">adj_pca</span><span class="op">)</span>, <span class="va">meta</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="op">)</span></span>
