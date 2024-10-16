@@ -1,12 +1,12 @@
 ---
 title: "Module 1: Introduction to pharmacogenomics"
 author:
-  - name: Julia Nguyen
-    email: julia.nguyen@uhn.ca
-    affiliation:
-        - &pm Princess Margaret Cancer Centre
   - name: Jermiah J. Joseph
     email: jermiah.joseph@uhn.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
+  - name: Julia Nguyen
+    email: julia.nguyen@uhn.ca
     affiliation:
         - &pm Princess Margaret Cancer Centre
   - name: Nikta Feizi
@@ -146,8 +146,10 @@ GDSC_rnaseq$gene_symbol %in% GDSC_gene_identifiers$hgnc_symbol |> table()
 GDSC_rnaseq$gene_symbol %in% GDSC_gene_identifiers$cosmic_gene_symbol |> table()
 ```
 
-This is a pretty obvious indicator to move forward with the `gene_id` for downstream
-analysis.
+We can see that `gene_id` maps completely to the genes in our RNA-seq data,
+whereas `hgnc_symbol` and `cosmic_gene_symbol` are missing gene symbols (see the
+numbers under `FALSE`). This is a pretty obvious indicator to move forward with
+the `gene_id` for downstream analysis.
 
 Now we move over to the cell line annotations. There are a few attributes made available, 
 we first look to confirm the mapping id to the RNA-Seq data.
@@ -214,7 +216,7 @@ GDSC_methylation[1:5, 1:5]
 
 This data has already been processed into a matrix. Notice though that the sample
 names are not present, instead there is the array ID and position. We can use the
-provided annotation file to map back to the sample names.
+provided annotation file to map back to the sample names in our model list.
 
 ```{r get_methylation_model_list}
 data(GDSC_methylation_model_list)
@@ -292,7 +294,7 @@ Notice that we have the 1350 genes as the rows and the 100 cell lines as the col
 
 While using the continuous expression of single features is a convenient method for 
 quantifying biomarkers, there are cases when other techniques are needed and/or 
-more appropriate.
+are more appropriate.
 
 ### Binarization
 
@@ -304,7 +306,7 @@ GDSC_drivers |> head()
 ```
 
 Looking at the first row, we can see that there is a mutation on the `RGPD3` gene in 
-the `SIDM02101` cell line model. We would represent such mutation events wtih `1`.
+the `SIDM02101` cell line model. We would represent such mutation events with `1`.
 
 The code below again casts the long data frame into a wide format. This time we specify
 an aggregate function `length()`, which returns the number of rows (mutation events)

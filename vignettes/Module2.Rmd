@@ -512,8 +512,8 @@ tre_profiled$profiles
 
 # Quality Control of Pharmacogenomic Datasets
 
-For the remainder of the lab, we will go over some quick case scenarios that require
-quality control. We will load in new molecular profile.
+For the remainder of the lab, we briefly go over some common scenarios that require
+quality control. We will load in a new molecular profile.
 
 
 ## Checking for missing values

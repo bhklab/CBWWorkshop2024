@@ -63,14 +63,12 @@ pak::pkg_install("bhklab/CBWWorkshop2024", dependencies=TRUE)
 
 ## Contributing
 
-### 
-
-### Adding to the repo 
+### Adding to the repo
 
 0. Installing developer tools
 
 If you haven't worked with R packages before, some packages make life a lot 
-easier. You can do install them by running the following command in R:
+easier. You can install them by running the following command in R:
 
 ```R
 pkgs <- c("devtools", "usethis", "roxygen2", "testthat", "biocthis")
