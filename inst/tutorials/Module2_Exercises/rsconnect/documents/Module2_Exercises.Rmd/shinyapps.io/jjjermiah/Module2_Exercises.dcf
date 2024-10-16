@@ -1,0 +1,12 @@
+name: Module2_Exercises
+title: Module2_Exercises
+username: jjjermiah
+account: jjjermiah
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13029189
+bundleId:
+url: https://jjjermiah.shinyapps.io/Module2_Exercises/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

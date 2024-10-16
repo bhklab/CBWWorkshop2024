@@ -1,6 +1,6 @@
 Package: CBWWorkshop2024
 Title: CBW Workshop 2024: Pharmacogenomics Data Analysis 
-Version: 0.0.0.9014
+Version: 0.0.0.9016
 Authors@R: c(
     person("Jermiah", "Joseph", , "jermiahjoseph98@gmail.com", role = c("aut", "cre")),
     person("Julia", "Nguyen", role = "aut"),
@@ -26,7 +26,10 @@ Imports:
     CoreGx,
     PharmacoGx,
     MultiAssayExperiment,
-    data.table
+    data.table,
+    ggplot2,
+    dplyr,
+    learnr
 Suggests:
     knitr,
     rmarkdown,
@@ -38,7 +41,6 @@ Suggests:
     rmdformats,
     meta,
     pander,
-    learnr,
     rsconnect
 Remotes:
     bhklab/CoreGx,
