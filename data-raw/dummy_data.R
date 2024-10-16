@@ -83,14 +83,14 @@ treatmentids <- subset_treatmentmeta$treatmentid
 # There will be the following doses
 subset_raw_tr <- NCI_ALMANAC_raw[
   treatment2id == "",
-  mean(viability),
-  by = .(treatment1id, treatment1dose, sampleid, PANEL, CONC1)
+  viability,
+  by = .(treatment1id, treatment1dose, sampleid, PANEL, CONC1, tech_rep, bio_rep)
 ][
   treatment1id %in% treatmentids & sampleid %in% sampleids
 ]
 data.table::setnames(
   subset_raw_tr, 
-  c("V1", "treatment1id", "treatment1dose"), c("viability", "treatmentid", "treatmentdose")
+  c("treatment1id", "treatment1dose"), c("treatmentid", "treatmentdose")
 )
 
 
@@ -99,9 +99,9 @@ tremapper <- CoreGx::TREDataMapper(rawdata = subset_raw_tr)
 guess <- CoreGx::guessMapping(
   tremapper,
   list(
-    rowDataMap = c("treatmentdose", "treatmentid"),
-    colDataMap = c("sampleid"),
-    assayMap = c("treatmentdose", "treatmentid", "sampleid")
+    rowDataMap = c("treatmentdose", "treatmentid", "tech_rep"),
+    colDataMap = c("sampleid", "bio_rep"),
+    assayMap = c("treatmentdose", "treatmentid", "sampleid", "tech_rep", "bio_rep")
   ),
   subset = TRUE
 )
@@ -131,32 +131,32 @@ usethis::use_data(dummy_pset, overwrite = TRUE)
 # dummy_mae <- NCI60_molecular_data[, sampleids]
 #
 #
-
-message("Fitting treatment response curves")
-
-dummy_tre |> CoreGx::endoaggregate(
-  {
-    # mean_viability <- mean(viability)
-    #
-    # list(
-    #   mean_viability=mean_viability,
-    #   std_viability=sd(viability)
-    # )
-    fit <- PharmacoGx::logLogisticRegression(treatmentdose, viability,
-                                             viability_as_pct=TRUE)
-    ic50 <- PharmacoGx::computeIC50(treatmentdose, Hill_fit=fit)
-    aac <- PharmacoGx::computeAUC(treatmentdose, Hill_fit=fit)
-    list(
-      HS=fit[["HS"]],
-      E_inf = fit[["E_inf"]],
-      EC50 = fit[["EC50"]],
-      Rsq=as.numeric(unlist(attributes(fit))),
-      aac_recomputed=aac,
-      ic50_recomputed=ic50
-    )
-  },
-  assay="sensitivity",
-  target="profiles",
-  enlist=FALSE,
-  by=c("treatmentid", "sampleid")
-) -> tre_fit
+# 
+# message("Fitting treatment response curves")
+# 
+# dummy_tre |> CoreGx::endoaggregate(
+#   {
+#     # mean_viability <- mean(viability)
+#     #
+#     # list(
+#     #   mean_viability=mean_viability,
+#     #   std_viability=sd(viability)
+#     # )
+#     fit <- PharmacoGx::logLogisticRegression(treatmentdose, viability,
+#                                              viability_as_pct=TRUE)
+#     ic50 <- PharmacoGx::computeIC50(treatmentdose, Hill_fit=fit)
+#     aac <- PharmacoGx::computeAUC(treatmentdose, Hill_fit=fit)
+#     list(
+#       HS=fit[["HS"]],
+#       E_inf = fit[["E_inf"]],
+#       EC50 = fit[["EC50"]],
+#       Rsq=as.numeric(unlist(attributes(fit))),
+#       aac_recomputed=aac,
+#       ic50_recomputed=ic50
+#     )
+#   },
+#   assay="sensitivity",
+#   target="profiles",
+#   enlist=FALSE,
+#   by=c("treatmentid", "sampleid")
+# ) -> tre_fit

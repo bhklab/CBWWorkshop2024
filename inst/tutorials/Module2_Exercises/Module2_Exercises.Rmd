@@ -1,0 +1,85 @@
+---
+title: "Module2: Exercises"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Exercises corresponding to the Module 2 of the CBW workshop (see Vignettes).
+---
+
+
+```{r load_packages, eval=TRUE, echo=TRUE, include=FALSE}
+suppressPackageStartupMessages({
+  library(CBWWorkshop2024)
+  library(PharmacoGx)
+  library(data.table)
+})
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Introduction
+
+We will be working with the `NCI_ALMANAC_pset` object provided by this workshop.
+
+Load the data and determine how many samples and treatments are in the dataset
+```{r setup, exercise=TRUE, include=TRUE}
+
+pset <- CBWWorkshop2024::NCI_ALMANAC_pset
+pset
+```
+
+### Number of Samples
+
+```{r n_samples, exercise=TRUE}
+# after initializing the pset object, determine the number of samples and treatments
+n_samples <- <YOUR CODE HERE>
+n_samples
+```
+
+```{r n_samples-solution, exercise=FALSE}
+n_samples <- length(sampleNames(pset))
+n_samples
+```
+
+
+### Number of Treatments
+
+```{r n_treatments, exercise=TRUE}
+n_treatments <- <YOUR CODE HERE>
+n_treatments
+
+```
+
+
+```{r n_treatments-solution, exercise=FALSE}
+n_treatments <- length(treatmentNames(pset))
+n_treatments
+```
+
+
+## Subsetting the PSet
+
+### Metadata 
+
+Print the first 5 rows of the sample metadata
+```{r view_sample_metadata, exercise=TRUE}
+# Access the sample metadata for the PSet 
+
+# Print the first 5 rows of the sample metadata
+
+```
+
+```{r view_sample_metadata-solution, exercise=FALSE}
+# Solution code
+sample_metadata <- pset@sample
+head(sample_metadata, 5)
+```
+
+### Subsetting the PSet
+
+
+Subset the PSet to include only the samples treated with the drug `5-Fluorouracil`
+
+
+
