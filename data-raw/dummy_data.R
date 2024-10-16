@@ -33,6 +33,12 @@ batch1 <- sample(colnames(tpm_matrix), size = 25)
 batch_rna <- tpm_matrix
 batch_rna[, colnames(batch_rna) %in% batch1] <- batch_rna[, colnames(batch_rna) %in% batch1] * 1.2
 
+# add in outlier
+batch_rna[,"T-47D"] <- batch_rna[,"T-47D"] * 2
+
+# add NA values to a gene
+batch_rna['GENE002',][sample(1:ncol(batch_rna), 25)] <- NA
+
 rnaseq_tpm_se <- SummarizedExperiment::SummarizedExperiment(
   assays = list(exprs = tpm_matrix),
   colData = data.frame(sampleid = sampleids, batchid = 1),

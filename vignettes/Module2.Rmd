@@ -91,6 +91,9 @@ suppressPackageStartupMessages({
   library(CBWWorkshop2024)
   library(PharmacoGx)
   library(data.table)
+  library(ggplot2)
+  library(ggpubr)
+  library(sva)
 })
 ```
 
@@ -471,5 +474,200 @@ tre_profiled$profiles
 
 @Julia what can I do with these? can I plot or something cool?
 
+```{r waterfall_plot}
 
+tre_profiled$profiles
+
+
+# order by CI
+    toPlot <- toPlot[order(toPlot$ci),]
+    toPlot$rank <- 1:nrow(toPlot)
+
+    toPlot$rank <- as.factor(toPlot$rank)
+    toPlot$drug <- as.factor(toPlot$drug)
+
+    p <- ggplot(toPlot, aes(x = ci - 0.5, y = rank)) +
+    geom_col(aes(fill = type), color = "black") + scale_x_continuous(limits = c(-0.5, 0.5), labels = function(x) x + 0.5) +
+    scale_y_discrete(breaks = toPlot$rank, labels = toPlot$drug) + geom_vline(xintercept = 0) +
+    scale_fill_manual("Association", values = pal2) + theme_classic() + 
+    theme(plot.title = element_text(hjust = 0.5)) + 
+    labs(y = "Drug", title = signature, x = "Concordance Index (CI)") 
+```
+
+
+## Quality Control of Pharmacogenomic Datasets
+
+
+### Checking for missing values
+
+```{r get_batch_tpm}
+# get molecular profile
+tpm_matrix <- pset@molecularProfiles[["rnaseq.tpm.batch"]] |> assay() |> as.data.frame()
+tpm_matrix[1:5,1:5]
+
+# get metadata
+meta <- pset@molecularProfiles[["rnaseq.tpm.batch"]] |> colData()
+meta |> head()
+```
+
+For this exercise, we purposely put in a gene with many missing values. Let's look
+for this gene.
+
+The code below will quantify the number of `NA` values in each row (gene).
+
+```{r count_NA}
+apply(tpm_matrix, 1, function(x) sum(is.na(x))) |> head() 
+
+# print only genes with NA values
+sum_NA <- apply(tpm_matrix, 1, function(x) sum(is.na(x)))
+sum_NA[sum_NA > 0]
+```
+
+We see that `GENE002` has 25 `NA` values.
+It is important to consider the proportion of `NA` values relative to the number of
+observations. We can quickly calculate the proportion:
+
+```{r prortion_NA}
+num_NA <- sum_NA[sum_NA > 0] |> unname()
+num_observations <- ncol(tpm_matrix)
+
+# get proportion
+num_NA / num_observations
+```
+
+Now we now that 50% of samples have an `NA` value rather than an expression level
+for `GENE002`. This can be indicative of some technical issue. Let's remove this 
+gene from downstream analysis.
+
+```{r remove_gene}
+tpm_matrix <- tpm_matrix[-which(rownames(tpm_matrix) == "GENE002"),]
+any(is.na(tpm_matrix))
+```
+
+In the last line of code, we check if there were any remaining `NA` values. Since
+there is none, we can move on to visualizing our data.
+
+### Principal component analysis for outlier removal
+
+Let's quickly take a look at our expression matrix again.
+
+```{r view_tpm}
+tpm_matrix[1:5,1:5]
+```
+
+The expression matrix is currently formatted such that the features (genes) are the
+rows and the samples (cells) are the columns. 
+
+Since we want to do PCA to visualize the *samples*, we need to transpose the matrix 
+so that the attributes of the samples (genes) are the columns instead.
+
+```{r transpose_matrix}
+t_tpm_matrix <- tpm_matrix |> t() |> as.data.frame()
+t_tpm_matrix[1:5,1:5]
+```
+
+Once the expression matrix is in the correct format, we can perform PCA using the 
+`prcomp` function.
+
+```{r pca_batch}
+org_pca <- prcomp(t_tpm_matrix)$x |> as.data.frame() 
+
+print(dim(org_pca))
+
+org_pca[1:5,1:5]
+```
+
+To visualize the data, we plot the first two principal components (PCs)
+
+```{r plot_PCs_batch}
+# add batch labels
+org_pca$Batch <- meta$batchid[match(rownames(org_pca), meta$sampleid)] |> as.factor()
+
+# plot 
+p1 <- ggplot(org_pca) + 
+  geom_point(aes(x = PC1, y = PC2, color = Batch), size = 5) + 
+  scale_color_manual(values = c("#624763", "#B1D3A3")) + 
+  theme_classic() + ggtitle("Before Batch Correction")
+p1
+```
+
+There is a very obvious outlier in our data. We can quantitatively identify this outlier
+by identifying samples that lie beyond a threshold of `1.5 * IQR` of the first and fourth
+quartiles.
+
+```{r identify_outliers}
+# extract PC scores for given PC
+scores <- org_pca[["PC1"]]
+
+# compute IQR of given PC
+iqr <- IQR(scores)
+
+# compute upper and lower thresholds
+upp_thres <- quantile(scores, 0.75) + 1.5 * iqr
+low_thres <- quantile(scores, 0.25) - 1.5 * iqr
+
+# print samples with values beyond threshold
+outlier <- rownames(org_pca)[which(scores < low_thres | scores > upp_thres)]
+paste("Outlier for PC1:", outlier) |> print()
+```
+
+Let's remove `T-47D` and re-plot our data.
+
+```{r rm_outliers}
+# remove outlier
+outlier = "T-47D"
+tpm_matrix[[outlier]] <- NULL
+
+# redo PCA and plotting
+org_pca <- prcomp(t(tpm_matrix))$x |> as.data.frame() 
+org_pca$Batch <- meta$batchid[match(rownames(org_pca), meta$sampleid)] |> as.factor()
+
+p1 <- ggplot(org_pca) + 
+  geom_point(aes(x = PC1, y = PC2, color = Batch), size = 5) + 
+  scale_color_manual(values = c("#624763", "#B1D3A3")) + 
+  theme_classic() + ggtitle("Before Batch Correction")
+p1
+```
+
+Now that the outlier is removed, we have a better visualization of the data.
+It is very evident that the data points (samples) tend to cluster by batch. This 
+is indicative of a potential batch effect.
+
+### Adjusting for known batches
+
+When we have a known batch, we can adjust for it directly. One method is to use the
+`ComBat()` function from the `sva` package.
+
+```{r adjust_known_batch}
+# adjust for known batch
+adj_tpm_matrix <- ComBat(dat = tpm_matrix, 
+                         batch = as.factor(meta$batchid[match(colnames(tpm_matrix), meta$sampleid)]),
+                         par.prior = TRUE,
+                         prior.plots = FALSE)
+
+adj_tpm_matrix[1:5,1:5]
+```
+
+We can now perform PCA and visualize on our adjusted TPM counts matrix. We will compare
+the results to the original PCA visualization.
+
+Don't forget to transpose the adjusted counts matrix!
+
+```{r pca_batch}
+# perform PCA on adjusted matrix
+adj_pca <- prcomp(t(adj_tpm_matrix))$x |> as.data.frame() 
+adj_pca$Batch <- meta$batchid[match(rownames(adj_pca), meta$sampleid)] |> as.factor()
+
+# create scatter plot
+p2 <- ggplot(adj_pca) + 
+  geom_point(aes(x = PC1, y = PC2, color = Batch), size = 5) + 
+  scale_color_manual(values = c("#624763", "#B1D3A3")) +
+  theme_classic() + ggtitle("After Batch Correction")
+
+# plot both plots side by side for comparison
+ggarrange(p1, p2, ncol = 2)
+```
+
+For downstream pharmacogenomic analysis (or any other bioinformatic analysis), the
+batch-corrected expression matrix should be used.
 
