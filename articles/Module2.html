@@ -181,8 +181,8 @@ can be used to download any of the available PSets from <a href="https://orcestr
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Note: this may take a while to download as the files are stored in </span></span>
-<span><span class="co"># zenodo and are quite large</span></span></code></pre></div>
+<span><span class="co"># Note: this may take a while to download as the files are stored in</span></span>
+<span><span class="co"># Zenodo and are quite large</span></span></code></pre></div>
 <p>. . .</p>
 <p>For convenience and in the interest of time, we have created a
 <code>PharmacoSet</code> to be used in this tutorial. We will be
@@ -209,7 +209,7 @@ interacting with this dataset for the remainder of the tutorial.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="understanding-pharmacoset-the-data-structure">Understanding <code>PharmacoSet</code> the Data Structure<a class="anchor" aria-label="anchor" href="#understanding-pharmacoset-the-data-structure"></a>
+<h2 id="understanding-the-pharmacoset-data-structure">Understanding the <code>PharmacoSet</code> Data Structure<a class="anchor" aria-label="anchor" href="#understanding-the-pharmacoset-data-structure"></a>
 </h2>
 <p>The <code>PharmacoSet</code> class is a container for pharmacogenomic
 data.</p>
@@ -217,6 +217,8 @@ data.</p>
 screening experiments where cell lines are treated with a panel of drugs
 at multiple doses and the response is measured using a molecular
 assay.</p>
+<p>Pharmacogenomic data is located in a <code>PharmacoSet</code> within
+its slots, which are accessed using the <code>@</code> operator.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">slotNames</span><span class="op">(</span><span class="va">pset</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "treatmentResponse" "annotation"        "molecularProfiles"</span></span>
@@ -346,7 +348,8 @@ the <code>molecularProfiles</code> slot.</p>
 called the <code>TreatmentResponseExperiment</code> (TRE) which has been
 specifically designed to handle high dimensional biological
 stimulus-response data.</p>
-<p><span class="citation">@jermiah</span> ADD DIAGRAM OF TRE CLASS</p>
+<p><span style="color:red; font-size: large; font-weight: bold;">TODO</span>
+<span class="citation">@jermiah</span> ADD DIAGRAM OF TRE CLASS</p>
 <div class="section level3">
 <h3 id="view-the-treatmentresponse-slot">View the <code>treatmentResponse</code> slot<a class="anchor" aria-label="anchor" href="#view-the-treatmentresponse-slot"></a>
 </h3>
@@ -457,9 +460,9 @@ metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and
 <code class="sourceCode R"><span><span class="va">tissues_of_interest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Kidney"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">samples_of_interest</span> <span class="op">&lt;-</span> <span class="va">pset</span><span class="op">@</span><span class="va">sample</span><span class="op">[</span></span>
-<span>  <span class="va">pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">tissues_of_interest</span>, </span>
+<span>  <span class="va">pset</span><span class="op">@</span><span class="va">sample</span><span class="op">$</span><span class="va">tissueid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">tissues_of_interest</span>,</span>
 <span>  <span class="st">"sampleid"</span></span>
-<span>  <span class="op">]</span></span>
+<span><span class="op">]</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "UO-31"  "Caki-1" "A-498"  "786-O"</span></span></code></pre>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
@@ -517,7 +520,7 @@ metadata<a class="anchor" aria-label="anchor" href="#subsetting-using-sample-and
 to facilitate more than just storing data efficiently. Once the data is
 curated and stored safely inside our object, we are ready to start
 answering questions.</p>
-<p>First, lets extract the <code>TRE</code> to work with:</p>
+<p>First, let’s extract the <code>TRE</code> to work with:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tre</span> <span class="op">&lt;-</span> <span class="va">pset</span><span class="op">@</span><span class="va">treatmentResponse</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">tre</span><span class="op">)</span></span></code></pre></div>
@@ -536,12 +539,12 @@ answering questions.</p>
 to summarize the data in a <code>TreatmentResponseExperiment</code>
 object.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tre</span>  <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">tre</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span></span>
-<span>      assay<span class="op">=</span><span class="st">"sensitivity"</span>,</span>
-<span>      N<span class="op">=</span><span class="va">.N</span>,</span>
-<span>      by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> </span></code></pre></div>
+<span>    assay <span class="op">=</span> <span class="st">"sensitivity"</span>,</span>
+<span>    N <span class="op">=</span> <span class="va">.N</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       treatmentid treatmentdose sampleid bio_rep     N</span></span>
 <span><span class="co">##            &lt;char&gt;         &lt;num&gt;   &lt;char&gt;   &lt;int&gt; &lt;int&gt;</span></span>
 <span><span class="co">##    1: Ixabepilone         1e-07    786-O       1     1</span></span>
@@ -556,19 +559,19 @@ object.</p>
 <span><span class="co">## 9039:  Ifosfamide         4e+03  UACC-62       1     1</span></span>
 <span><span class="co">## 9040:  Ifosfamide         4e+03    UO-31       1     1</span></span></code></pre>
 <p>You can also use the <code>subset</code> function to subset the
-<code>TreatmentResponseExperiment</code> object before performing an
+<code>TreatmentResponseExperiment</code> object before performing
 <code>aggregate</code>.</p>
 <p>Additionally, you can even <code>subset</code> over the result of an
 <code>aggregate</code> operation.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tre</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">tre</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">treatmentid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Doxorubicin"</span>, <span class="st">"Ixabepilone"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span></span>
-<span>      assay<span class="op">=</span><span class="st">"sensitivity"</span>,</span>
-<span>      N<span class="op">=</span><span class="va">.N</span>,</span>
-<span>      by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
+<span>    assay <span class="op">=</span> <span class="st">"sensitivity"</span>,</span>
+<span>    N <span class="op">=</span> <span class="va">.N</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">N</span><span class="op">&gt;</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">sampleid</span> <span class="op">==</span><span class="st">"A-498"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">N</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">&amp;</span> <span class="va">sampleid</span> <span class="op">==</span> <span class="st">"A-498"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##     treatmentid treatmentdose sampleid bio_rep     N</span></span>
 <span><span class="co">##          &lt;char&gt;         &lt;num&gt;   &lt;char&gt;   &lt;int&gt; &lt;int&gt;</span></span>
 <span><span class="co">##  1: Ixabepilone         3e-05    A-498       1     2</span></span>
@@ -589,13 +592,19 @@ object.</p>
 in the data. We can visualize the number of replicates using a
 histogram.</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tre</span>  <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">tre</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span></span>
-<span>      assay<span class="op">=</span><span class="st">"sensitivity"</span>,</span>
-<span>      N<span class="op">=</span><span class="va">.N</span>,</span>
-<span>      by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
+<span>    assay <span class="op">=</span> <span class="st">"sensitivity"</span>,</span>
+<span>    N <span class="op">=</span> <span class="va">.N</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span>expr<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">N</span>, main<span class="op">=</span><span class="st">"Histogram of Number of Replicates"</span>, xlab<span class="op">=</span><span class="st">"Number of Replicates"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span></span>
+<span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span></span>
+<span>      <span class="va">N</span>,</span>
+<span>      main <span class="op">=</span> <span class="st">"Histogram of Number of Replicates"</span>,</span>
+<span>      xlab <span class="op">=</span> <span class="st">"Number of Replicates"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="Module2_files/figure-html/tre_aggregate-1.png" width="700">
 ### Summarize over technical replicates</p>
 <p>Depending on the experiment design, you will need to choose how you
@@ -620,14 +629,14 @@ of the <code>viability</code> values</li>
 <li>Plot the histogram of the number of doses</li>
 </ul>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tre</span>  <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">tre</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span></span>
-<span>      assay<span class="op">=</span><span class="st">"sensitivity"</span>,</span>
-<span>      viability<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">viability</span><span class="op">)</span>,</span>
-<span>      by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span>, <span class="st">"treatmentdose"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="va">_</span><span class="op">[</span>, <span class="va">.N</span>, by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span>expr<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">N</span>, main<span class="op">=</span><span class="st">"Histogram of Number of Doses"</span>, xlab<span class="op">=</span><span class="st">"Number of Doses"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    assay <span class="op">=</span> <span class="st">"sensitivity"</span>,</span>
+<span>    viability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">viability</span><span class="op">)</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span>, <span class="st">"treatmentdose"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="va">_</span><span class="op">[</span>, <span class="va">.N</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span>expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">N</span>, main <span class="op">=</span> <span class="st">"Histogram of Number of Doses"</span>, xlab <span class="op">=</span> <span class="st">"Number of Doses"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Module2_files/figure-html/tre_aggregate_exercise-1.png" width="700"></p>
 </div>
 </div>
@@ -645,13 +654,13 @@ method.</p>
 method, but will return a <code>TreatmentResponseExperiment</code>
 object with the summarized data as another assay.</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_tre</span> <span class="op">&lt;-</span> <span class="va">tre</span>  <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">new_tre</span> <span class="op">&lt;-</span> <span class="va">tre</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">endoaggregate</span><span class="op">(</span></span>
-<span>      N<span class="op">=</span><span class="va">.N</span>,</span>
-<span>      assay<span class="op">=</span><span class="st">"sensitivity"</span>,</span>
-<span>      target<span class="op">=</span><span class="st">"tech_rep_counts"</span>,</span>
-<span>      by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> </span>
+<span>    N <span class="op">=</span> <span class="va">.N</span>,</span>
+<span>    assay <span class="op">=</span> <span class="st">"sensitivity"</span>,</span>
+<span>    target <span class="op">=</span> <span class="st">"tech_rep_counts"</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">new_tre</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;TreatmentResponseExperiment&gt; </span></span></span>
 <span><span class="co"><span style="color: #BBBB00; font-weight: bold; font-style: italic;">## </span>   <span style="color: #BBBB00; font-weight: bold;">dim:  4847 52 </span></span></span>
@@ -671,18 +680,18 @@ object with the summarized data as another assay.</p>
 <span><span class="co">## 4:         0.005 Doxorubicin NCI-ADR-RES       1   132</span></span>
 <span><span class="co">## 5:         0.050 Doxorubicin NCI-ADR-RES       1   132</span></span>
 <span><span class="co">## 6:         0.500 Doxorubicin NCI-ADR-RES       1   132</span></span></code></pre>
-<p>Lets use this method to summarize the technical replicates by taking
+<p>Let’s use this method to summarize the technical replicates by taking
 the mean of the <code>viability</code> values for each unique
 combination of <code>treatmentid</code>, <code>treatmentdose</code>,
 <code>sampleid</code>, and <code>bio_rep</code>.</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tre_avged</span> <span class="op">&lt;-</span> <span class="va">tre</span>  <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">tre_avged</span> <span class="op">&lt;-</span> <span class="va">tre</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">endoaggregate</span><span class="op">(</span></span>
-<span>      viability<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">viability</span><span class="op">)</span>,</span>
-<span>      assay<span class="op">=</span><span class="st">"sensitivity"</span>,</span>
-<span>      target<span class="op">=</span><span class="st">"mean_sensitivity"</span>,</span>
-<span>      by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
+<span>    viability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">viability</span><span class="op">)</span>,</span>
+<span>    assay <span class="op">=</span> <span class="st">"sensitivity"</span>,</span>
+<span>    target <span class="op">=</span> <span class="st">"mean_sensitivity"</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"treatmentdose"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">tre_avged</span><span class="op">$</span><span class="va">mean_sensitivity</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Classes 'data.table' and 'data.frame':   9040 obs. of  5 variables:</span></span>
 <span><span class="co">##  $ treatmentdose: num  1e-07 1e-07 1e-07 1e-07 1e-07 1e-07 1e-07 1e-07 1e-07 1e-07 ...</span></span>
@@ -692,30 +701,32 @@ combination of <code>treatmentid</code>, <code>treatmentdose</code>,
 <span><span class="co">##  $ viability    : num  98 99.7 99.3 96 103.7 ...</span></span>
 <span><span class="co">##  - attr(*, "sorted")= chr [1:4] "treatmentdose" "treatmentid" "sampleid" "bio_rep"</span></span>
 <span><span class="co">##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;</span></span></code></pre>
+<p><span style="color:red; font-size: large; font-weight: bold;">TODO</span>
+heading below</p>
 </div>
 <div class="section level3">
 <h3 id="computing-profiles">Computing profiles<a class="anchor" aria-label="anchor" href="#computing-profiles"></a>
 </h3>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tre_profiled</span> <span class="op">&lt;-</span> <span class="va">tre_avged</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">tre_profiled</span> <span class="op">&lt;-</span> <span class="va">tre_avged</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">endoaggregate</span><span class="op">(</span></span>
 <span>    <span class="op">{</span></span>
 <span>      <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/logLogisticRegression.html" class="external-link">logLogisticRegression</a></span><span class="op">(</span><span class="va">treatmentdose</span>, <span class="va">viability</span><span class="op">)</span></span>
 <span>      <span class="va">IC50</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/computeICn.html" class="external-link">computeIC50</a></span><span class="op">(</span><span class="va">treatmentdose</span>, Hill_fit <span class="op">=</span> <span class="va">fit</span><span class="op">)</span></span>
 <span>      <span class="va">AAC</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/computeAUC.html" class="external-link">computeAUC</a></span><span class="op">(</span><span class="va">treatmentdose</span>, Hill_fit <span class="op">=</span> <span class="va">fit</span>, area.type <span class="op">=</span> <span class="st">"Fitted"</span><span class="op">)</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        HS <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"HS"</span><span class="op">]</span><span class="op">]</span>, E_inf <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"E_inf"</span><span class="op">]</span><span class="op">]</span><span class="op">/</span><span class="fl">100</span>, EC50 <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"EC50"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>        HS <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"HS"</span><span class="op">]</span><span class="op">]</span>, E_inf <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"E_inf"</span><span class="op">]</span><span class="op">]</span> <span class="op">/</span> <span class="fl">100</span>, EC50 <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"EC50"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>        Rsq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>        AAC <span class="op">=</span> <span class="va">AAC</span>,</span>
 <span>        IC50 <span class="op">=</span> <span class="va">IC50</span></span>
 <span>      <span class="op">)</span></span>
 <span>    <span class="op">}</span>,</span>
-<span>    assay<span class="op">=</span><span class="st">"mean_sensitivity"</span>,</span>
-<span>    subset<span class="op">=</span> <span class="va">treatmentid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu">rowData</span><span class="op">(</span><span class="va">tre_avged</span><span class="op">)</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">treatmentid</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>,</span>
+<span>    assay <span class="op">=</span> <span class="st">"mean_sensitivity"</span>,</span>
+<span>    subset <span class="op">=</span> <span class="va">treatmentid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu">rowData</span><span class="op">(</span><span class="va">tre_avged</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">treatmentid</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>,</span>
 <span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span>,</span>
-<span>    enlist<span class="op">=</span><span class="cn">FALSE</span>,</span>
-<span>    target<span class="op">=</span><span class="st">"profiles"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span>    enlist <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    target <span class="op">=</span> <span class="st">"profiles"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>If we didn’t subset the <code>TRE</code> this computation will have
 taken a while since it is a computationally intensive operation and run
 on a single thread.</p>
@@ -732,16 +743,16 @@ vignette as it may take some time.</p>
 <p>Depending on your device, this number may vary. Let’s use a
 conservative number of threads for this example.</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">THREADS</span> <span class="op">&lt;-</span> <span class="fl">6</span> <span class="co"># github runners provide 2c </span></span>
-<span>  </span>
-<span><span class="va">tre_profiled</span> <span class="op">&lt;-</span> <span class="va">tre_avged</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">THREADS</span> <span class="op">&lt;-</span> <span class="fl">6</span> <span class="co"># github runners provide 2c</span></span>
+<span></span>
+<span><span class="va">tre_profiled</span> <span class="op">&lt;-</span> <span class="va">tre_avged</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">endoaggregate</span><span class="op">(</span></span>
 <span>    <span class="op">{</span></span>
 <span>      <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/logLogisticRegression.html" class="external-link">logLogisticRegression</a></span><span class="op">(</span><span class="va">treatmentdose</span>, <span class="va">viability</span><span class="op">)</span></span>
 <span>      <span class="va">IC50</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/computeICn.html" class="external-link">computeIC50</a></span><span class="op">(</span><span class="va">treatmentdose</span>, Hill_fit <span class="op">=</span> <span class="va">fit</span><span class="op">)</span></span>
 <span>      <span class="va">AAC</span> <span class="op">&lt;-</span> <span class="fu">PharmacoGx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/computeAUC.html" class="external-link">computeAUC</a></span><span class="op">(</span><span class="va">treatmentdose</span>, Hill_fit <span class="op">=</span> <span class="va">fit</span>, area.type <span class="op">=</span> <span class="st">"Fitted"</span><span class="op">)</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        HS <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"HS"</span><span class="op">]</span><span class="op">]</span>, E_inf <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"E_inf"</span><span class="op">]</span><span class="op">]</span><span class="op">/</span><span class="fl">100</span>, EC50 <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"EC50"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>        HS <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"HS"</span><span class="op">]</span><span class="op">]</span>, E_inf <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"E_inf"</span><span class="op">]</span><span class="op">]</span> <span class="op">/</span> <span class="fl">100</span>, EC50 <span class="op">=</span> <span class="va">fit</span><span class="op">[[</span><span class="st">"EC50"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>        Rsq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>        AAC <span class="op">=</span> <span class="va">AAC</span>,</span>
 <span>        IC50 <span class="op">=</span> <span class="va">IC50</span>,</span>
@@ -752,13 +763,13 @@ conservative number of threads for this example.</p>
 <span>        maxviability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">viability</span><span class="op">)</span></span>
 <span>      <span class="op">)</span></span>
 <span>    <span class="op">}</span>,</span>
-<span>    assay<span class="op">=</span><span class="st">"mean_sensitivity"</span>,</span>
+<span>    assay <span class="op">=</span> <span class="st">"mean_sensitivity"</span>,</span>
 <span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"treatmentid"</span>, <span class="st">"sampleid"</span>, <span class="st">"bio_rep"</span><span class="op">)</span>,</span>
-<span>    enlist<span class="op">=</span><span class="cn">FALSE</span>,</span>
-<span>    target<span class="op">=</span><span class="st">"profiles"</span>,</span>
-<span>    nthread<span class="op">=</span><span class="va">THREADS</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>Lets look at the profiles we have computed:</p>
+<span>    enlist <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    target <span class="op">=</span> <span class="st">"profiles"</span>,</span>
+<span>    nthread <span class="op">=</span> <span class="va">THREADS</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>Let’s look at the profiles we have computed:</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">show</span><span class="op">(</span><span class="va">tre_profiled</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;TreatmentResponseExperiment&gt; </span></span></span>
@@ -799,24 +810,26 @@ conservative number of threads for this example.</p>
 <span><span class="co">## 150: 0.02680624</span></span>
 <span><span class="co">## 151:         NA</span></span></code></pre>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#tre_profiled$profiles</span></span>
+<code class="sourceCode R"><span><span class="co"># tre_profiled$profiles</span></span>
 <span></span>
-<span><span class="co">#TODO: add code to make box plots for AAC and IC50 per drug</span></span></code></pre></div>
+<span><span class="co"># TODO: add code to make box plots for AAC and IC50 per drug</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="quality-control-of-pharmacogenomic-datasets">Quality Control of Pharmacogenomic Datasets<a class="anchor" aria-label="anchor" href="#quality-control-of-pharmacogenomic-datasets"></a>
 </h2>
-<p>For the remainder of the lab, we will go over some quick case
-scenarios that require quality control. We will load in new molecular
+<p>For the remainder of the lab, we briefly go over some common
+scenarios that require quality control. We will load in a new molecular
 profile.</p>
 <div class="section level3">
 <h3 id="checking-for-missing-values">Checking for missing values<a class="anchor" aria-label="anchor" href="#checking-for-missing-values"></a>
 </h3>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get molecular profile</span></span>
-<span><span class="va">tpm_matrix</span> <span class="op">&lt;-</span> <span class="va">pset</span><span class="op">@</span><span class="va">molecularProfiles</span><span class="op">[[</span><span class="st">"rnaseq.tpm.batch"</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">tpm_matrix</span> <span class="op">&lt;-</span> <span class="va">pset</span><span class="op">@</span><span class="va">molecularProfiles</span><span class="op">[[</span><span class="st">"rnaseq.tpm.batch"</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">assay</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##            NCI-H23    HOP-62     SNB-75 HL-60(TB)     A-549</span></span>
 <span><span class="co">## GENE001 90.5370190  75.59677 104.525210  42.18450  9.391661</span></span>
 <span><span class="co">## GENE002 75.5065358  22.05942         NA        NA 82.203007</span></span>
@@ -841,7 +854,7 @@ values. Let’s look for this gene.</p>
 <p>The code below will quantify the number of <code>NA</code> values in
 each row (gene).</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">tpm_matrix</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">tpm_matrix</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## GENE001 GENE002 GENE003 GENE004 GENE005 GENE006 </span></span>
 <span><span class="co">##       0      25       0       0       0       0</span></span></code></pre>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
@@ -861,16 +874,16 @@ proportion:</p>
 <span><span class="co"># get proportion</span></span>
 <span><span class="va">num_NA</span> <span class="op">/</span> <span class="va">num_observations</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.5</span></span></code></pre>
-<p>Now we now that 50% of samples have an <code>NA</code> value rather
+<p>Now we know that 50% of samples have an <code>NA</code> value rather
 than an expression level for <code>GENE002</code>. This can be
 indicative of some technical issue. Let’s remove this gene from
 downstream analysis.</p>
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tpm_matrix</span> <span class="op">&lt;-</span> <span class="va">tpm_matrix</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span> <span class="op">==</span> <span class="st">"GENE002"</span><span class="op">)</span>,<span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="va">tpm_matrix</span> <span class="op">&lt;-</span> <span class="va">tpm_matrix</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span> <span class="op">==</span> <span class="st">"GENE002"</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] FALSE</span></span></code></pre>
 <p>In the last line of code, we check if there were any remaining
-<code>NA</code> values. Since there is none, we can move on to
+<code>NA</code> values. Since there are none, we can move on to
 visualizing our data.</p>
 </div>
 <div class="section level3">
@@ -878,7 +891,7 @@ visualizing our data.</p>
 </h3>
 <p>Let’s quickly take a look at our expression matrix again.</p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##            NCI-H23    HOP-62     SNB-75 HL-60(TB)     A-549</span></span>
 <span><span class="co">## GENE001 90.5370190  75.59677 104.525210  42.18450  9.391661</span></span>
 <span><span class="co">## GENE003 85.2218882 103.63729   8.646855  86.64833 42.742828</span></span>
@@ -891,8 +904,10 @@ visualizing our data.</p>
 transpose the matrix so that the attributes of the samples (genes) are
 the columns instead.</p>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">t_tpm_matrix</span> <span class="op">&lt;-</span> <span class="va">tpm_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">t_tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">t_tpm_matrix</span> <span class="op">&lt;-</span> <span class="va">tpm_matrix</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">t_tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##              GENE001    GENE003    GENE004  GENE005  GENE006</span></span>
 <span><span class="co">## NCI-H23    90.537019  85.221888  0.0749728 57.03799 26.41427</span></span>
 <span><span class="co">## HOP-62     75.596766 103.637293 89.5881605 80.19416 74.16214</span></span>
@@ -902,12 +917,12 @@ the columns instead.</p>
 <p>Once the expression matrix is in the correct format, we can perform
 PCA using the <code>prcomp</code> function.</p>
 <div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">org_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="va">t_tpm_matrix</span><span class="op">)</span><span class="op">$</span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="va">org_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="va">t_tpm_matrix</span><span class="op">)</span><span class="op">$</span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">org_pca</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 50 50</span></span></code></pre>
 <div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">org_pca</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">org_pca</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##                  PC1       PC2       PC3        PC4       PC5</span></span>
 <span><span class="co">## NCI-H23   -44.039730 -45.92050  63.97547  -9.390331  42.39060</span></span>
 <span><span class="co">## HOP-62     -9.862044  10.97767 -90.24025  40.301276 -27.50330</span></span>
@@ -915,16 +930,18 @@ PCA using the <code>prcomp</code> function.</p>
 <span><span class="co">## HL-60(TB)  83.651364  10.58870  59.28436 -24.431547   6.36504</span></span>
 <span><span class="co">## A-549       8.510913  84.27694  59.59322  -9.085760  29.08710</span></span></code></pre>
 <p>To visualize the data, we plot the first two principal components
-(PCs)</p>
+(PCs).</p>
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># add batch labels</span></span>
 <span><span class="va">org_pca</span><span class="op">$</span><span class="va">Batch</span> <span class="op">&lt;-</span> <span class="va">meta</span><span class="op">$</span><span class="va">batchid</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">org_pca</span><span class="op">)</span>, <span class="va">meta</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># plot </span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">org_pca</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">Batch</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#624763"</span>, <span class="st">"#B1D3A3"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Before Batch Correction"</span><span class="op">)</span></span>
+<span><span class="co"># plot</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">org_pca</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">Batch</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#624763"</span>, <span class="st">"#B1D3A3"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Before Batch Correction"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">p1</span></span></code></pre></div>
 <p><img src="Module2_files/figure-html/plot_PCs_batch-1.png" width="700"></p>
 <p>There is a very obvious outlier in our data. We can quantitatively
@@ -948,17 +965,19 @@ of <code>1.5 * IQR</code> of the first and fourth quartiles.</p>
 <p>Let’s remove <code>T-47D</code> and re-plot our data.</p>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remove outlier</span></span>
-<span><span class="va">outlier</span> <span class="op">=</span> <span class="st">"T-47D"</span></span>
+<span><span class="va">outlier</span> <span class="op">&lt;-</span> <span class="st">"T-47D"</span></span>
 <span><span class="va">tpm_matrix</span><span class="op">[[</span><span class="va">outlier</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span></span>
 <span><span class="co"># redo PCA and plotting</span></span>
-<span><span class="va">org_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="va">org_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">org_pca</span><span class="op">$</span><span class="va">Batch</span> <span class="op">&lt;-</span> <span class="va">meta</span><span class="op">$</span><span class="va">batchid</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">org_pca</span><span class="op">)</span>, <span class="va">meta</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">org_pca</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">Batch</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#624763"</span>, <span class="st">"#B1D3A3"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Before Batch Correction"</span><span class="op">)</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">org_pca</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">Batch</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#624763"</span>, <span class="st">"#B1D3A3"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Before Batch Correction"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">p1</span></span></code></pre></div>
 <p><img src="Module2_files/figure-html/rm_outliers-1.png" width="700"></p>
 <p>Now that the outlier is removed, we have a better visualization of
@@ -973,10 +992,12 @@ is to use the <code>ComBat()</code> function from the <code>sva</code>
 package.</p>
 <div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># adjust for known batch</span></span>
-<span><span class="va">adj_tpm_matrix</span> <span class="op">&lt;-</span> <span class="fu">ComBat</span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tpm_matrix</span>, </span>
-<span>                         batch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">batchid</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span>, <span class="va">meta</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>                         par.prior <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                         prior.plots <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">adj_tpm_matrix</span> <span class="op">&lt;-</span> <span class="fu">ComBat</span><span class="op">(</span></span>
+<span>  dat <span class="op">=</span> <span class="va">tpm_matrix</span>,</span>
+<span>  batch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">meta</span><span class="op">$</span><span class="va">batchid</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">tpm_matrix</span><span class="op">)</span>, <span class="va">meta</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  par.prior <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  prior.plots <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Found2batches</span></span></code></pre>
 <pre><code><span><span class="co">## Adjusting for0covariate(s) or covariate level(s)</span></span></code></pre>
 <pre><code><span><span class="co">## Standardizing Data across genes</span></span></code></pre>
@@ -984,7 +1005,7 @@ package.</p>
 <pre><code><span><span class="co">## Finding parametric adjustments</span></span></code></pre>
 <pre><code><span><span class="co">## Adjusting the Data</span></span></code></pre>
 <div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">adj_tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">adj_tpm_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##           NCI-H23   HOP-62    SNB-75 HL-60(TB)     A-549</span></span>
 <span><span class="co">## GENE001 81.991219 68.65465 94.477925  46.14868  9.844954</span></span>
 <span><span class="co">## GENE003 78.009018 94.55152  9.221893  94.18421 46.353576</span></span>
@@ -997,14 +1018,15 @@ visualization.</p>
 <p>Don’t forget to transpose the adjusted counts matrix!</p>
 <div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># perform PCA on adjusted matrix</span></span>
-<span><span class="va">adj_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">adj_tpm_matrix</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="va">adj_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">adj_tpm_matrix</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">adj_pca</span><span class="op">$</span><span class="va">Batch</span> <span class="op">&lt;-</span> <span class="va">meta</span><span class="op">$</span><span class="va">batchid</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">adj_pca</span><span class="op">)</span>, <span class="va">meta</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create scatter plot</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">adj_pca</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">Batch</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span> </span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">adj_pca</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">Batch</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#624763"</span>, <span class="st">"#B1D3A3"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"After Batch Correction"</span><span class="op">)</span></span>
+<span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"After Batch Correction"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># plot both plots side by side for comparison</span></span>
 <span><span class="fu">ggarrange</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>

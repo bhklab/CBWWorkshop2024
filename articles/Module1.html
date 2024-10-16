@@ -63,17 +63,23 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Module 1: Introduction to pharmacogenomics</h1>
-                        <h4 data-toc-skip class="author">Julia
+                        <h4 data-toc-skip class="author">Jermiah J.
+Joseph</h4>
+            <address class="author_afil">
+      Princess Margaret Cancer
+Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:jermiah.joseph@uhn.ca" class="email">jermiah.joseph@uhn.ca</a>
+      </address>
+                              <h4 data-toc-skip class="author">Julia
 Nguyen</h4>
             <address class="author_afil">
       Princess Margaret Cancer
 Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:julia.nguyen@uhn.ca" class="email">julia.nguyen@uhn.ca</a>
       </address>
-                              <h4 data-toc-skip class="author">Jermiah
-J. Joseph</h4>
+                              <h4 data-toc-skip class="author">Nikta
+Feizi</h4>
             <address class="author_afil">
       Princess Margaret Cancer
-Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:jermiah.joseph@uhn.ca" class="email">jermiah.joseph@uhn.ca</a>
+Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:nikta.feizi@uhn.ca" class="email">nikta.feizi@uhn.ca</a>
       </address>
                   
             <h4 data-toc-skip class="date">16 October 2024</h4>
@@ -92,8 +98,10 @@ Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:jermiah.jo
 information<a class="anchor" aria-label="anchor" href="#instructors-names-and-contact-information"></a>
 </h3>
 <ul>
-<li>Jermiah Joseph</li>
-<li>Nikta Feizi</li>
+<li>Jermiah Joseph <a href="mailto:jermiah.joseph@uhn.ca" class="email">jermiah.joseph@uhn.ca</a>
+</li>
+<li>Nikta Feizi <a href="mailto:nikta.feizi@uhn.ca" class="email">nikta.feizi@uhn.ca</a>
+</li>
 <li>Julia Nguyen <a href="mailto:julia.nguyen@uhn.ca" class="email">julia.nguyen@uhn.ca</a>
 </li>
 </ul>
@@ -129,7 +137,7 @@ or <a href="https://orcestra.ca" class="external-link">orcestra.ca</a>
 </li>
 <li>Subset and filter a <code>PharmacoSet</code> by samples and/or
 treatments</li>
-<li>Access the molecular features, dose-response and metadata contained
+<li>Access the molecular features, dose-response, and metadata contained
 within the <code>PharmacoSet</code>
 </li>
 </ul>
@@ -208,8 +216,11 @@ annotation maps to the RNA-Seq data and to check for completeness.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; FALSE  TRUE </span></span>
 <span><span class="co">#&gt; 69600 65400</span></span></code></pre></div>
-<p>This is a pretty obvious indicator to move forward with the gene_id
-for downstream analysis.</p>
+<p>We can see that <code>gene_id</code> maps completely to the genes in
+our RNA-seq data, whereas <code>hgnc_symbol</code> and
+<code>cosmic_gene_symbol</code> are missing gene symbols (see the
+numbers under <code>FALSE</code>). This is a pretty obvious indicator to
+move forward with the <code>gene_id</code> for downstream analysis.</p>
 <p>Now we move over to the cell line annotations. There are a few
 attributes made available, we first look to confirm the mapping id to
 the RNA-Seq data.</p>
@@ -445,7 +456,7 @@ used to predict response.</p>
 <p>This data has already been processed into a matrix. Notice though
 that the sample names are not present, instead there is the array ID and
 position. We can use the provided annotation file to map back to the
-sample names</p>
+sample names in our model list.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">GDSC_methylation_model_list</span><span class="op">)</span></span>
 <span><span class="va">GDSC_methylation_model_list</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -478,13 +489,18 @@ sample names</p>
 <span><span class="co">#&gt; 5  &lt;NA&gt;                    &lt;NA&gt;        NA</span></span>
 <span><span class="co">#&gt; 6  skin                melanoma    906830</span></span>
 <span></span>
-<span><span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">sampleid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">Sentrix_ID</span>, <span class="st">"_"</span>, <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">Sentrix_Position</span><span class="op">)</span></span>
+<span><span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">sampleid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>  <span class="st">"X"</span>, <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">Sentrix_ID</span>,</span>
+<span>  <span class="st">"_"</span>, <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">Sentrix_Position</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">sampleid</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; TRUE </span></span>
 <span><span class="co">#&gt;  100</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">Sample_Name</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span>, <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">Sample_Name</span><span class="op">[</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span>, <span class="va">GDSC_methylation_model_list</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span></span>
+<span><span class="op">]</span></span>
 <span><span class="va">GDSC_methylation</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                               A673       RT4   8-MG-BA  U-118-MG CHAGO-K-1</span></span>
 <span><span class="co">#&gt; chr1:1051178-1052445     0.3733729 0.4144962 0.2892333 0.3023764 0.3880624</span></span>
@@ -493,7 +509,7 @@ sample names</p>
 <span><span class="co">#&gt; chr1:110008962-110010124 0.4143231 0.5317602 0.5259936 0.4551888 0.4740822</span></span>
 <span><span class="co">#&gt; chr1:110527248-110528026 0.3022454 0.1882153 0.2679353 0.2989812 0.2603969</span></span></code></pre></div>
 <p>We have provided a few other subsetted datasets. A full list is
-available from <a href="https://bhklab.github.io/CBWWorkshop2024/reference/index.html">Reference</a></p>
+available from <a href="https://bhklab.github.io/CBWWorkshop2024/reference/index.html">Reference</a>.</p>
 <p>We encourage independent exploration of these datasets.</p>
 </div>
 </div>
@@ -501,11 +517,18 @@ available from <a href="https://bhklab.github.io/CBWWorkshop2024/reference/index
 <h3 id="creating-expression-matrices-for-pharmacogenomic-analysis">Creating expression matrices for pharmacogenomic analysis<a class="anchor" aria-label="anchor" href="#creating-expression-matrices-for-pharmacogenomic-analysis"></a>
 </h3>
 <p>To facilitate downstream pharmacogenomic analysis, we want to create
-an expression matrix such that: * Features are the rows * Samples are
-the columns * Feature expression as the individual values</p>
-<p>Below, we show a example of such matrix using dummy data</p>
+an expression matrix such that:</p>
+<ul>
+<li>Features are the rows</li>
+<li>Samples are the columns</li>
+<li>Feature expression as the individual values</li>
+</ul>
+<p>Below, we show a example of such matrix using dummy data.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dummy_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Sample"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">dummy_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Sample"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">dummy_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Feature"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">dummy_data</span></span>
 <span><span class="co">#&gt;               Sample1    Sample2    Sample3     Sample4    Sample5</span></span>
@@ -554,20 +577,20 @@ expression.</p>
 <span><span class="va">expr</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1350  100</span></span></code></pre></div>
 <p>Notice that we have the 1350 genes as the rows and the 100 cell lines
-as the columns</p>
+as the columns.</p>
 </div>
 <div class="section level3">
 <h3 id="feature-extraction-techniques-to-define-biomarkers">Feature extraction techniques to define biomarkers<a class="anchor" aria-label="anchor" href="#feature-extraction-techniques-to-define-biomarkers"></a>
 </h3>
 <p>While using the continuous expression of single features is a
 convenient method for quantifying biomarkers, there are cases when other
-techniques are needed and/or more appropriate.</p>
+techniques are needed and/or are more appropriate.</p>
 <div class="section level4">
 <h4 id="binarization">Binarization<a class="anchor" aria-label="anchor" href="#binarization"></a>
 </h4>
-<p>Recall that the driver mutations data was not presented as a
-continuous numeric values. One method to prepare this data is to
-binarize the mutation status.</p>
+<p>Recall that the driver mutations data was not presented as continuous
+numeric values. One method to prepare this data is to binarize the
+mutation status.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">GDSC_drivers</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     gene_id gene_symbol  model_id protein_mutation             rna_mutation</span></span>
@@ -593,14 +616,19 @@ binarize the mutation status.</p>
 <span><span class="co">#&gt; 6 frameshift 0.6333   True Sanger  Mesobank_CellLine-45</span></span></code></pre></div>
 <p>Looking at the first row, we can see that there is a mutation on the
 <code>RGPD3</code> gene in the <code>SIDM02101</code> cell line model.
-We would represent such mutation events wtih <code>1</code>.</p>
+We would represent such mutation events with <code>1</code>.</p>
 <p>The code below again casts the long data frame into a wide format.
 This time we specify an aggregate function <code><a href="https://rdrr.io/r/base/length.html" class="external-link">length()</a></code>, which
 returns the number of rows (mutation events) for each gene-cell line
 pair. This was done by passing the option
-<code>fun.aggregate = length</code></p>
+<code>fun.aggregate = length</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">expr</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/cast.html" class="external-link">dcast</a></span><span class="op">(</span><span class="va">GDSC_drivers</span>, <span class="va">gene_symbol</span> <span class="op">~</span> <span class="va">model_id</span>, value.var <span class="op">=</span> <span class="st">"cdna_mutation"</span>, fun.aggregate <span class="op">=</span> <span class="va">length</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">expr</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/cast.html" class="external-link">dcast</a></span><span class="op">(</span></span>
+<span>  <span class="va">GDSC_drivers</span>,</span>
+<span>  <span class="va">gene_symbol</span> <span class="op">~</span> <span class="va">model_id</span>,</span>
+<span>  value.var <span class="op">=</span> <span class="st">"cdna_mutation"</span>,</span>
+<span>  fun.aggregate <span class="op">=</span> <span class="va">length</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">expr</span><span class="op">$</span><span class="va">gene_symbol</span></span>
 <span><span class="va">expr</span><span class="op">$</span><span class="va">gene_symbol</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span></span>
@@ -647,7 +675,7 @@ site. There are 1000 CpG sites.</p>
 <p>Signatures refer to combinations of features that form some pattern
 with biological relevance. For example, you may choose to define a
 signature X to represent CpG sites located on promoters of genes
-involved in pathway Y).</p>
+involved in pathway Y.</p>
 <p>For simplicity, we can define some arbituary signatures from our CpG
 sites.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -666,18 +694,17 @@ sites.</p>
 <span><span class="co">#&gt; 6 chr1:114354373-114355300        10</span></span></code></pre></div>
 <p>Each of the 1000 CpG sites was randomly assigned to one of 10
 signatures.</p>
-<p>Next we want to quantify the signature for each cell line. Again for
-simplicity, we will sum the beta values for across each CpG for each
+<p>Next we want to quantify the signature for each cell line. Again, for
+simplicity, we will sum the beta values across each CpG for each
 signature.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sScores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fl">0</span>, ncol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">s</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  </span>
 <span>  <span class="co"># get CpGs within each signature</span></span>
-<span>  <span class="va">cpgs</span> <span class="op">&lt;-</span> <span class="va">signatures</span><span class="op">[</span><span class="va">signatures</span><span class="op">$</span><span class="va">Signature</span> <span class="op">==</span> <span class="va">s</span>,<span class="op">]</span><span class="op">$</span><span class="va">CpG</span></span>
-<span>  <span class="va">mSig</span> <span class="op">&lt;-</span> <span class="va">GDSC_methylation</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">cpgs</span>,<span class="op">]</span></span>
-<span>  </span>
+<span>  <span class="va">cpgs</span> <span class="op">&lt;-</span> <span class="va">signatures</span><span class="op">[</span><span class="va">signatures</span><span class="op">$</span><span class="va">Signature</span> <span class="op">==</span> <span class="va">s</span>, <span class="op">]</span><span class="op">$</span><span class="va">CpG</span></span>
+<span>  <span class="va">mSig</span> <span class="op">&lt;-</span> <span class="va">GDSC_methylation</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">cpgs</span>, <span class="op">]</span></span>
+<span></span>
 <span>  <span class="co"># compute sum of beta values for each cell line</span></span>
 <span>  <span class="va">sSum</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">mSig</span><span class="op">)</span></span>
 <span>  <span class="va">sScores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">sScores</span>, <span class="va">sSum</span><span class="op">)</span></span>
@@ -686,7 +713,7 @@ signature.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">sScores</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Signature"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">sScores</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_methylation</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">sScores</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="va">sScores</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                 A673      RT4  8-MG-BA U-118-MG CHAGO-K-1</span></span>
 <span><span class="co">#&gt; Signature1  35.73567 41.50092 30.31945 35.03195  40.93194</span></span>
 <span><span class="co">#&gt; Signature2  36.54479 41.78597 34.23020 37.28902  42.43054</span></span>
