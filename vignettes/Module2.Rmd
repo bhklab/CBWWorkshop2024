@@ -5,33 +5,28 @@ author:
     email: jermiah.joseph@uhn.ca
     affiliation:
         - &pm Princess Margaret Cancer Centre
-  - name: Almas Khan
-    email: almas.khan@mail.utoronto.ca
-    affiliation:
-        - &pm Princess Margaret Cancer Centre
   - name: Julia Nguyen
     email: julia.nguyen@uhn.ca
     affiliation:
         - &pm Princess Margaret Cancer Centre
 output: 
+  revealjs::revealjs_presentation:
+    keep_md: true
+    theme: solarized
+    highlight: pygments
+    center: false
   BiocStyle::html_document:
     self_contained: yes
     toc: true
-    toc_float: true
+    toc_float: false
     toc_depth: 2
     code_folding: show
-date: "`r doc_date()`"
-package: "`r pkg_ver('CBWWorkshop2024')`"
-vignette: >
-  %\VignetteIndexEntry{Module 2: Hands-on with pharmacogenomics data}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE} 
+
+```{r global_knitr_opts, echo=FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+  echo = TRUE, include = TRUE, warning = FALSE, message = TRUE
 )
 ```
 
@@ -52,39 +47,26 @@ MAE <- BiocStyle::Biocpkg("MultiAssayExperiment")
 ## Instructor(s) name(s) and contact information {-}
 
 * Jermiah J. Joseph <jermiah.joseph@uhn.ca>
-* Almas Khan <almas.khan@mail.utoronto.ca>
+* Almas Khan <almas.khan@uhn.ca>
 * Julia Nguyen <julia.nguyen@uhn.ca>
 
-## Lab Description {-}
 
-<!-- Lab Practical – Hands-on with pharmacogenomics data  (Jermiah Joseph, Almas Khan)
-
-Loading a PharmacoSet in R using PharmacoGx or ORCESTRA, understanding the data structure, accessing features, and preparing metadata
-Plot batch effects using PCA and run correction method (SVA)
-Filter out outliers and missing values -->
-
-### Learning goals {-}
+## Learning goals {-}
 
 * Understand the data structure of a `PharmacoSet`
 * Learn how to access features and metadata from a PharmacoSet
 * Learn how to plot batch effects using PCA and run correction method (SVA)
 * Learn how to filter out outliers and missing values
 
-### Learning objectives {-}
+## Learning objectives {-}
 
 * Describe the use cases for `r PGx` in Pharmacogenomics
 * Understand the structure of the `CoreSet` and `PharmacoSet` classes to facilitate their use in subsequent analyses
 * Download/load a `PharmacoSet` using `r PGx` or [orcestra.ca](https://orcestra.ca)
 * Subset and filter a `PharmacoSet` by samples and/or treatments
 * Access the molecular features, dose-response and metadata contained within the `PharmacoSet`
-
-----
-
-```{r global_knitr_opts, echo=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE, include = TRUE, warning = FALSE, message = TRUE
-)
-```
+* Perform quality control on a `PharmacoSet` by identifying and removing outliers and missing values
+* Perform batch correction on a `PharmacoSet` using the `sva` package
 
 ```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
 suppressPackageStartupMessages({
@@ -112,6 +94,7 @@ print(names(available))
 
 print(available[, c("Dataset Name", "PSet Name", "version")])
 ```
+. . .
 
 The following function from `r PGx` can be used to download any of the available PSets from [orcestra.ca](https://orcestra.ca).
 
@@ -127,6 +110,7 @@ PharmacoGx::downloadPSet(
 # Note: this may take a while to download as the files are stored in 
 # zenodo and are quite large
 ```
+. . .
 
 For convenience and in the interest of time, we have created a `PharmacoSet` to be used 
 in this tutorial. We will be interacting with this dataset for the remainder of the tutorial.
@@ -147,6 +131,7 @@ screening experiments where cell lines are treated with a panel of drugs at mult
 slotNames(pset)
 ```
 
+. . .
 
 ```{r core_set_class, echo=FALSE, fig.wide=TRUE, fig.cap = "**PharmacoSet** class structure" }
 knitr::include_graphics("./CoreSet-class.png")
@@ -170,6 +155,7 @@ We can access the `sampleNames` of the `PharmacoSet`:
 ```{r show_sample_names}
 PharmacoGx::sampleNames(pset)
 ```
+. . .
 
 To get all the metadata associated with the samples, we can access the `sample` slot:
 ```{r show_samples}
@@ -184,6 +170,7 @@ Similar to the `sample`, we can access the `treatmentNames` of the `PharmacoSet`
 ```{r show_treatment_names}
 PharmacoGx::treatmentNames(pset) |> head()
 ```
+. . .
 
 To get all the metadata associated with the treatments, we can access the `treatment` slot:
 
@@ -191,7 +178,6 @@ To get all the metadata associated with the treatments, we can access the `treat
 pset@treatment |> str()
 ```
 There are also 22 treatments used.
-
 
 # Molecular Profiles
 
@@ -205,6 +191,15 @@ All the `SummarizedExperiment` objects are stored in a container called
 a `MultiAssayExperiment` which can be accessed through the 
 `molecularProfiles` slot.
 
+
+
+## `MultiAssayExperiment` and `SummarizedExperiment`
+
+
+```{r SummarizedExperiment_schema, echo=FALSE, fig.wide=TRUE, fig.cap = "**SummarizedExperiment** and **MultiAssayExperiment** classes."}
+knitr::include_graphics("./MultiAssayExperiment_SummarizedExperiment_schematics.png")
+
+```
 ## View the `molecularProfiles` slot
 
 ```{r show_molecular_profiles}
@@ -227,6 +222,8 @@ stimulus-response data.
 pset@treatmentResponse
 ```
 
+. . .
+
 To view all the methods available for the `TreatmentResponseExperiment` class,
 we can use the `methods` function:
 
@@ -237,7 +234,7 @@ methods(class = "TreatmentResponseExperiment")
 # Subsetting a `PharmacoSet`
 
 
-### Subset by `sampleNames` and/or `treatmentNames`
+## Subset by `sampleNames` and/or `treatmentNames`
 
 When subsetting a `PharmacoSet` object by `sample` names, both the 
 `MultiAssayExperiment` and `TreatmentResponseExperiment` objects will be 
@@ -245,22 +242,23 @@ subsetted so all their internal `Experiments` only contain data for the samples
 of interest.
 
 However, when subsetting by `treatment` names, only the `TRE` object will be 
-subsetted. 
+subsetted.
 
+. . .
 
 ```{r subset_pset}
 PharmacoGx::subsetBySample(
   pset,
-  sample = sampleNames(pset)[1:5]
+  sample = PharmacoGx::sampleNames(pset)[1:5]
 )
 
 PharmacoGx::subsetByTreatment(
   pset,
-  treatment = treatmentNames(pset)[1:5]
+  treatment = PharmacoGx::treatmentNames(pset)[1:5]
 )
 ```
 
-### Subsetting using `sample` and `treatment` metadata
+## Subsetting using `sample` and `treatment` metadata
 
 The utility of the `metadata` slots in the `PharmacoSet` class 
 
@@ -268,10 +266,12 @@ The utility of the `metadata` slots in the `PharmacoSet` class
 unique(pset@sample$tissueid)
 
 tissues_of_interest <- c("Kidney")
-indices <- which(pset@sample$tissueid %in% tissues_of_interest)
 
-
-(samples_of_interest <- sampleNames(pset)[indices])
+(samples_of_interest <- pset@sample[
+  pset@sample$tissueid %in% tissues_of_interest, 
+  "sampleid"
+  ]
+)
 
 PharmacoGx::subsetBySample(
   pset,
@@ -355,18 +355,38 @@ tre  |>
   ) |>
   with(expr=hist(N, main="Histogram of Number of Replicates", xlab="Number of Replicates"))
 ```
-
-@Julia do we want to plot the technical replicates for a specific treatment? 
-
-idk if that applies here but
-
 ### Summarize over technical replicates
 
 Depending on the experiment design, you will need to choose how you want to 
 proceed with the data.
 
-In the interest of computation time, we want to summarize the technical replicates
-into a single value and store that result **inside** the `TreatmentResponseExperiment`.
+One common approach is to summarize the technical replicates into a single value,
+this can be done by taking the mean, median, or any other summary statistic.
+
+### Exercise 
+
+* Use `aggregate` to summarize the data by taking the mean of the `viability` values
+* Aggregate over the `treatmentid`, `sampleid`, `bio_rep`, and `treatmentdose`
+* Then, count the number of doses for each unique combination of `treatmentid`, `sampleid`, and `bio_rep`
+* Plot the histogram of the number of doses
+
+```{r tre_aggregate_exercise}
+tre  |>
+  aggregate(
+      assay="sensitivity",
+      viability=mean(viability),
+      by=c("treatmentid", "sampleid", "bio_rep", "treatmentdose")
+  ) |> 
+  _[, .N, by=c("treatmentid", "sampleid", "bio_rep")] |>
+  with(expr=hist(N, main="Histogram of Number of Doses", xlab="Number of Doses"))
+
+```
+
+## `Endoaggregate`
+
+In the interest of computation time and resources, we want to summarize the
+technical replicates into a single value and store that 
+result **inside** the `TreatmentResponseExperiment`.
 
 For this, we have developed the `endoaggregate` method. 
 
@@ -399,7 +419,9 @@ tre_avged <- tre  |>
 str(tre_avged$mean_sensitivity)
 ```
 
-### A nice subheading for computing AAC, IC50 etc.
+
+
+## A nice subheading for computing AAC, IC50 etc.
 
 ```{r tre_endoaggregate3, warning=FALSE}
 
@@ -434,7 +456,10 @@ computation.
 To determine a safe, and optimal number of threads to use, we can use the
 `CoreGx::optimizeCoreGx` function which will tell us a safe number of threads.
 
-```{r determine_nthreads, warning=FALSE}
+NOTE: The following two code chunks will not be evaluated in this vignette as it
+mawy take some time. 
+
+```{r determine_nthreads, warning=FALSE, eval=FALSE}
 
 CoreGx::optimizeCoreGx(tre_avged)
 ```
@@ -442,8 +467,9 @@ CoreGx::optimizeCoreGx(tre_avged)
 Depending on your device, this number may vary.
 Let's use a conservative number of threads for this example.
 
-```{r tre_endoaggregate4, warning=FALSE}
-
+```{r tre_endoaggregate4, warning=FALSE, eval=FALSE}
+THREADS <- 2 # github runners provide 2c 
+  
 tre_profiled <- tre_avged |> 
   endoaggregate(
     {
@@ -461,7 +487,7 @@ tre_profiled <- tre_avged |>
     by = c("treatmentid", "sampleid", "bio_rep"),
     enlist=FALSE,
     target="profiles",
-    nthread=6
+    nthread=THREADS
 )
 ```
 
@@ -472,7 +498,6 @@ Lets look at the profiles we have computed:
 tre_profiled$profiles
 ```
 
-@Julia what can I do with these? can I plot or something cool?
 
 ```{r box_plot}
 #tre_profiled$profiles
@@ -482,13 +507,13 @@ tre_profiled$profiles
 ```
 
 
-## Quality Control of Pharmacogenomic Datasets
+# Quality Control of Pharmacogenomic Datasets
 
 For the remainder of the lab, we will go over some quick case scenarios that require
 quality control. We will load in new molecular profile.
 
 
-### Checking for missing values
+## Checking for missing values
 
 ```{r get_batch_tpm}
 # get molecular profile
@@ -537,7 +562,7 @@ any(is.na(tpm_matrix))
 In the last line of code, we check if there were any remaining `NA` values. Since
 there is none, we can move on to visualizing our data.
 
-### Principal component analysis for outlier removal
+## Principal component analysis for outlier removal
 
 Let's quickly take a look at our expression matrix again.
 
@@ -623,7 +648,7 @@ Now that the outlier is removed, we have a better visualization of the data.
 It is very evident that the data points (samples) tend to cluster by batch. This 
 is indicative of a potential batch effect.
 
-### Adjusting for known batches
+## Adjusting for known batches
 
 When we have a known batch, we can adjust for it directly. One method is to use the
 `ComBat()` function from the `sva` package.
@@ -660,4 +685,5 @@ ggarrange(p1, p2, ncol = 2)
 
 For downstream pharmacogenomic analysis (or any other bioinformatic analysis), the
 batch-corrected expression matrix should be used.
+
 

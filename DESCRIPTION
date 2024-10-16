@@ -1,10 +1,11 @@
 Package: CBWWorkshop2024
 Title: CBW Workshop 2024: Pharmacogenomics Data Analysis 
-Version: 0.0.0.9014
+Version: 0.0.0.9018
 Authors@R: c(
     person("Jermiah", "Joseph", , "jermiahjoseph98@gmail.com", role = c("aut", "cre")),
     person("Julia", "Nguyen", role = "aut"),
-    person("Nikta", "Feizi", role = "aut")
+    person("Nikta", "Feizi", role = "aut"),
+    person("Canadian Bioinformatics Workshop,Bioinformatics.ca", , , "support@bioinformatics.ca", role = "fnd")
   )
 Description: This workshop delves into the rapidly advancing field of personalized cancer
   treatment, emphasizing how treatments can be tailored to individual patients
@@ -50,4 +51,4 @@ VignetteBuilder: knitr
 URL: https://bhklab.github.io/CBWWorkshop2024/
 BugReports: https://github.com/bhklab/CBWWorkshop2024/issues
 Depends: 
-    R (>= 3.5.0)
+    R (>= 4.3.0)
