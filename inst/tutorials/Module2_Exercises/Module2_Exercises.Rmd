@@ -1,85 +1,212 @@
 ---
 title: "Module2: Exercises"
-output: learnr::tutorial
-runtime: shiny_prerendered
+output:
+  revealjs::revealjs_presentation:
+    theme: solarized
+    highlight: pygments
+    center: false
+  BiocStyle::html_document:
+    self_contained: yes
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    code_folding: show
 description: >
   Exercises corresponding to the Module 2 of the CBW workshop (see Vignettes).
 ---
 
 
-```{r load_packages, eval=TRUE, echo=TRUE, include=FALSE}
+```{r global_knitr_opts, echo=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, include = TRUE, warning = FALSE, message = TRUE
+)
+```
+
+
+```{r load_packages, eval=TRUE, echo=TRUE}
 suppressPackageStartupMessages({
   library(CBWWorkshop2024)
   library(PharmacoGx)
   library(data.table)
 })
-library(learnr)
-knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-## Introduction
+# Introduction
 
 We will be working with the `NCI_ALMANAC_pset` object provided by this workshop.
 
 Load the data and determine how many samples and treatments are in the dataset
-```{r setup, exercise=TRUE, include=TRUE}
-
+```{r setup}
 pset <- CBWWorkshop2024::NCI_ALMANAC_pset
 pset
 ```
 
-### Number of Samples
+## Number of Samples
 
-```{r n_samples, exercise=TRUE}
-# after initializing the pset object, determine the number of samples and treatments
-n_samples <- <YOUR CODE HERE>
-n_samples
+```{r n_samples-solution}
+length(sampleNames(pset))
 ```
 
-```{r n_samples-solution, exercise=FALSE}
-n_samples <- length(sampleNames(pset))
-n_samples
-```
+## Number of Treatments
 
-
-### Number of Treatments
-
-```{r n_treatments, exercise=TRUE}
-n_treatments <- <YOUR CODE HERE>
-n_treatments
+```{r n_treatments-solution}
+length(treatmentNames(pset))
 
 ```
 
 
-```{r n_treatments-solution, exercise=FALSE}
-n_treatments <- length(treatmentNames(pset))
-n_treatments
-```
+# Subsetting the PSet
 
-
-## Subsetting the PSet
-
-### Metadata 
+## Metadata 
 
 Print the first 5 rows of the sample metadata
-```{r view_sample_metadata, exercise=TRUE}
-# Access the sample metadata for the PSet 
-
-# Print the first 5 rows of the sample metadata
-
-```
-
-```{r view_sample_metadata-solution, exercise=FALSE}
+```{r view_sample_metadata-solution}
 # Solution code
 sample_metadata <- pset@sample
 head(sample_metadata, 5)
 ```
 
-### Subsetting the PSet
+## Subsetting the PSet
+
+Subset the PSet to include only data for the sample "NCI-H322M"
+
+```{r subset_pset-solution, warning=FALSE}
+pset |> subsetBySample("NCI-H322M")
+```
+
+## Subsetting the PSet
+
+Subset the PSet to include only data for samples where:
+
+* The `NCI_ALMANAC.disease` is "Non-Small Cell Lung Cancer"
+* and `tissueid` is NOT "Pleura"
+
+```{r subset_pset2-solution, warning=FALSE}
+pset |> subsetBySample(
+  sampleInfo(pset)[
+    sampleInfo(pset)$NCI_ALMANAC.disease == "Non-Small Cell Lung Cancer" &
+    sampleInfo(pset)$tissueid != "Pleura",
+    "sampleid"
+  ]
+)
+```
 
 
-Subset the PSet to include only the samples treated with the drug `5-Fluorouracil`
+# Subset and Aggregate
+
+Load the `NCI_ALMANAC_TRE` object provided by this workshop.
+
+```{r load_tre}
+tre <- CBWWorkshop2024::NCI_ALMANAC_TRE
+```
+
+## Subset `TreatmentResponseExperiment`
+
+Using the `[` operator, subset the `tre` object to include only data for sample "NCI-H322M"
+
+```{r subset_tre2-solution}
+tre[, "NCI-H322M", ]
+```
+
+## Subset `TreatmentResponseExperiment`
+
+Using the either the `subset` method or `[` notations, 
+subset the `tre` object to include only data where
+* the `sampleid` starts with "NCI"
+* and the `dose` is between 0.05 and 10
+
+```{r subset_tre-solution}
+subset(
+  tre,
+  between(dose, 0.05, 10),
+  grepl("NCI", colnames(tre))
+)
+
+tre[.(between(dose, 0.05, 10)),.( grepl("NCI", colnames(tre)))]
+```
+
+## Aggregate `TreatmentResponseExperiment` 
+
+* Use `aggregate` and `subset` to get all the `treatmentid`
+with more than 15000 experiments
+
+```{r tre_aggregate_exercise2}
+tre |> 
+  aggregate(
+    assay="sensitivity",
+    N=.N,
+    by=c("treatmentid")
+  ) |> 
+  subset(N > 15000, treatmentid)
+```
+
+
+## Aggregate `TreatmentResponseExperiment` and plot 
+
+* Use `aggregate` to summarize the data by taking the mean of the `viability` values
+* Aggregate over the `treatmentid`, `sampleid`, `bio_rep`, and `treatmentdose`
+* Then, count the number of doses for each unique combination of `treatmentid`, `sampleid`, and `bio_rep`
+* Plot the histogram of the number of doses
+
+```{r tre_aggregate_exercise}
+tre  |>
+  aggregate(
+      assay="sensitivity",
+      viability=mean(viability),
+      by=c("treatmentid", "sampleid", "bio_rep", "dose")
+  ) |> 
+  _[, .N, by=c("treatmentid", "sampleid", "bio_rep")] |>
+  with(
+    expr=hist(
+      N, 
+      main="Histogram of Number of Doses", 
+      xlab="Number of Doses", 
+      breaks =10
+      )
+    )
+```
+
+
+## Endoaggregation
+
+Use `endoaggregate` to summarize the data by taking the mean of the `viability` values
+
+
+## Endoaggregate `TreatmentResponseExperiment` mean viability
+
+Use `endoaggregate` to get a `TreatmentResponseExperiment` with a new assay 
+called `summary_viability` that summarizes the viability data with:
+1. The `mean` 
+2. The `median` 
+3. The `std` 
+3. The `min` 
+4. The `max` 
+
+The col names can be 
+* `mean_viability`
+* `median_viability` 
+* etc. 
+
+Note: you will have to determine what to aggregate over based on the data you have
+
+```{r tre_endoaggregate_exercise}
+tre |>
+  endoaggregate(
+    mean_viability = mean(viability),
+    median_viability = median(viability),
+    min_viability = min(viability),
+    max_viability = max(viability),
+    std_viability = sd(viability),
+    by = c("treatmentid", "sampleid", "bio_rep", "dose"),
+    assay="sensitivity",
+    target="summary_viability"
+  ) 
+```
+
+
+
+
 
 
 
