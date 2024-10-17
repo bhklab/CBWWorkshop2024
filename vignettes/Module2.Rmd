@@ -213,9 +213,6 @@ analysis, we have developed a new class called the `TreatmentResponseExperiment`
 (TRE) which has been specifically designed to handle high dimensional biological
 stimulus-response data.
 
-<span style="color:red; font-size: large; font-weight: bold;">TODO</span>
-@jermiah ADD DIAGRAM OF TRE CLASS
-
 ## View the `treatmentResponse` slot
 
 ```{r show_treatment_response}
@@ -355,6 +352,7 @@ tre |>
     )
   )
 ```
+
 ### Summarize over technical replicates
 
 Depending on the experiment design, you will need to choose how you want to 
@@ -479,13 +477,6 @@ Let's look at the profiles we have computed:
 show(tre_profiled)
 
 tre_profiled$profiles
-```
-
-
-```{r box_plot}
-# tre_profiled$profiles
-
-# TODO: add code to make box plots for AAC and IC50 per drug
 ```
 
 
