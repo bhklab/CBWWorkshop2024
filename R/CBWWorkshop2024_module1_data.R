@@ -14,7 +14,7 @@
 #' @usage data(GDSC_drivers)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"GDSC_drivers"
 
 #' A `data.frame` containing a subset of cell lines and RNA-seq data from
 #' the Genomics of Drug Sensitivity in Cancer (GDSC) dataset.
@@ -32,7 +32,7 @@ NULL
 #' @usage data(GDSC_rnaseq)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"GDSC_rnaseq"
 
 #' A `data.frame` containing the mapping of gene names used in the Genomics of
 #' Drug Sensitivity in Cancer (GDSC) dataset.
@@ -50,7 +50,7 @@ NULL
 #' @usage data(GDSC_gene_identifiers)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"GDSC_gene_identifiers"
 
 #' A `data.frame` containing metadata for cell lines used in the Genomics of
 #' Drug Sensitivity in Cancer (GDSC) project.
@@ -69,7 +69,7 @@ NULL
 #' @usage data(GDSC_model_list)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"GDSC_model_list"
 
 #' A `data.frame` containing methylation beta values for cell lines from the
 #' Genomics of Drug Sensitivity in Cancer (GDSC) dataset.
@@ -87,7 +87,7 @@ NULL
 #' @usage data(GDSC_methylation)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"GDSC_methylation"
 
 #' A `data.frame` containing cell line Sentrix array metadata for the Genomics
 #' of Drug Sensitivity in Cancer (GDSC) dataset.
@@ -105,7 +105,7 @@ NULL
 #' @usage data(GDSC_methylation_model_list)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"GDSC_methylation_model_list"
 
 #' A `data.frame` containing drug response data for the Genomics of Drug
 #' Sensitivity in Cancer (GDSC) dataset.
@@ -124,7 +124,7 @@ NULL
 #' @usage data(GDSC_drug_response)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"GDSC_drug_response"
 
 #' A `data.frame` containing global chromatin profiling of histone marks for
 #' the Cancer Cell Line Encyclopedia (CCLE) dataset.
@@ -140,7 +140,7 @@ NULL
 #' @usage data(CCLE_chromatin)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"CCLE_chromatin"
 
 #' A `data.frame` containing protein expression data for the Cancer Cell Line
 #' Encyclopedia (CCLE) dataset.
@@ -156,7 +156,7 @@ NULL
 #' @usage data(CCLE_rrpa)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"CCLE_rrpa"
 
 #' A `data.frame` containing metabolite expression data for the Cancer Cell Line
 #' Encyclopedia (CCLE) dataset.
@@ -172,7 +172,7 @@ NULL
 #' @usage data(CCLE_metabolomics)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"CCLE_metabolomics"
 
 #' A `data.frame` containing metadata for cell lines used in the Cancer Cell
 #' Line Encyclopedia (CCLE) project.
@@ -188,4 +188,4 @@ NULL
 #' @usage data(CCLE_model_list)
 #' @keywords datasets
 #' @format `data.frame` object
-NULL
+"CCLE_model_list"
