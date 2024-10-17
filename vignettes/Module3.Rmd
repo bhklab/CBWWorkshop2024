@@ -586,4 +586,4 @@ Do you think that adding an additional gene has improved model performance?
 ## Individual Practice
 
 For the remainder of the lab, please explore the associations between other features
-and drug response.
+and drug response. Try using the CCLE pset too!
