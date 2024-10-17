@@ -480,6 +480,10 @@ tre_profiled$profiles
 ```
 
 
+
+
+
+
 # Quality Control of Pharmacogenomic Datasets
 
 For the remainder of the lab, we briefly go over some common scenarios that require
@@ -524,6 +528,7 @@ num_observations <- ncol(tpm_matrix)
 # get proportion
 num_NA / num_observations
 ```
+
 
 Now we know that 50% of samples have an `NA` value rather than an expression level
 for `GENE002`. This can be indicative of some technical issue. Let's remove this 
@@ -581,7 +586,6 @@ p1 <- ggplot(org_pca) +
   scale_color_manual(values = c("#624763", "#B1D3A3")) +
   theme_classic() +
   ggtitle("Before Batch Correction")
-
 p1
 ```
 
@@ -653,6 +657,7 @@ Don't forget to transpose the adjusted counts matrix!
 
 ```{r pca_adj_batch}
 # perform PCA on adjusted matrix
+
 adj_pca <- prcomp(t(adj_tpm_matrix))$x |> as.data.frame()
 adj_pca$Batch <- meta$batchid[match(rownames(adj_pca), meta$sampleid)] |> as.factor()
 
@@ -666,6 +671,9 @@ p2 <- ggplot(adj_pca) +
 # plot both plots side by side for comparison
 ggarrange(p1, p2, ncol = 2)
 ```
+
+For downstream pharmacogenomic analysis (or any other bioinformatic analysis), the
+batch-corrected expression matrix should be used.
 
 For downstream pharmacogenomic analysis (or any other bioinformatic analysis), the
 batch-corrected expression matrix should be used.

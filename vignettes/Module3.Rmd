@@ -1,12 +1,16 @@
 ---
-title: "Module 3: Intro to pharmacogenomics in the context of cancer"
+title: "Module 3: Pharmacogenomics for biomarker discovery – Basic analysis"
 author: 
-  - name: Julia Nguyen
-    email: julia.nguyen@uhn.ca
+  - name: Jermiah J. Joseph
+    email: jermiah.joseph@uhn.ca
     affiliation:
         - &pm Princess Margaret Cancer Centre
   - name: Nikta Feizi
-    email: nikta.feizi@uhn.ca
+    email: 
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
+  - name: Julia Nguyen
+    email: julia.nguyen@uhn.ca
     affiliation:
         - &pm Princess Margaret Cancer Centre
 output: 
@@ -40,6 +44,15 @@ MAE <- BiocStyle::Biocpkg("MultiAssayExperiment")
 ```
 
 ## Overview 
+# Lab 3 Overview {-}
+
+## Instructor(s) name(s) and contact information {-}
+
+* Jermiah J. Joseph <jermiah.joseph@uhn.ca>
+* Nikta Feizi <>
+* Julia Nguyen <julia.nguyen@uhn.ca>
+
+## PharmacoGx Package Overview
 
 **PharmacoGx:** An R package for analyzing pharmacogenomic datasets.
 
@@ -104,21 +117,25 @@ exploration and interpretation.
 3. Perform correlations to assess concordance between cell line datasets.
 4. Visualize and interpret the results of statistical tests.
 
-## Load Required Libraries
-
-We start by loading the necessary libraries for this analysis.
-
-```{r load_libraries, echo=TRUE, message=FALSE, warning=FALSE}
+```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
 suppressPackageStartupMessages({
+  library(CBWWorkshop2024)
+  library(PharmacoGx)
+  library(data.table)
+  library(reshape2)
+  library(ggplot2)
+  library(ggpubr)
   library(Biobase) # Core Bioconductor class for gene expression data
   library(SummarizedExperiment) # Core Bioconductor class for summarized data
   library(S4Vectors) # Core Bioconductor class for handling S4 objects
-  library(PharmacoGx) # Package for analyzing pharmacogenomic datasets
   library(pander) # Package for nicely formatted tables
 })
 ```
 
-## Load GDSC and CCLE Datasets
+
+## Exploring GDSC and CCLE Datasets
+
+### Load GDSC and CCLE Datasets
 
 We will use the **GDSCsmall** and **CCLEsmall** sample datasets provided by
 `r PGx` to compare the two data sources.
@@ -126,18 +143,22 @@ We will use the **GDSCsmall** and **CCLEsmall** sample datasets provided by
 ```{r load_data}
 data("GDSCsmall")
 data("CCLEsmall")
+GDSCsmall
 ```
 
-## Find Common Genes Between GDSC and CCLE
+### Find Common Genes Between GDSC and CCLE
 
 The first step in comparing datasets is to find shared features between them.
 Here, we identify the genes that are present in both datasets.
 
 ```{r find_common_genes}
 commonGenes <- intersect(fNames(GDSCsmall, "rna"), fNames(CCLEsmall, "rna"))
+length(commonGenes)
 ```
 
-## Identify Common Cell Lines and Drugs
+There are 41 genes that are common between the RNA profiles of the GDSC and CCLE datasets.
+
+### Identify Common Cell Lines and Drugs
 
 Next, we identify the common cell lines and drugs between **GDSC** and **CCLE**.
 
@@ -149,7 +170,19 @@ common <- intersectPSet(
 )
 ```
 
-## Summarize Drug Sensitivity Profiles
+There are 9 common samples between GDSC and CCLE. The `intersectPSet` function returns a 
+list of the two PSets subsetted to include only the common cell lines.
+
+```{r intersect_pset_results}
+common
+```
+
+Notice that most of the molecular profiles are subsetted to include the 9 common samples. 
+Some odd cases include RNA from GDSC which has a technical replicate (hence 10 samples) and
+CNV from CCLE which is missing CNV profiles for two fo the nine cell lines.
+
+
+### Summarize Drug Sensitivity Profiles
 
 We summarize drug sensitivity profiles (AUC and IC50) for each dataset. The
 `summary.stat` parameter can be set to different statistical metrics such as
@@ -183,9 +216,49 @@ CCLE.ic50 <- summarizeSensitivityProfiles(
   summary.stat = "median",
   verbose = FALSE
 )
+CCLE.auc |> head()
 ```
 
-## Summarize Gene Expression Profiles
+We can visualize the distribution of drug sensitivity profiles to compare between the two psets. 
+
+First we quickly reformat the data into a long format to faciliate plotting. We use
+the `melt()` function from the `reshape2` package.
+
+```{r format_sensitivity}
+CCLE_toPlot <- melt(CCLE.auc)
+colnames(CCLE_toPlot) <- c("Drug", "Gene", "AUC")
+
+CCLE_toPlot |> head()
+```
+
+Next, we can create a quick box plot to visualize the AUC distributions per drug.
+
+```{r plot_sensitivity}
+ggplot(CCLE_toPlot, aes(x = Drug, y = AUC)) + geom_boxplot(fill = "grey") +
+  theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #rotate x-axis labels
+```
+
+Let's do this again but with the GDSC PSet so we can compare the two
+```{r plot_sensitivity_compare}
+# format the CCLE sensitivity data
+GDSC_toPlot <- melt(GDSC.auc)
+colnames(GDSC_toPlot) <- c("Drug", "Gene", "AUC")
+
+# merge the two pset dataframes
+GDSC_toPlot$PSet <- "GDSC"
+CCLE_toPlot$PSet <- "CCLE"
+merge_toPlot <- rbind(GDSC_toPlot, CCLE_toPlot)
+
+# plot to compare AUC distribution between PSets
+ggplot(merge_toPlot, aes(x = Drug, y = AUC)) + geom_boxplot(aes(fill = PSet)) +
+  scale_fill_manual(values = c("#624763", "#B1D3A3")) + theme_classic() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) #rotate x-axis labels
+```
+
+Preclinical drug response data is fairly noisy, hence the variation we see between 
+the two datasets. However, we do see some commonalities in distribution.
+
+### Summarize Gene Expression Profiles
 
 We summarize gene expression data for the genes that are common between **GDSC**
 and **CCLE**.
@@ -199,7 +272,12 @@ CCLEexpression <- summarizeMolecularProfiles(
   common$CCLE, cellNames(common$CCLE),
   mDataType = "rna", features = commonGenes, verbose = FALSE
 )
+GDSCexpression |> head()
 ```
+
+Here, you could do PCA on the profiles to quickly check the data. We will skip this 
+step in the interest of time.
+
 
 ## Correlation Analysis Between GDSC and CCLE
 
@@ -207,11 +285,11 @@ We perform correlation analysis to examine the relationship between gene
 expression, AUC, and IC50 measures across the **GDSC** and **CCLE** datasets
 using **Spearman's correlation**.
 
-```{r correlation_analysis}
-# Cell line names
+```{r correlation_analysis_gene_expression}
+# get common cell line names
 cc <- cellNames(common[[1]])
 
-# Correlation of gene expression
+# correlation of gene expression across common cell lines
 ge.cor <- sapply(cc, function(x, d1, d2) {
   stats::cor(
     d1[, x], d2[, x],
@@ -219,7 +297,19 @@ ge.cor <- sapply(cc, function(x, d1, d2) {
   )
 }, d1 = assay(GDSCexpression, 1), d2 = assay(CCLEexpression, 1))
 
-# Correlation of IC50 values
+ge.cor
+```
+
+We can see that the RNA-Seq expression values are highly correlated across the 
+common cell lines.
+
+Let's take a look at the correlation of drug response, starting with IC50 values.
+
+```{r correlation_analysis_IC50}
+# quick look at the CCLE IC50 data
+CCLE.ic50 |> head()
+
+# correlation of IC50 values across common drugs and cell lines
 ic50.cor <- sapply(cc, function(x, d1, d2) {
   stats::cor(
     d1[, x], d2[, x],
@@ -227,13 +317,31 @@ ic50.cor <- sapply(cc, function(x, d1, d2) {
   )
 }, d1 = GDSC.ic50, d2 = CCLE.ic50)
 
-# Correlation of AUC values
+ic50.cor
+```
+
+Notice that we have some `NA` values in the original CCLE IC50 dataset and in the
+correlation results. 
+
+The `pairwise.complete.obs` argument used in the `cor()` function ensures that only 
+complete observations (i.e. numeric values that are not `NA`) are included in the 
+pairwise correlations. 
+
+Since `23132-87` and `647-V` are all `NA` values, no spearman correlation was
+computed.
+
+We can quickly compute the correlation for AUC as well.
+
+```{r correlation_analysis_AUC}
+# correlation of AUC values across common drugs and cell lines
 auc.cor <- sapply(cc, function(x, d1, d2) {
   stats::cor(
     d1[, x], d2[, x],
     method = "spearman", use = "pairwise.complete.obs"
   )
 }, d1 = GDSC.auc, d2 = CCLE.auc)
+
+auc.cor
 ```
 
 ## Statistical Comparison
@@ -251,11 +359,10 @@ w2 <- stats::wilcox.test(
 )
 
 # Display p-values
-yylim <- c(-1, 1)
 ss <- sprintf("GE vs. AUC = %.1E\nGE vs. IC50 = %.1E", w1$p.value, w2$p.value)
 ```
 
-## Boxplot Visualization
+### Boxplot Visualization
 
 The results are visualized using boxplots to compare the correlations across
 gene expression, AUC, and IC50.
@@ -265,7 +372,7 @@ boxplot(list("GE" = ge.cor, "AUC" = auc.cor, "IC50" = ic50.cor),
   main = "Concordance between cell lines",
   ylab = expression(R[s]),
   sub = ss,
-  ylim = yylim,
+  ylim = c(-1, 1),
   col = "lightgrey",
   pch = 20,
   border = "black"
