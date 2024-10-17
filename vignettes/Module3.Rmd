@@ -168,6 +168,9 @@ common <- intersectPSet(
   intersectOn = c("cell.lines", "drugs"),
   strictIntersect = TRUE
 )
+
+cellNames(common[[1]])
+length(cellNames(common[[1]]))
 ```
 
 There are 9 common samples between GDSC and CCLE. The `intersectPSet` function returns a 
@@ -267,11 +270,12 @@ and **CCLE**.
 GDSCexpression <- summarizeMolecularProfiles(
   common$GDSC, cellNames(common$GDSC),
   mDataType = "rna", features = commonGenes, verbose = FALSE
-)
+) |> assay()
 CCLEexpression <- summarizeMolecularProfiles(
   common$CCLE, cellNames(common$CCLE),
   mDataType = "rna", features = commonGenes, verbose = FALSE
-)
+) |> assay() 
+
 GDSCexpression |> head()
 ```
 
@@ -295,7 +299,7 @@ ge.cor <- sapply(cc, function(x, d1, d2) {
     d1[, x], d2[, x],
     method = "spearman", use = "pairwise.complete.obs"
   )
-}, d1 = assay(GDSCexpression, 1), d2 = assay(CCLEexpression, 1))
+}, d1 = GDSCexpression, d2 = CCLEexpression)
 
 ge.cor
 ```
@@ -358,8 +362,12 @@ w2 <- stats::wilcox.test(
   x = ge.cor, y = ic50.cor, conf.int = TRUE, exact = FALSE
 )
 
+w1
+w2
+
 # Display p-values
 ss <- sprintf("GE vs. AUC = %.1E\nGE vs. IC50 = %.1E", w1$p.value, w2$p.value)
+ss
 ```
 
 ### Boxplot Visualization
@@ -379,46 +387,204 @@ boxplot(list("GE" = ge.cor, "AUC" = auc.cor, "IC50" = ic50.cor),
 )
 ```
 
-## Drug Sensitivity Signature
+## Statistical Analysis for Drug Response Associations
 
-We calculate drug sensitivity signatures using gene expression and mutation data
-for selected drugs to understand the relationship between molecular features and
-drug response. Note that this gene-drug signature is based on univariable
+In this final section, we will be focusing on computing the association between a
+feature of interest and drug response in order to identify predictive biomarkers.
+
+Let's begin by selecting a feature and drug of interest to explore.
+
+```{r variables_association}
+commonGenes |> head()
+feature <- "ENSG00000000003"
+
+common$GDSC@treatment |> rownames()
+drug <- "PD-0325901"
+```
+
+Next, we need to extract the vector of gene expression for our chosen feature and
+drug response for our chosen drug. Let's do this for the GDSC dataset.
+
+```{r get_vector}
+Gene <- GDSCexpression[feature,]
+Drug <- GDSC.auc[drug,]
+
+Gene
+Drug
+```
+
+Notice that the PSet has already kept the samples ordered across the various profiles.
+
+Before we compute the associations, we can quickly plot the two variables to visualize
+their relationship.
+
+```{r plot_association}
+# create datafarme to plot
+toPlot <- data.frame(Gene = Gene, Drug = Drug)
+
+ggplot(toPlot, aes(x = Gene, y = Drug)) + geom_point() +
+  theme_classic() + labs(x = "Gene (expr)", y = "Drug (AUC)")
+```
+
+From the scatter plot, we see a weak positive correlation. Let's see if this is 
+reflected in our association analyses.
+
+### Concordance Index
+
+Fist, we will compute the association between the gene expression data and drug response.
+We will use the `concordance.index` function from the `survcomp` package.
+
+``` {r compute_ci}
+ci <- survcomp::concordance.index(
+  as.numeric(Drug),                   # drug vector
+  surv.time = as.numeric(Gene),       # gene vector
+  surv.event = rep(1,length(Gene)),   
+  outx = TRUE, method="noether", na.rm = TRUE
+)
+
+cat("Concordance Index:", ci$c.index, "\n",
+    "P-value:", ci$p.value, "\n",
+    "Standard Error:", ci$se, "\n", 
+    "Upper CI:", ci$upper,"\n",
+    "Lower CI:", ci$lower)
+```
+
+The concordance index tells us there is a weak inverse association between the 
+gene expression and the drug response.
+
+### Pearson's Correlation Coefficient
+
+Using the same feature and drug, let's compute the association again but this
+time using Pearon's correlation.
+
+``` {r compute_pearson}
+ps <- cor.test(
+  x = Gene,
+  y = Drug,
+  alternative = "two.sided",
+  method = "pearson"
+)
+
+cat("Pearson's correlation:", ps$estimate, "\n",
+    "P-value:", ci$p.value, "\n",
+    "Confidence Interval:", ps$conf.int)
+```
+
+The Pearson's correlation tells us there is a (very) weak positive linear relationship
+between the gene expression and the drug response.
+
+Notice the slight difference in interpretation between the concordance index and the
+Pearson's correlation.
+
+### Drug Sensitivity Signatures (PharmacoGx)
+
+The last method we will explore is a built-in function from the `PharmacoGx` package 
+called `drugSensitivitySig`. This function takes a Pharmacoset along with a list of
+drugs and features, then computes the association between the feature expression 
+and drug response for each pair.
+
+Let's first select the first 3 genes and drugs as our features & drugs of interest:
+```{r variables_drugSS}
+features <- commonGenes[1:3]
+drugs <- rownames(common$GDSC@treatment)[1:3]
+```
+
+Now we can calculate the drug sensitivity signature using the vector of genes and drugs
+for the GDSC dataset. Note that this gene-drug signature is based on univariable
 analysis.
 
-```{r drug_sensitivity_signature}
-features <- fNames(CCLEsmall, "rna")[which(featureInfo(CCLEsmall, "rna")$Symbol == "NQO1")]
-
-# Gene expression signature
+```{r DSS_gene}
+# gene expression signature
 sig.rna <- drugSensitivitySig(
-  object = CCLEsmall,
+  object = GDSCsmall,
   mDataType = "rna",
-  drugs = c("17-AAG"),
+  drugs = drugs,
   features = features,
   sensitivity.measure = "auc_published",
   molecular.summary.stat = "median",
   sensitivity.summary.stat = "median",
+  modeling.method = "pearson",
   verbose = FALSE
 )
+sig.rna@.Data[,,c(1,5)]
+```
 
-# Mutation signature
+The output is a 3D array of genes x drugs x metric. Outputted are the `estimate` and
+`pvalue`. Feel free to explore the other array components in `sig.rna@.Data`.
+
+This function is a powerful method for investigating the univariate relationship between 
+multiple molecular features and drugs. 
+
+Let's do the same for mutations, we'll do a quick example using one gene and drug from
+the CCLE dataset.
+
+```{r DSS_mut}
+# mutation signature
 sig.mut <- drugSensitivitySig(
   object = CCLEsmall,
   mDataType = "mutation",
-  drugs = c("PD-0325901"),
+  drugs = "PD-0325901",
   features = "BRAF",
   sensitivity.measure = "auc_published",
   molecular.summary.stat = "and",
   sensitivity.summary.stat = "median",
   verbose = FALSE
 )
-
-# Combine and display results
-sig <- rbind(sig.rna, sig.mut)
-rownames(sig) <- c("17-AAG + NQO1", "PD-0325901 + BRAF")
-colnames(sig) <- dimnames(sig.mut)[[3]]
-pander::pandoc.table(
-  t(sig),
-  style = "rmarkdown", caption = "P Value of Gene-Drug Association"
-)
+sig.mut@.Data[,,c(1,6)]
 ```
+
+
+## Univariate vs Multivariate Analysis
+
+For the final section of this lab, we will explore univariate vs multivariate linear
+modeling. Let's start with a simple univariate linear model using the same Gene and
+Drug vector from earlier.
+
+### Univariate Analysis
+
+Recall `Gene` is the RNA expression vector of `ENSG00000000005` and `Drug` is the drug
+response vector (AUC) for `PD-0325901` in the GDSC dataset.
+
+```{r uni_lm}
+lm(Drug ~ Gene) |> summary()
+```
+
+Let's break down this output:
+
+*Residuals*: the difference between the predicted y (drug response) values and the
+actual y values. A larger range suggests the model may not be a good fit of the data.
+
+*Coefficients*: the parameters of the model.
+`Estimate` can be considered the effect size. Specifically, it is the one-unit
+change in the y variable (drug repsonse) per one-unit change in the x variable (gene 
+expression).
+The estimate from our drug~gene assocaition is `0.014028`.
+`Pr(>|t|)` is the corresponding p-value for each estimate.
+The p-value from our drug~gene association test is `0.443`.
+
+Note: If any of the coefficients had met the p-value < 0.05 significance threshold, you would
+have seen `*` beside the estiamte (unfortunatly, this association does not meet this 
+threshold).
+
+Let's see if we can make a multi-variate model with better performance.
+
+```{r multi_lm}
+# get another gene vector
+commonGenes[2]
+Gene2 <- GDSCexpression[commonGenes[2],]
+
+# multi-variate model
+lm(Drug ~ Gene + Gene2) |> summary()
+```
+
+The second gene feature we are adding to our model is `ENSG00000000005`.
+
+Take a look at the output, comparing it to the previous model we ran. 
+Do you think that adding an additional gene has improved model performance?
+
+
+## Individual Practice
+
+For the remainder of the lab, please explore the associations between other features
+and drug response.
+
