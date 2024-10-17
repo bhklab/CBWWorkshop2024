@@ -1,6 +1,6 @@
 Package: CBWWorkshop2024
 Title: CBW Workshop 2024: Pharmacogenomics Data Analysis 
-Version: 0.0.0.9025
+Version: 0.0.0.9027
 Authors@R: c(
     person("Jermiah", "Joseph", , "jermiahjoseph98@gmail.com", role = c("aut", "cre")),
     person("Julia", "Nguyen", role = "aut"),
@@ -30,7 +30,8 @@ Imports:
     data.table,
     ggplot2,
     ggpubr,
-    sva
+    sva,
+    survcomp
 Suggests:
     knitr,
     rmarkdown,
