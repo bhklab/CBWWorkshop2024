@@ -82,7 +82,7 @@ Feizi</h4>
 Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:nikta.feizi@uhn.ca" class="email">nikta.feizi@uhn.ca</a>
       </address>
                   
-            <h4 data-toc-skip class="date">16 October 2024</h4>
+            <h4 data-toc-skip class="date">17 October 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bhklab/CBWWorkshop2024/blob/main/vignettes/Module1.Rmd" class="external-link"><code>vignettes/Module1.Rmd</code></a></small>
       <div class="d-none name"><code>Module1.Rmd</code></div>
@@ -226,104 +226,27 @@ attributes made available, we first look to confirm the mapping id to
 the RNA-Seq data.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">GDSC_model_list</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_model_list</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "model_id"                                                     </span></span>
-<span><span class="co">#&gt;  [2] "sample_id"                                                    </span></span>
-<span><span class="co">#&gt;  [3] "patient_id"                                                   </span></span>
-<span><span class="co">#&gt;  [4] "parent_id"                                                    </span></span>
-<span><span class="co">#&gt;  [5] "model_name"                                                   </span></span>
-<span><span class="co">#&gt;  [6] "synonyms"                                                     </span></span>
-<span><span class="co">#&gt;  [7] "tissue"                                                       </span></span>
-<span><span class="co">#&gt;  [8] "cancer_type"                                                  </span></span>
-<span><span class="co">#&gt;  [9] "cancer_type_ncit_id"                                          </span></span>
-<span><span class="co">#&gt; [10] "tissue_status"                                                </span></span>
-<span><span class="co">#&gt; [11] "sample_site"                                                  </span></span>
-<span><span class="co">#&gt; [12] "cancer_type_detail"                                           </span></span>
-<span><span class="co">#&gt; [13] "model_type"                                                   </span></span>
-<span><span class="co">#&gt; [14] "growth_properties"                                            </span></span>
-<span><span class="co">#&gt; [15] "model_treatment"                                              </span></span>
-<span><span class="co">#&gt; [16] "sampling_day"                                                 </span></span>
-<span><span class="co">#&gt; [17] "sampling_month"                                               </span></span>
-<span><span class="co">#&gt; [18] "sampling_year"                                                </span></span>
-<span><span class="co">#&gt; [19] "doi"                                                          </span></span>
-<span><span class="co">#&gt; [20] "pmed"                                                         </span></span>
-<span><span class="co">#&gt; [21] "msi_status"                                                   </span></span>
-<span><span class="co">#&gt; [22] "ploidy_snp6"                                                  </span></span>
-<span><span class="co">#&gt; [23] "ploidy_wes"                                                   </span></span>
-<span><span class="co">#&gt; [24] "ploidy_wgs"                                                   </span></span>
-<span><span class="co">#&gt; [25] "mutational_burden"                                            </span></span>
-<span><span class="co">#&gt; [26] "model_comments"                                               </span></span>
-<span><span class="co">#&gt; [27] "model_relations_comment"                                      </span></span>
-<span><span class="co">#&gt; [28] "COSMIC_ID"                                                    </span></span>
-<span><span class="co">#&gt; [29] "BROAD_ID"                                                     </span></span>
-<span><span class="co">#&gt; [30] "CCLE_ID"                                                      </span></span>
-<span><span class="co">#&gt; [31] "RRID"                                                         </span></span>
-<span><span class="co">#&gt; [32] "HCMI"                                                         </span></span>
-<span><span class="co">#&gt; [33] "suppliers"                                                    </span></span>
-<span><span class="co">#&gt; [34] "supplier"                                                     </span></span>
-<span><span class="co">#&gt; [35] "cat_number"                                                   </span></span>
-<span><span class="co">#&gt; [36] "species"                                                      </span></span>
-<span><span class="co">#&gt; [37] "gender"                                                       </span></span>
-<span><span class="co">#&gt; [38] "ethnicity"                                                    </span></span>
-<span><span class="co">#&gt; [39] "age_at_sampling"                                              </span></span>
-<span><span class="co">#&gt; [40] "family_history_of_cancer"                                     </span></span>
-<span><span class="co">#&gt; [41] "prior_same_malignancy"                                        </span></span>
-<span><span class="co">#&gt; [42] "prior_other_malignancy"                                       </span></span>
-<span><span class="co">#&gt; [43] "smoking_status"                                               </span></span>
-<span><span class="co">#&gt; [44] "alcohol_exposure_intensity"                                   </span></span>
-<span><span class="co">#&gt; [45] "alcohol_consumption_per_week"                                 </span></span>
-<span><span class="co">#&gt; [46] "history_diabetes"                                             </span></span>
-<span><span class="co">#&gt; [47] "diabetes_treatment"                                           </span></span>
-<span><span class="co">#&gt; [48] "colorectal_cancer_risk_factors"                               </span></span>
-<span><span class="co">#&gt; [49] "patient_history_of_gastrointestinal_disorder"                 </span></span>
-<span><span class="co">#&gt; [50] "gastrointestinal_disorder_diagnosed"                          </span></span>
-<span><span class="co">#&gt; [51] "prior_synchronous_colon_rectal_tumours"                       </span></span>
-<span><span class="co">#&gt; [52] "history_prior_colon_polyps"                                   </span></span>
-<span><span class="co">#&gt; [53] "previous_current_barretts_oesophagus"                         </span></span>
-<span><span class="co">#&gt; [54] "reflux_disease_prior"                                         </span></span>
-<span><span class="co">#&gt; [55] "reflux_disease_treatment"                                     </span></span>
-<span><span class="co">#&gt; [56] "h_pylori_infection"                                           </span></span>
-<span><span class="co">#&gt; [57] "history_clinical_chronic_pancreatitis"                        </span></span>
-<span><span class="co">#&gt; [58] "tumour_grade"                                                 </span></span>
-<span><span class="co">#&gt; [59] "tnm_integrated"                                               </span></span>
-<span><span class="co">#&gt; [60] "tnm_t"                                                        </span></span>
-<span><span class="co">#&gt; [61] "tnm_n"                                                        </span></span>
-<span><span class="co">#&gt; [62] "tnm_m"                                                        </span></span>
-<span><span class="co">#&gt; [63] "clinical_staging"                                             </span></span>
-<span><span class="co">#&gt; [64] "metastasis_at_diagnosis"                                      </span></span>
-<span><span class="co">#&gt; [65] "metastatic_site_at_diagnosis"                                 </span></span>
-<span><span class="co">#&gt; [66] "method_procurement"                                           </span></span>
-<span><span class="co">#&gt; [67] "sample_treatment"                                             </span></span>
-<span><span class="co">#&gt; [68] "sample_treatment_details"                                     </span></span>
-<span><span class="co">#&gt; [69] "radiation_type"                                               </span></span>
-<span><span class="co">#&gt; [70] "prior_therapy_outcome"                                        </span></span>
-<span><span class="co">#&gt; [71] "tumour_regression_score"                                      </span></span>
-<span><span class="co">#&gt; [72] "colon_polyps_present_at_time_of_tissue_collection"            </span></span>
-<span><span class="co">#&gt; [73] "venous_invasion_present"                                      </span></span>
-<span><span class="co">#&gt; [74] "venous_invasion_type"                                         </span></span>
-<span><span class="co">#&gt; [75] "lymphatic_invasion_present"                                   </span></span>
-<span><span class="co">#&gt; [76] "perineural_invasion_present"                                  </span></span>
-<span><span class="co">#&gt; [77] "gastric_oesophageal_junction"                                 </span></span>
-<span><span class="co">#&gt; [78] "barretts_goblet_cells_present"                                </span></span>
-<span><span class="co">#&gt; [79] "oesophageal_columnar_metaplasia"                              </span></span>
-<span><span class="co">#&gt; [80] "goblet_cells_oesophageal_columnar_mucosa"                     </span></span>
-<span><span class="co">#&gt; [81] "degree_of_dysplasia_non_cancerous_oesophageal_columnar_mucosa"</span></span>
-<span><span class="co">#&gt; [82] "peripancreatic_lymph_nodes_tested_surgery"                    </span></span>
-<span><span class="co">#&gt; [83] "number_positive_peripancreatic_lymph_nodes"                   </span></span>
-<span><span class="co">#&gt; [84] "mlh1_expression_by_ihc"                                       </span></span>
-<span><span class="co">#&gt; [85] "mlh1_promoter_methylation_status"                             </span></span>
-<span><span class="co">#&gt; [86] "msh2_expression_by_ihc"                                       </span></span>
-<span><span class="co">#&gt; [87] "pms2_expression_by_ihc"                                       </span></span>
-<span><span class="co">#&gt; [88] "msh6_expression_by_ihc"                                       </span></span>
-<span><span class="co">#&gt; [89] "braf_mutation_identified"                                     </span></span>
-<span><span class="co">#&gt; [90] "braf_expression_by_ihc"                                       </span></span>
-<span><span class="co">#&gt; [91] "pik3ca_mutation_identified"                                   </span></span>
-<span><span class="co">#&gt; [92] "pten_expression_by_ihc"                                       </span></span>
-<span><span class="co">#&gt; [93] "pten_mutation_identified"                                     </span></span>
-<span><span class="co">#&gt; [94] "kras_mutation_identified"                                     </span></span>
-<span><span class="co">#&gt; [95] "mismatch_repair_status"                                       </span></span>
-<span><span class="co">#&gt; [96] "preoperative_ce_alevel"                                       </span></span>
-<span><span class="co">#&gt; [97] "crispr_ko_data"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_model_list</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">39</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "model_id"                "sample_id"              </span></span>
+<span><span class="co">#&gt;  [3] "patient_id"              "parent_id"              </span></span>
+<span><span class="co">#&gt;  [5] "model_name"              "synonyms"               </span></span>
+<span><span class="co">#&gt;  [7] "tissue"                  "cancer_type"            </span></span>
+<span><span class="co">#&gt;  [9] "cancer_type_ncit_id"     "tissue_status"          </span></span>
+<span><span class="co">#&gt; [11] "sample_site"             "cancer_type_detail"     </span></span>
+<span><span class="co">#&gt; [13] "model_type"              "growth_properties"      </span></span>
+<span><span class="co">#&gt; [15] "model_treatment"         "sampling_day"           </span></span>
+<span><span class="co">#&gt; [17] "sampling_month"          "sampling_year"          </span></span>
+<span><span class="co">#&gt; [19] "doi"                     "pmed"                   </span></span>
+<span><span class="co">#&gt; [21] "msi_status"              "ploidy_snp6"            </span></span>
+<span><span class="co">#&gt; [23] "ploidy_wes"              "ploidy_wgs"             </span></span>
+<span><span class="co">#&gt; [25] "mutational_burden"       "model_comments"         </span></span>
+<span><span class="co">#&gt; [27] "model_relations_comment" "COSMIC_ID"              </span></span>
+<span><span class="co">#&gt; [29] "BROAD_ID"                "CCLE_ID"                </span></span>
+<span><span class="co">#&gt; [31] "RRID"                    "HCMI"                   </span></span>
+<span><span class="co">#&gt; [33] "suppliers"               "supplier"               </span></span>
+<span><span class="co">#&gt; [35] "cat_number"              "species"                </span></span>
+<span><span class="co">#&gt; [37] "gender"                  "ethnicity"              </span></span>
+<span><span class="co">#&gt; [39] "age_at_sampling"</span></span>
 <span></span>
 <span><span class="va">GDSC_rnaseq</span><span class="op">$</span><span class="va">model_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">GDSC_model_list</span><span class="op">$</span><span class="va">model_id</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -728,6 +651,17 @@ signature.</p>
 <p>We now have a new expression matrix, this time of the 10 defined
 signatures for each of our cell lines.</p>
 </div>
+</div>
+<div class="section level3">
+<h3 id="individual-practice">Individual practice<a class="anchor" aria-label="anchor" href="#individual-practice"></a>
+</h3>
+<p>For the remainder of this session, we provide more sample datasets to
+practice the above techniques.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">CCLE_model_list</span><span class="op">)</span>   <span class="co">#metadata for CCLE cell lines </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">CCLE_metabolomics</span><span class="op">)</span> <span class="co">#CCLE metabolite expression levels</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">CCLE_rrpa</span><span class="op">)</span>         <span class="co">#CCLE RPPA protein expression levels</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">CCLE_chromatin</span><span class="op">)</span>    <span class="co">#CCLE histone modifications</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
