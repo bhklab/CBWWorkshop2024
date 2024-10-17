@@ -7,11 +7,15 @@
 sequencing data from the NCI60, subset to cell-lines in NCI-ALMANAC}
 \format{
 \code{TreatmentResponseExperiment} object
+
+An object of class \code{TreatmentResponseExperiment} with 6561 rows and 62 columns.
 }
 \usage{
 data(NCI_ALMANAC_TRE)
 
 CBWWorkshop2024::NCI_ALMANAC_TRE
+
+NCI_ALMANAC_TRE
 }
 \description{
 This data has been precurated for inclusion in the NCI60_2021 PharmacoSet,

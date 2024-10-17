@@ -116,3 +116,7 @@
 "NCI_ALMANAC_pset"
 
 
+#' A `TreatmentResponseExperiment` containing RNA microarray, mircoRNA and RNA
+#' 
+#' @name NCI_ALMANAC_TRE
+"NCI_ALMANAC_TRE"
