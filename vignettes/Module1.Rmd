@@ -156,7 +156,7 @@ we first look to confirm the mapping id to the RNA-Seq data.
 
 ```{r get_model_list}
 data(GDSC_model_list)
-print(colnames(GDSC_model_list))
+print(colnames(GDSC_model_list)[1:39])
 
 GDSC_rnaseq$model_id %in% GDSC_model_list$model_id |> table()
 ```
@@ -387,3 +387,15 @@ sScores[1:10, 1:5]
 
 We now have a new expression matrix, this time of the 10 defined signatures for
 each of our cell lines.
+
+## Individual practice
+
+For the remainder of this session, we provide more sample datasets to practice
+the above techniques.
+
+```{r load_remaining_data}
+data(CCLE_model_list)   #metadata for CCLE cell lines 
+data(CCLE_metabolomics) #CCLE metabolite expression levels
+data(CCLE_rrpa)         #CCLE RPPA protein expression levels
+data(CCLE_chromatin)    #CCLE histone modifications
+```
