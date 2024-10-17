@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBWWorkshop2024</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9021</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9024</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +42,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>Module Labs</h6></li>
     <li><a class="dropdown-item" href="../articles/Module1.html">Module 1: Introduction to pharmacogenomics</a></li>
     <li><a class="dropdown-item" href="../articles/Module2.html">Module 2: Hands-on with pharmacogenomics data</a></li>
-    <li><a class="dropdown-item" href="../articles/Module3.html">Module 3: Intro to pharmacogenomics in the context of cancer</a></li>
+    <li><a class="dropdown-item" href="../articles/Module3.html">Module 3: Pharmacogenomics for biomarker discovery – Basic analysis</a></li>
     <li><a class="dropdown-item" href="../articles/Module4.html">Module 4: Pharmacogenomics for biomarker discovery - Advanced analysis</a></li>
   </ul>
 </li>
@@ -910,7 +910,6 @@ PCA using the <code>prcomp</code> function.</p>
 <span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#624763"</span>, <span class="st">"#B1D3A3"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Before Batch Correction"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">p1</span></span></code></pre></div>
 <p><img src="Module2_files/figure-html/plot_PCs_batch-1.png" width="700"></p>
 <p>There is a very obvious outlier in our data. We can quantitatively
@@ -987,6 +986,7 @@ visualization.</p>
 <p>Don’t forget to transpose the adjusted counts matrix!</p>
 <div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># perform PCA on adjusted matrix</span></span>
+<span></span>
 <span><span class="va">adj_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">adj_tpm_matrix</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">adj_pca</span><span class="op">$</span><span class="va">Batch</span> <span class="op">&lt;-</span> <span class="va">meta</span><span class="op">$</span><span class="va">batchid</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">adj_pca</span><span class="op">)</span>, <span class="va">meta</span><span class="op">$</span><span class="va">sampleid</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -1000,6 +1000,8 @@ visualization.</p>
 <span><span class="co"># plot both plots side by side for comparison</span></span>
 <span><span class="fu">ggarrange</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Module2_files/figure-html/pca_adj_batch-1.png" width="700"></p>
+<p>For downstream pharmacogenomic analysis (or any other bioinformatic
+analysis), the batch-corrected expression matrix should be used.</p>
 <p>For downstream pharmacogenomic analysis (or any other bioinformatic
 analysis), the batch-corrected expression matrix should be used.</p>
 </div>
