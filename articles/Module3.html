@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBWWorkshop2024</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9025</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9027</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -241,10 +241,17 @@ GDSC and CCLE datasets.</p>
 <span>  strictIntersect <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Intersecting large PSets may take a long time ...</span></span></code></pre>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">cellNames</a></span><span class="op">(</span><span class="va">common</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "22RV1"    "23132-87" "5637"     "639-V"    "647-V"    "697"      "769-P"   </span></span>
+<span><span class="co">## [8] "786-0"    "8-MG-BA"</span></span></code></pre>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">cellNames</a></span><span class="op">(</span><span class="va">common</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 9</span></span></code></pre>
 <p>There are 9 common samples between GDSC and CCLE. The
 <code>intersectPSet</code> function returns a list of the two PSets
 subsetted to include only the common cell lines.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">common</span></span></code></pre></div>
 <pre><code><span><span class="co">## $CCLE</span></span>
 <span><span class="co">## <span style="color: #BBBB00; font-weight: bold; font-style: italic;">&lt;PharmacoSet&gt;</span></span></span>
@@ -296,7 +303,7 @@ dataset. The <code>summary.stat</code> parameter can be set to different
 statistical metrics such as <code>mean</code>, <code>median</code>, etc.
 Here, we use the <code>median</code> for summarizing the
 sensitivity.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Summary statistics for AUC</span></span>
 <span><span class="va">GDSC.auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeSensitivityProfiles.html" class="external-link">summarizeSensitivityProfiles</a></span><span class="op">(</span></span>
 <span>  <span class="va">common</span><span class="op">$</span><span class="va">GDSC</span>,</span>
@@ -344,7 +351,7 @@ compare between the two psets.</p>
 <p>First we quickly reformat the data into a long format to faciliate
 plotting. We use the <code>melt()</code> function from the
 <code>reshape2</code> package.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">CCLE_toPlot</span> <span class="op">&lt;-</span> <span class="fu">melt</span><span class="op">(</span><span class="va">CCLE.auc</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">CCLE_toPlot</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Drug"</span>, <span class="st">"Gene"</span>, <span class="st">"AUC"</span><span class="op">)</span></span>
 <span></span>
@@ -358,7 +365,7 @@ plotting. We use the <code>melt()</code> function from the
 <span><span class="co">## 6   Nutlin-3 22RV1 0.076925</span></span></code></pre>
 <p>Next, we can create a quick box plot to visualize the AUC
 distributions per drug.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">CCLE_toPlot</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Drug</span>, y <span class="op">=</span> <span class="va">AUC</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_boxplot</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="co">#rotate x-axis labels</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: Removed 33 rows containing non-finite outside the scale range</span></span>
@@ -366,7 +373,7 @@ distributions per drug.</p>
 <p><img src="Module3_files/figure-html/plot_sensitivity-1.png" width="700"></p>
 <p>Let’s do this again but with the GDSC PSet so we can compare the
 two</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># format the CCLE sensitivity data</span></span>
 <span><span class="va">GDSC_toPlot</span> <span class="op">&lt;-</span> <span class="fu">melt</span><span class="op">(</span><span class="va">GDSC.auc</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">GDSC_toPlot</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Drug"</span>, <span class="st">"Gene"</span>, <span class="st">"AUC"</span><span class="op">)</span></span>
@@ -392,25 +399,31 @@ in distribution.</p>
 </h4>
 <p>We summarize gene expression data for the genes that are common
 between <strong>GDSC</strong> and <strong>CCLE</strong>.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">GDSCexpression</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span></span>
 <span>  <span class="va">common</span><span class="op">$</span><span class="va">GDSC</span>, <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">cellNames</a></span><span class="op">(</span><span class="va">common</span><span class="op">$</span><span class="va">GDSC</span><span class="op">)</span>,</span>
 <span>  mDataType <span class="op">=</span> <span class="st">"rna"</span>, features <span class="op">=</span> <span class="va">commonGenes</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">CCLEexpression</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span></span>
 <span>  <span class="va">common</span><span class="op">$</span><span class="va">CCLE</span>, <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">cellNames</a></span><span class="op">(</span><span class="va">common</span><span class="op">$</span><span class="va">CCLE</span><span class="op">)</span>,</span>
 <span>  mDataType <span class="op">=</span> <span class="st">"rna"</span>, features <span class="op">=</span> <span class="va">commonGenes</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span> </span>
+<span></span>
 <span><span class="va">GDSCexpression</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## class: SummarizedExperiment </span></span>
-<span><span class="co">## dim: 6 9 </span></span>
-<span><span class="co">## metadata(3): experimentData annotation protocolData</span></span>
-<span><span class="co">## assays(1): exprs</span></span>
-<span><span class="co">## rownames(6): ENSG00000000003 ENSG00000000005 ... ENSG00000000460</span></span>
-<span><span class="co">##   ENSG00000000938</span></span>
-<span><span class="co">## rowData names(7): Probe EnsemblGeneId ... BEST rownames</span></span>
-<span><span class="co">## colnames(9): 22RV1 23132-87 ... 786-0 8-MG-BA</span></span>
-<span><span class="co">## colData names(29): samplename filename ... rownames tissueid</span></span></code></pre>
+<pre><code><span><span class="co">##                     22RV1  23132-87      5637     639-V     647-V       697</span></span>
+<span><span class="co">## ENSG00000000003  5.890740  6.243345 10.018953  9.653157 10.039302  5.215355</span></span>
+<span><span class="co">## ENSG00000000005  4.448758  4.335738  4.108065  4.014940  4.250878  4.367339</span></span>
+<span><span class="co">## ENSG00000000419 10.427302 11.045576 11.611295 11.604278 11.248686 10.572231</span></span>
+<span><span class="co">## ENSG00000000457  5.905884  6.900556  5.684007  5.392485  5.748209  5.934834</span></span>
+<span><span class="co">## ENSG00000000460  6.010605  5.433439  5.729120  5.439058  6.453635  6.342021</span></span>
+<span><span class="co">## ENSG00000000938  4.410785  4.329849  4.397001  4.176387  4.275824  4.618786</span></span>
+<span><span class="co">##                    769-P     786-0   8-MG-BA</span></span>
+<span><span class="co">## ENSG00000000003 8.615450  7.304893  7.994002</span></span>
+<span><span class="co">## ENSG00000000005 4.722970  4.235424  4.447925</span></span>
+<span><span class="co">## ENSG00000000419 9.927782 10.825907 10.759706</span></span>
+<span><span class="co">## ENSG00000000457 6.475836  5.087249  4.994176</span></span>
+<span><span class="co">## ENSG00000000460 5.999142  5.001772  6.073944</span></span>
+<span><span class="co">## ENSG00000000938 5.003250  4.443563  4.797094</span></span></code></pre>
 <p>Here, you could do PCA on the profiles to quickly check the data. We
 will skip this step in the interest of time.</p>
 </div>
@@ -422,7 +435,7 @@ will skip this step in the interest of time.</p>
 gene expression, AUC, and IC50 measures across the <strong>GDSC</strong>
 and <strong>CCLE</strong> datasets using <strong>Spearman’s
 correlation</strong>.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get common cell line names</span></span>
 <span><span class="va">cc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">cellNames</a></span><span class="op">(</span><span class="va">common</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
@@ -432,7 +445,7 @@ correlation</strong>.</p>
 <span>    <span class="va">d1</span><span class="op">[</span>, <span class="va">x</span><span class="op">]</span>, <span class="va">d2</span><span class="op">[</span>, <span class="va">x</span><span class="op">]</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"spearman"</span>, use <span class="op">=</span> <span class="st">"pairwise.complete.obs"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">}</span>, d1 <span class="op">=</span> <span class="fu">assay</span><span class="op">(</span><span class="va">GDSCexpression</span>, <span class="fl">1</span><span class="op">)</span>, d2 <span class="op">=</span> <span class="fu">assay</span><span class="op">(</span><span class="va">CCLEexpression</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span>, d1 <span class="op">=</span> <span class="va">GDSCexpression</span>, d2 <span class="op">=</span> <span class="va">CCLEexpression</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ge.cor</span></span></code></pre></div>
 <pre><code><span><span class="co">##     22RV1  23132-87      5637     639-V     647-V       697     769-P     786-0 </span></span>
@@ -443,7 +456,7 @@ correlation</strong>.</p>
 across the common cell lines.</p>
 <p>Let’s take a look at the correlation of drug response, starting with
 IC50 values.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># quick look at the CCLE IC50 data</span></span>
 <span><span class="va">CCLE.ic50</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                22RV1 23132-87       5637     639-V 647-V       697     769-P</span></span>
@@ -460,7 +473,7 @@ IC50 values.</p>
 <span><span class="co">## PHA-665752 8.0000000 8.0000000</span></span>
 <span><span class="co">## lapatinib  7.1780353 5.2266199</span></span>
 <span><span class="co">## Nutlin-3   8.0000000 8.0000000</span></span></code></pre>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># correlation of IC50 values across common drugs and cell lines</span></span>
 <span><span class="va">ic50.cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">cc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">d1</span>, <span class="va">d2</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span></span>
@@ -483,7 +496,7 @@ pairwise correlations.</p>
 <p>Since <code>23132-87</code> and <code>647-V</code> are all
 <code>NA</code> values, no spearman correlation was computed.</p>
 <p>We can quickly compute the correlation for AUC as well.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># correlation of AUC values across common drugs and cell lines</span></span>
 <span><span class="va">auc.cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">cc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">d1</span>, <span class="va">d2</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span></span>
@@ -504,7 +517,7 @@ pairwise correlations.</p>
 <p>We compare the correlations using <strong>Wilcoxon signed-rank
 tests</strong> to see if there are significant differences between the
 gene expression correlations and the drug sensitivity correlations.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">w1</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/wilcox.test.html" class="external-link">wilcox.test</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">ge.cor</span>, y <span class="op">=</span> <span class="va">auc.cor</span>, conf.int <span class="op">=</span> <span class="cn">TRUE</span>, exact <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
@@ -512,14 +525,42 @@ gene expression correlations and the drug sensitivity correlations.</p>
 <span>  x <span class="op">=</span> <span class="va">ge.cor</span>, y <span class="op">=</span> <span class="va">ic50.cor</span>, conf.int <span class="op">=</span> <span class="cn">TRUE</span>, exact <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Display p-values</span></span>
-<span><span class="va">ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"GE vs. AUC = %.1E\nGE vs. IC50 = %.1E"</span>, <span class="va">w1</span><span class="op">$</span><span class="va">p.value</span>, <span class="va">w2</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">w1</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">##  Wilcoxon rank sum test with continuity correction</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## data:  ge.cor and auc.cor</span></span>
+<span><span class="co">## W = 62, p-value = 0.001496</span></span>
+<span><span class="co">## alternative hypothesis: true location shift is not equal to 0</span></span>
+<span><span class="co">## 95 percent confidence interval:</span></span>
+<span><span class="co">##  0.06309566 0.51857816</span></span>
+<span><span class="co">## sample estimates:</span></span>
+<span><span class="co">## difference in location </span></span>
+<span><span class="co">##               0.347967</span></span></code></pre>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">w2</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">##  Wilcoxon rank sum test with continuity correction</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## data:  ge.cor and ic50.cor</span></span>
+<span><span class="co">## W = 63, p-value = 0.001024</span></span>
+<span><span class="co">## alternative hypothesis: true location shift is not equal to 0</span></span>
+<span><span class="co">## 95 percent confidence interval:</span></span>
+<span><span class="co">##  0.2407670 0.4857055</span></span>
+<span><span class="co">## sample estimates:</span></span>
+<span><span class="co">## difference in location </span></span>
+<span><span class="co">##              0.3179657</span></span></code></pre>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Display p-values</span></span>
+<span><span class="va">ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"GE vs. AUC = %.1E\nGE vs. IC50 = %.1E"</span>, <span class="va">w1</span><span class="op">$</span><span class="va">p.value</span>, <span class="va">w2</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span></span>
+<span><span class="va">ss</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "GE vs. AUC = 1.5E-03\nGE vs. IC50 = 1.0E-03"</span></span></code></pre>
 <div class="section level4">
 <h4 id="boxplot-visualization">Boxplot Visualization<a class="anchor" aria-label="anchor" href="#boxplot-visualization"></a>
 </h4>
 <p>The results are visualized using boxplots to compare the correlations
 across gene expression, AUC, and IC50.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html" class="external-link">boxplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"GE"</span> <span class="op">=</span> <span class="va">ge.cor</span>, <span class="st">"AUC"</span> <span class="op">=</span> <span class="va">auc.cor</span>, <span class="st">"IC50"</span> <span class="op">=</span> <span class="va">ic50.cor</span><span class="op">)</span>,</span>
 <span>  main <span class="op">=</span> <span class="st">"Concordance between cell lines"</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">R</span><span class="op">[</span><span class="va">s</span><span class="op">]</span><span class="op">)</span>,</span>
@@ -533,61 +574,261 @@ across gene expression, AUC, and IC50.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="drug-sensitivity-signature">Drug Sensitivity Signature<a class="anchor" aria-label="anchor" href="#drug-sensitivity-signature"></a>
+<h3 id="statistical-analysis-for-drug-response-associations">Statistical Analysis for Drug Response Associations<a class="anchor" aria-label="anchor" href="#statistical-analysis-for-drug-response-associations"></a>
 </h3>
-<p>We calculate drug sensitivity signatures using gene expression and
-mutation data for selected drugs to understand the relationship between
-molecular features and drug response. Note that this gene-drug signature
-is based on univariable analysis.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">fNames</a></span><span class="op">(</span><span class="va">CCLEsmall</span>, <span class="st">"rna"</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/CoreSet-accessors.html" class="external-link">featureInfo</a></span><span class="op">(</span><span class="va">CCLEsmall</span>, <span class="st">"rna"</span><span class="op">)</span><span class="op">$</span><span class="va">Symbol</span> <span class="op">==</span> <span class="st">"NQO1"</span><span class="op">)</span><span class="op">]</span></span>
+<p>In this final section, we will be focusing on computing the
+association between a feature of interest and drug response in order to
+identify predictive biomarkers.</p>
+<p>Let’s begin by selecting a feature and drug of interest to
+explore.</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">commonGenes</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "ENSG00000000003" "ENSG00000000005" "ENSG00000000419" "ENSG00000000457"</span></span>
+<span><span class="co">## [5] "ENSG00000000460" "ENSG00000000938"</span></span></code></pre>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">feature</span> <span class="op">&lt;-</span> <span class="st">"ENSG00000000003"</span></span>
 <span></span>
-<span><span class="co"># Gene expression signature</span></span>
+<span><span class="va">common</span><span class="op">$</span><span class="va">GDSC</span><span class="op">@</span><span class="va">treatment</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##  [1] "PD-0325901" "17-AAG"     "Nilotinib"  "PHA-665752" "lapatinib" </span></span>
+<span><span class="co">##  [6] "Nutlin-3"   "AZD0530"    "Crizotinib" "Sorafenib"  "PD-0332991"</span></span>
+<span><span class="co">## [11] "paclitaxel" "AZD6244"    "PLX4720"    "TAE684"     "Erlotinib"</span></span></code></pre>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">drug</span> <span class="op">&lt;-</span> <span class="st">"PD-0325901"</span></span></code></pre></div>
+<p>Next, we need to extract the vector of gene expression for our chosen
+feature and drug response for our chosen drug. Let’s do this for the
+GDSC dataset.</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Gene</span> <span class="op">&lt;-</span> <span class="va">GDSCexpression</span><span class="op">[</span><span class="va">feature</span>,<span class="op">]</span></span>
+<span><span class="va">Drug</span> <span class="op">&lt;-</span> <span class="va">GDSC.auc</span><span class="op">[</span><span class="va">drug</span>,<span class="op">]</span></span>
+<span></span>
+<span><span class="va">Gene</span></span></code></pre></div>
+<pre><code><span><span class="co">##     22RV1  23132-87      5637     639-V     647-V       697     769-P     786-0 </span></span>
+<span><span class="co">##  5.890740  6.243345 10.018953  9.653157 10.039302  5.215355  8.615450  7.304893 </span></span>
+<span><span class="co">##   8-MG-BA </span></span>
+<span><span class="co">##  7.994002</span></span></code></pre>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Drug</span></span></code></pre></div>
+<pre><code><span><span class="co">##    22RV1 23132-87     5637    639-V    647-V      697    769-P    786-0 </span></span>
+<span><span class="co">## 0.029649 0.122911 0.007242 0.279261 0.100351 0.049681 0.179831 0.150231 </span></span>
+<span><span class="co">##  8-MG-BA </span></span>
+<span><span class="co">## 0.034754</span></span></code></pre>
+<p>Notice that the PSet has already kept the samples ordered across the
+various profiles.</p>
+<p>Before we compute the associations, we can quickly plot the two
+variables to visualize their relationship.</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create datafarme to plot</span></span>
+<span><span class="va">toPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Gene <span class="op">=</span> <span class="va">Gene</span>, Drug <span class="op">=</span> <span class="va">Drug</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">toPlot</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Gene</span>, y <span class="op">=</span> <span class="va">Drug</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Gene (expr)"</span>, y <span class="op">=</span> <span class="st">"Drug (AUC)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Module3_files/figure-html/plot_association-1.png" width="700"></p>
+<p>From the scatter plot, we see a weak positive correlation. Let’s see
+if this is reflected in our association analyses.</p>
+<div class="section level4">
+<h4 id="concordance-index">Concordance Index<a class="anchor" aria-label="anchor" href="#concordance-index"></a>
+</h4>
+<p>Fist, we will compute the association between the gene expression
+data and drug response. We will use the <code>concordance.index</code>
+function from the <code>survcomp</code> package.</p>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ci</span> <span class="op">&lt;-</span> <span class="fu">survcomp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survcomp/man/concordance.index.html" class="external-link">concordance.index</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">Drug</span><span class="op">)</span>,                   <span class="co"># drug vector</span></span>
+<span>  surv.time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">Gene</span><span class="op">)</span>,       <span class="co"># gene vector</span></span>
+<span>  surv.event <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">Gene</span><span class="op">)</span><span class="op">)</span>,   </span>
+<span>  outx <span class="op">=</span> <span class="cn">TRUE</span>, method<span class="op">=</span><span class="st">"noether"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Concordance Index:"</span>, <span class="va">ci</span><span class="op">$</span><span class="va">c.index</span>, <span class="st">"\n"</span>,</span>
+<span>    <span class="st">"P-value:"</span>, <span class="va">ci</span><span class="op">$</span><span class="va">p.value</span>, <span class="st">"\n"</span>,</span>
+<span>    <span class="st">"Standard Error:"</span>, <span class="va">ci</span><span class="op">$</span><span class="va">se</span>, <span class="st">"\n"</span>, </span>
+<span>    <span class="st">"Upper CI:"</span>, <span class="va">ci</span><span class="op">$</span><span class="va">upper</span>,<span class="st">"\n"</span>,</span>
+<span>    <span class="st">"Lower CI:"</span>, <span class="va">ci</span><span class="op">$</span><span class="va">lower</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Concordance Index: 0.4166667 </span></span>
+<span><span class="co">##  P-value: 0.07592696 </span></span>
+<span><span class="co">##  Standard Error: 0.04695301 </span></span>
+<span><span class="co">##  Upper CI: 0.5086929 </span></span>
+<span><span class="co">##  Lower CI: 0.3246404</span></span></code></pre>
+<p>The concordance index tells us there is a weak inverse association
+between the gene expression and the drug response.</p>
+</div>
+<div class="section level4">
+<h4 id="pearsons-correlation-coefficient">Pearson’s Correlation Coefficient<a class="anchor" aria-label="anchor" href="#pearsons-correlation-coefficient"></a>
+</h4>
+<p>Using the same feature and drug, let’s compute the association again
+but this time using Pearon’s correlation.</p>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html" class="external-link">cor.test</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">Gene</span>,</span>
+<span>  y <span class="op">=</span> <span class="va">Drug</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="st">"two.sided"</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"pearson"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Pearson's correlation:"</span>, <span class="va">ps</span><span class="op">$</span><span class="va">estimate</span>, <span class="st">"\n"</span>,</span>
+<span>    <span class="st">"P-value:"</span>, <span class="va">ci</span><span class="op">$</span><span class="va">p.value</span>, <span class="st">"\n"</span>,</span>
+<span>    <span class="st">"Confidence Interval:"</span>, <span class="va">ps</span><span class="op">$</span><span class="va">conf.int</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Pearson's correlation: 0.2937677 </span></span>
+<span><span class="co">##  P-value: 0.07592696 </span></span>
+<span><span class="co">##  Confidence Interval: -0.4601228 0.8015157</span></span></code></pre>
+<p>The Pearson’s correlation tells us there is a (very) weak positive
+linear relationship between the gene expression and the drug
+response.</p>
+<p>Notice the slight difference in interpretation between the
+concordance index and the Pearson’s correlation.</p>
+</div>
+<div class="section level4">
+<h4 id="drug-sensitivity-signatures-pharmacogx">Drug Sensitivity Signatures (PharmacoGx)<a class="anchor" aria-label="anchor" href="#drug-sensitivity-signatures-pharmacogx"></a>
+</h4>
+<p>The last method we will explore is a built-in function from the
+<code>PharmacoGx</code> package called <code>drugSensitivitySig</code>.
+This function takes a Pharmacoset along with a list of drugs and
+features, then computes the association between the feature expression
+and drug response for each pair.</p>
+<p>Let’s first select the first 3 genes and drugs as our features &amp;
+drugs of interest:</p>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="va">commonGenes</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
+<span><span class="va">drugs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">common</span><span class="op">$</span><span class="va">GDSC</span><span class="op">@</span><span class="va">treatment</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
+<p>Now we can calculate the drug sensitivity signature using the vector
+of genes and drugs for the GDSC dataset. Note that this gene-drug
+signature is based on univariable analysis.</p>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># gene expression signature</span></span>
 <span><span class="va">sig.rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/drugSensitivitySig.html" class="external-link">drugSensitivitySig</a></span><span class="op">(</span></span>
-<span>  object <span class="op">=</span> <span class="va">CCLEsmall</span>,</span>
+<span>  object <span class="op">=</span> <span class="va">GDSCsmall</span>,</span>
 <span>  mDataType <span class="op">=</span> <span class="st">"rna"</span>,</span>
-<span>  drugs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"17-AAG"</span><span class="op">)</span>,</span>
+<span>  drugs <span class="op">=</span> <span class="va">drugs</span>,</span>
 <span>  features <span class="op">=</span> <span class="va">features</span>,</span>
 <span>  sensitivity.measure <span class="op">=</span> <span class="st">"auc_published"</span>,</span>
 <span>  molecular.summary.stat <span class="op">=</span> <span class="st">"median"</span>,</span>
 <span>  sensitivity.summary.stat <span class="op">=</span> <span class="st">"median"</span>,</span>
+<span>  modeling.method <span class="op">=</span> <span class="st">"pearson"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Mutation signature</span></span>
+<span><span class="va">sig.rna</span><span class="op">@</span><span class="va">.Data</span><span class="op">[</span>,,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">5</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">## , , estimate</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##                  PD-0325901     17-AAG  Nilotinib</span></span>
+<span><span class="co">## ENSG00000000003 -0.18840373 -0.2369481  0.8554590</span></span>
+<span><span class="co">## ENSG00000000005 -0.14409315 -0.4756331  0.7875267</span></span>
+<span><span class="co">## ENSG00000000419 -0.02890968  0.5466780 -0.8239237</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## , , pvalue</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##                 PD-0325901    17-AAG Nilotinib</span></span>
+<span><span class="co">## ENSG00000000003  0.8793373 0.8477058 0.3465502</span></span>
+<span><span class="co">## ENSG00000000005  0.9079470 0.6844380 0.4227225</span></span>
+<span><span class="co">## ENSG00000000419  0.9815930 0.6317843 0.3835609</span></span></code></pre>
+<p>The output is a 3D array of genes x drugs x metric. Outputted are the
+<code>estimate</code> and <code>pvalue</code>. Feel free to explore the
+other array components in <code>sig.rna@.Data</code>.</p>
+<p>This function is a powerful method for investigating the univariate
+relationship between multiple molecular features and drugs.</p>
+<p>Let’s do the same for mutations, we’ll do a quick example using one
+gene and drug from the CCLE dataset.</p>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># mutation signature</span></span>
 <span><span class="va">sig.mut</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/drugSensitivitySig.html" class="external-link">drugSensitivitySig</a></span><span class="op">(</span></span>
 <span>  object <span class="op">=</span> <span class="va">CCLEsmall</span>,</span>
 <span>  mDataType <span class="op">=</span> <span class="st">"mutation"</span>,</span>
-<span>  drugs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PD-0325901"</span><span class="op">)</span>,</span>
+<span>  drugs <span class="op">=</span> <span class="st">"PD-0325901"</span>,</span>
 <span>  features <span class="op">=</span> <span class="st">"BRAF"</span>,</span>
 <span>  sensitivity.measure <span class="op">=</span> <span class="st">"auc_published"</span>,</span>
 <span>  molecular.summary.stat <span class="op">=</span> <span class="st">"and"</span>,</span>
 <span>  sensitivity.summary.stat <span class="op">=</span> <span class="st">"median"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Combine and display results</span></span>
-<span><span class="va">sig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">sig.rna</span>, <span class="va">sig.mut</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">sig</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"17-AAG + NQO1"</span>, <span class="st">"PD-0325901 + BRAF"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">sig</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">sig.mut</span><span class="op">)</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="fu">pander</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pandoc.table.return.html" class="external-link">pandoc.table</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sig</span><span class="op">)</span>,</span>
-<span>  style <span class="op">=</span> <span class="st">"rmarkdown"</span>, caption <span class="op">=</span> <span class="st">"P Value of Gene-Drug Association"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">sig.mut</span><span class="op">@</span><span class="va">.Data</span><span class="op">[</span>,,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">6</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">##     estimate       pvalue </span></span>
+<span><span class="co">## 8.251857e-01 1.612881e-09</span></span></code></pre>
+</div>
+</div>
+<div class="section level3">
+<h3 id="univariate-vs-multivariate-analysis">Univariate vs Multivariate Analysis<a class="anchor" aria-label="anchor" href="#univariate-vs-multivariate-analysis"></a>
+</h3>
+<p>For the final section of this lab, we will explore univariate vs
+multivariate linear modeling. Let’s start with a simple univariate
+linear model using the same Gene and Drug vector from earlier.</p>
+<div class="section level4">
+<h4 id="univariate-analysis">Univariate Analysis<a class="anchor" aria-label="anchor" href="#univariate-analysis"></a>
+</h4>
+<p>Recall <code>Gene</code> is the RNA expression vector of
+<code>ENSG00000000005</code> and <code>Drug</code> is the drug response
+vector (AUC) for <code>PD-0325901</code> in the GDSC dataset.</p>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Drug</span> <span class="op">~</span> <span class="va">Gene</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## lm(formula = Drug ~ Gene)</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## |    &amp;nbsp;    | 17-AAG + NQO1 | PD-0325901 + BRAF |</span></span>
-<span><span class="co">## |:------------:|:-------------:|:-----------------:|</span></span>
-<span><span class="co">## | **estimate** |     0.601     |      0.8252       |</span></span>
-<span><span class="co">## |    **se**    |    0.05368    |      0.1339       |</span></span>
-<span><span class="co">## |    **n**     |      492      |        472        |</span></span>
-<span><span class="co">## |  **tstat**   |     11.2      |       6.161       |</span></span>
-<span><span class="co">## |  **fstat**   |     125.3     |       37.95       |</span></span>
-<span><span class="co">## |  **pvalue**  |   6.034e-26   |     1.613e-09     |</span></span>
-<span><span class="co">## |    **df**    |      469      |        449        |</span></span>
-<span><span class="co">## |   **fdr**    |   6.034e-26   |     1.613e-09     |</span></span>
+<span><span class="co">## Residuals:</span></span>
+<span><span class="co">##      Min       1Q   Median       3Q      Max </span></span>
+<span><span class="co">## -0.12867 -0.04835 -0.01884  0.05239  0.14848 </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Table: P Value of Gene-Drug Association</span></span></code></pre>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##              Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span><span class="co">## (Intercept) -0.004639   0.139300  -0.033    0.974</span></span>
+<span><span class="co">## Gene         0.014028   0.017253   0.813    0.443</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Residual standard error: 0.08965 on 7 degrees of freedom</span></span>
+<span><span class="co">## Multiple R-squared:  0.0863, Adjusted R-squared:  -0.04423 </span></span>
+<span><span class="co">## F-statistic: 0.6612 on 1 and 7 DF,  p-value: 0.4429</span></span></code></pre>
+<p>Let’s break down this output:</p>
+<p><em>Residuals</em>: the difference between the predicted y (drug
+response) values and the actual y values. A larger range suggests the
+model may not be a good fit of the data.</p>
+<p><em>Coefficients</em>: the parameters of the model.
+<code>Estimate</code> can be considered the effect size. Specifically,
+it is the one-unit change in the y variable (drug repsonse) per one-unit
+change in the x variable (gene expression). The estimate from our
+drug~gene assocaition is <code>0.014028</code>. <code>Pr(&gt;|t|)</code>
+is the corresponding p-value for each estimate. The p-value from our
+drug~gene association test is <code>0.443</code>.</p>
+<p>Note: If any of the coefficients had met the p-value &lt; 0.05
+significance threshold, you would have seen <code>*</code> beside the
+estiamte (unfortunatly, this association does not meet this
+threshold).</p>
+<p>Let’s see if we can make a multi-variate model with better
+performance.</p>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get another gene vector</span></span>
+<span><span class="va">commonGenes</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "ENSG00000000005"</span></span></code></pre>
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Gene2</span> <span class="op">&lt;-</span> <span class="va">GDSCexpression</span><span class="op">[</span><span class="va">commonGenes</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,<span class="op">]</span></span>
+<span></span>
+<span><span class="co"># multi-variate model</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Drug</span> <span class="op">~</span> <span class="va">Gene</span> <span class="op">+</span> <span class="va">Gene2</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## lm(formula = Drug ~ Gene + Gene2)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Residuals:</span></span>
+<span><span class="co">##      Min       1Q   Median       3Q      Max </span></span>
+<span><span class="co">## -0.13292 -0.04715 -0.02147  0.04840  0.14047 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##             Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span><span class="co">## (Intercept)  0.15618    0.84445   0.185    0.859</span></span>
+<span><span class="co">## Gene         0.01251    0.02017   0.620    0.558</span></span>
+<span><span class="co">## Gene2       -0.03441    0.17780  -0.194    0.853</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Residual standard error: 0.09653 on 6 degrees of freedom</span></span>
+<span><span class="co">## Multiple R-squared:  0.09197,    Adjusted R-squared:  -0.2107 </span></span>
+<span><span class="co">## F-statistic: 0.3038 on 2 and 6 DF,  p-value: 0.7487</span></span></code></pre>
+<p>The second gene feature we are adding to our model is
+<code>ENSG00000000005</code>.</p>
+<p>Take a look at the output, comparing it to the previous model we ran.
+Do you think that adding an additional gene has improved model
+performance?</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="individual-practice">Individual Practice<a class="anchor" aria-label="anchor" href="#individual-practice"></a>
+</h3>
+<p>For the remainder of the lab, please explore the associations between
+other features and drug response. Try using the CCLE pset too!</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
