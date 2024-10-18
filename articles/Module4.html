@@ -84,10 +84,6 @@ Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:nikta.feiz
 
     
     
-<div class="section level3">
-<h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h3>
-</div>
 <div class="section level2">
 <h2 class="unnumbered" id="lab-4-overview">Lab 4 Overview<a class="anchor" aria-label="anchor" href="#lab-4-overview"></a>
 </h2>
@@ -125,9 +121,10 @@ models.</li>
 </ul>
 </div>
 </div>
-<div class="section level3">
-<h3 id="data-acquisition-and-preparation">Data Acquisition and Preparation<a class="anchor" aria-label="anchor" href="#data-acquisition-and-preparation"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="data-acquisition-and-preparation">Data Acquisition and Preparation<a class="anchor" aria-label="anchor" href="#data-acquisition-and-preparation"></a>
+</h2>
 <p>Like before, we will use smaller versions of the PharmacoSets for the
 workshop to minimize processing time. Let’s load these datasets in and
 subset for common cell lines and .</p>
@@ -135,15 +132,17 @@ subset for common cell lines and .</p>
 <code class="sourceCode R"><span><span class="co"># load in the datasets</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"GDSCsmall"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"CCLEsmall"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="extracting-required-vectors-for-biomarker-analysis">Extracting required vectors for biomarker analysis<a class="anchor" aria-label="anchor" href="#extracting-required-vectors-for-biomarker-analysis"></a>
-</h4>
+<div class="section level3">
+<h3 id="extracting-required-vectors-for-biomarker-analysis">Extracting required vectors for biomarker analysis<a class="anchor" aria-label="anchor" href="#extracting-required-vectors-for-biomarker-analysis"></a>
+</h3>
 <p>Recall there are two components needed for a biomarker association
 analysis: - Feature data (molecular profile) - Drug response</p>
 <p>Say we are interested in <code>ENSG00000003987</code> expression
 association with <code>PD-0325901</code>. We can start by extracting
 this data from both PSets.</p>
-<p><em>Gene Expression Data</em></p>
+<div class="section level4">
+<h4 id="gene-expression-data">Gene Expression Data<a class="anchor" aria-label="anchor" href="#gene-expression-data"></a>
+</h4>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># specify our gene of interest</span></span>
 <span><span class="va">gene</span> <span class="op">&lt;-</span> <span class="st">"ENSG00000003987"</span></span>
@@ -165,7 +164,10 @@ this data from both PSets.</p>
 <span><span class="co">#&gt; ENSG00000003987 4.197327 4.022529 4.000509 4.031896 3.977781 3.834624 4.36307</span></span>
 <span><span class="co">#&gt;                    769-P    786-0  8-MG-BA</span></span>
 <span><span class="co">#&gt; ENSG00000003987 4.397028 3.973001 4.275385</span></span></code></pre></div>
-<p><em>Drug Response Data</em></p>
+</div>
+<div class="section level4">
+<h4 id="drug-response-data">Drug Response Data<a class="anchor" aria-label="anchor" href="#drug-response-data"></a>
+</h4>
 <p>Next, let’s take a look at the available drug response data</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/sensitivityProfiles.html" class="external-link">sensitivityProfiles</a></span><span class="op">(</span><span class="va">CCLEsmall</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -226,9 +228,10 @@ let’s pull that out.</p>
 <span><span class="co">#&gt;    22RV1 23132-87      380     5637    639-V    647-V </span></span>
 <span><span class="co">#&gt; 0.029649 0.122911       NA 0.007242 0.279261 0.100351</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="gene-expression-exploratory-data-analysis-eda">Gene Expression Exploratory Data Analysis (EDA)<a class="anchor" aria-label="anchor" href="#gene-expression-exploratory-data-analysis-eda"></a>
-</h4>
+</div>
+<div class="section level3">
+<h3 id="gene-expression-exploratory-data-analysis-eda">Gene Expression Exploratory Data Analysis (EDA)<a class="anchor" aria-label="anchor" href="#gene-expression-exploratory-data-analysis-eda"></a>
+</h3>
 <p>Before performing the statistical analysis, let’s quickly look at the
 distribution of <code>ENSG00000003987</code> expression data.</p>
 <p>First, we can check the number of cell lines in each vector:</p>
@@ -262,9 +265,9 @@ what implications a small sample size (e.g. GDSC) would have when
 downstream analysis.</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="effect-size-calculation">Effect Size Calculation<a class="anchor" aria-label="anchor" href="#effect-size-calculation"></a>
-</h3>
+<div class="section level2">
+<h2 id="effect-size-calculation">Effect Size Calculation<a class="anchor" aria-label="anchor" href="#effect-size-calculation"></a>
+</h2>
 <p>In this next section, we will compute the associations between our
 feature and drug within each individual PSet. These results will be what
 we input into the meta-analysis.</p>
@@ -334,9 +337,9 @@ response.</p>
 <span><span class="co">#&gt;  Upper CI: 0.6659694 </span></span>
 <span><span class="co">#&gt;  Lower CI: 0.4895861</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="combine-effect-sizes-and-perform-meta-analysis">Combine Effect Sizes and Perform Meta-Analysis<a class="anchor" aria-label="anchor" href="#combine-effect-sizes-and-perform-meta-analysis"></a>
-</h3>
+<div class="section level2">
+<h2 id="perform-meta-analysis">Perform Meta-Analysis<a class="anchor" aria-label="anchor" href="#perform-meta-analysis"></a>
+</h2>
 <p>Now we can combine the effect sizes from <code>GDSCsmall</code> and
 <code>CCLEsmall</code> to perform a meta-analysis.</p>
 <p>Recall from the lecture that we need three variables for our
@@ -383,10 +386,12 @@ it into a dataframe.</p>
 <span><span class="co">#&gt; Details on meta-analytical method:</span></span>
 <span><span class="co">#&gt; - Inverse variance method</span></span>
 <span><span class="co">#&gt; - Restricted maximum-likelihood estimator for tau^2</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="visualization-with-forest-plots">Visualization with Forest Plots<a class="anchor" aria-label="anchor" href="#visualization-with-forest-plots"></a>
+</h3>
 <div class="section level4">
-<h4 id="visualization-with-forest-plots">Visualization with Forest Plots<a class="anchor" aria-label="anchor" href="#visualization-with-forest-plots"></a>
+<h4 id="forest-function-from-meta-package">forest function from meta package<a class="anchor" aria-label="anchor" href="#forest-function-from-meta-package"></a>
 </h4>
-<p><em>forest function from meta package</em></p>
 <p>We can use the built in <code>forest</code> function from the
 <code>meta</code> package to quickly create a forest plot using the
 output of the <code>metagen</code> function:</p>
@@ -405,7 +410,10 @@ path. We have also attached the plot below:</p>
 <strong>PharmacoSet</strong> class structure
 </p>
 </div>
-<p><em>Using ggplot2</em></p>
+</div>
+<div class="section level4">
+<h4 id="using-ggplot2">Using ggplot2<a class="anchor" aria-label="anchor" href="#using-ggplot2"></a>
+</h4>
 <p>We can also visualize this data usign the <code>ggplot2</code>
 package. While this will not return a full forest plot, we can get a
 closer look at the relationship between the effect sizes of each
@@ -432,18 +440,19 @@ having a greater weight due to a lower variance among other
 considerations.</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="subgroup-analysis">Subgroup Analysis<a class="anchor" aria-label="anchor" href="#subgroup-analysis"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="subgroup-analysis">Subgroup Analysis<a class="anchor" aria-label="anchor" href="#subgroup-analysis"></a>
+</h2>
 <p>We will now conduct a tissue-subgroup analysis using a subset of the
 <code>CCLEsmall</code> dataset, using all the steps that we have learned
 from this workshop.</p>
 <p>We will be looking at the response of RNA-Seq data on AUC drug
 response. We will take a discovery approach, looking for any
 associations in our rich dataset.</p>
-<div class="section level4">
-<h4 id="data-preparation">Data Preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
-</h4>
+<div class="section level3">
+<h3 id="data-preparation">Data Preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
+</h3>
 <p>Let’s start by loading in and looking at our data.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load in expression data</span></span>
@@ -591,9 +600,9 @@ tissues as they have the largest sample sizes.</p>
 tissue-specific pset is now subsetted to only include the cell lines
 that are in the respective tissue.</p>
 </div>
-<div class="section level4">
-<h4 id="statistical-analysis-to-measure-drug-response-associations">Statistical Analysis to measure Drug Response Associations<a class="anchor" aria-label="anchor" href="#statistical-analysis-to-measure-drug-response-associations"></a>
-</h4>
+<div class="section level3">
+<h3 id="statistical-analysis-to-measure-drug-response-associations">Statistical Analysis to measure Drug Response Associations<a class="anchor" aria-label="anchor" href="#statistical-analysis-to-measure-drug-response-associations"></a>
+</h3>
 <p>Let’s say we want to discover a gene (biomarker) that is predictive
 of response to the drug <code>lapatinib</code>. To do that, we will
 compute the association between the expression of each gene to the
@@ -688,7 +697,9 @@ which is a method for multiple test correction.</p>
 <p>We would have to repeat this code for every tissue type. Although we
 are only working with two, imagine we wanted to do more tissue types in
 the future.</p>
-<p><em>Function for computing concordance index</em></p>
+<div class="section level4">
+<h4 id="function-for-computing-concordance-index">Function for computing concordance index<a class="anchor" aria-label="anchor" href="#function-for-computing-concordance-index"></a>
+</h4>
 <p>To simply this, we can turn the code above into a function such that
 we just have to input the expression matrix and drug response vector to
 get our result without having to change the rest of the code.</p>
@@ -762,7 +773,10 @@ string name of drug (just for putting in the results dataframe)</p>
 <p>We also added a column called <code>FDRsig</code> which represents if
 the association met the FDR &lt; 5% threshold. This will help us in
 plotting.</p>
-<p><em>Visualizing feature-drug associations</em></p>
+</div>
+<div class="section level4">
+<h4 id="visualizing-feature-drug-associations">Visualizing feature-drug associations<a class="anchor" aria-label="anchor" href="#visualizing-feature-drug-associations"></a>
+</h4>
 <p>Now that we have the associations between all our genes with
 lapatinib response for both our tissue groups, let’s visualize the
 distribution of the computed associations.</p>
@@ -817,20 +831,23 @@ tissue type</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># call the function on our lymp and lung results</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">plot_waterfall</span><span class="op">(</span><span class="va">lymp_results</span>, <span class="st">'Haematopoietic &amp; Lymphoid'</span><span class="op">)</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">plot_waterfall</span><span class="op">(</span><span class="va">lung_results</span>, <span class="st">'Lung'</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">ggarrange</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">plot_waterfall</span><span class="op">(</span><span class="va">lymp_results</span>, <span class="st">'Haematopoietic &amp; Lymphoid'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Module4_files/figure-html/waterfall_plot-1.png" width="700"></p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">plot_waterfall</span><span class="op">(</span><span class="va">lung_results</span>, <span class="st">'Lung'</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Module4_files/figure-html/waterfall_plot-2.png" width="700"></p>
 <p>Notice that there are no FDR significant associations within the lymp
 data, but there are some from the lung data.</p>
 <p>If you inspect closely, you can also see that the genes with the most
 predictive power (low and high CI values) are different between the two
 tissue types.</p>
-<p><em>Identifying candidate biomarkers</em></p>
+</div>
+<div class="section level4">
+<h4 id="identifying-candidate-biomarkers">Identifying candidate biomarkers<a class="anchor" aria-label="anchor" href="#identifying-candidate-biomarkers"></a>
+</h4>
 <p>We see some FDR significant associations in our lung data. Let’s
 extract those genes.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lung_sig</span> <span class="op">&lt;-</span> <span class="va">lung_results</span><span class="op">[</span><span class="va">lung_results</span><span class="op">$</span><span class="va">FDR</span> <span class="op">&lt;</span> <span class="fl">0.05</span>,<span class="op">]</span></span>
 <span><span class="va">lung_sig</span></span>
 <span><span class="co">#&gt;               gene      drug        ci       pvalue         se     upper</span></span>
@@ -856,14 +873,15 @@ their association in lung tissue-derived cell lines from another PSet
 (do a meta-analysis!)</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="interactive-exercise">Interactive Exercise<a class="anchor" aria-label="anchor" href="#interactive-exercise"></a>
-</h3>
-<p><strong>Task1:</strong>: Compare the fixed-effects and random-effects
+</div>
+<div class="section level2">
+<h2 id="interactive-exercise">Interactive Exercise<a class="anchor" aria-label="anchor" href="#interactive-exercise"></a>
+</h2>
+<p><strong>Task1:</strong> Compare the fixed-effects and random-effects
 models using the effect sizes using a new gene-drug pair. Examine the
 variability across different the two studies. Use the I² and
 Q-statistics to assess heterogeneity.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># perform meta analysis on GDSC and CCLE on a new gene-drug pair</span></span>
 <span></span>
 <span><span class="co"># Once you have your meta.result, you can use the code below to examine the Q and I-squared statistics</span></span>
@@ -872,9 +890,8 @@ Q-statistics to assess heterogeneity.</p>
 <span><span class="co">#cat("I-squared Statistic:", meta.result$I2, "%\n")</span></span></code></pre></div>
 <p><strong>Task2</strong>: Perform a subgroup analysis on a new tissue
 type.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># do a tissue subtype analysis on a new tissue type, reporting any candidate biomarkers</span></span></code></pre></div>
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
