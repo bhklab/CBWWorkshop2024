@@ -6,7 +6,7 @@ author:
     affiliation:
         - &pm Princess Margaret Cancer Centre
   - name: Nikta Feizi
-    email: 
+    email: nikta.feizi@uhn.ca
     affiliation:
         - &pm Princess Margaret Cancer Centre
   - name: Julia Nguyen
@@ -182,7 +182,7 @@ common
 
 Notice that most of the molecular profiles are subsetted to include the 9 common samples. 
 Some odd cases include RNA from GDSC which has a technical replicate (hence 10 samples) and
-CNV from CCLE which is missing CNV profiles for two fo the nine cell lines.
+CNV from CCLE which is missing CNV profiles for two of the nine cell lines.
 
 
 ### Summarize Drug Sensitivity Profiles
@@ -224,7 +224,7 @@ CCLE.auc |> head()
 
 We can visualize the distribution of drug sensitivity profiles to compare between the two psets. 
 
-First we quickly reformat the data into a long format to faciliate plotting. We use
+First we quickly reformat the data into a long format to facilitate plotting. We use
 the `melt()` function from the `reshape2` package.
 
 ```{r format_sensitivity}
@@ -367,7 +367,7 @@ w2
 
 # Display p-values
 ss <- sprintf("GE vs. AUC = %.1E\nGE vs. IC50 = %.1E", w1$p.value, w2$p.value)
-ss
+cat(ss)
 ```
 
 ### Boxplot Visualization
@@ -455,7 +455,7 @@ gene expression and the drug response.
 ### Pearson's Correlation Coefficient
 
 Using the same feature and drug, let's compute the association again but this
-time using Pearon's correlation.
+time using Pearson's correlation.
 
 ``` {r compute_pearson}
 ps <- cor.test(
@@ -479,7 +479,7 @@ Pearson's correlation.
 ### Drug Sensitivity Signatures (PharmacoGx)
 
 The last method we will explore is a built-in function from the `PharmacoGx` package 
-called `drugSensitivitySig`. This function takes a Pharmacoset along with a list of
+called `drugSensitivitySig`. This function takes a `PharmacoSet` along with a list of
 drugs and features, then computes the association between the feature expression 
 and drug response for each pair.
 
@@ -487,6 +487,9 @@ Let's first select the first 3 genes and drugs as our features & drugs of intere
 ```{r variables_drugSS}
 features <- commonGenes[1:3]
 drugs <- rownames(common$GDSC@treatment)[1:3]
+
+features
+drugs
 ```
 
 Now we can calculate the drug sensitivity signature using the vector of genes and drugs
@@ -555,15 +558,15 @@ Let's break down this output:
 actual y values. A larger range suggests the model may not be a good fit of the data.
 
 *Coefficients*: the parameters of the model.
-`Estimate` can be considered the effect size. Specifically, it is the one-unit
-change in the y variable (drug repsonse) per one-unit change in the x variable (gene 
+- `Estimate` can be considered the effect size. Specifically, it is the one-unit
+change in the y variable (drug response) per one-unit change in the x variable (gene 
 expression).
-The estimate from our drug~gene assocaition is `0.014028`.
-`Pr(>|t|)` is the corresponding p-value for each estimate.
+The estimate from our drug~gene association is `0.014028`.
+- `Pr(>|t|)` is the corresponding p-value for each estimate.
 The p-value from our drug~gene association test is `0.443`.
 
 Note: If any of the coefficients had met the p-value < 0.05 significance threshold, you would
-have seen `*` beside the estiamte (unfortunatly, this association does not meet this 
+have seen `*` beside the estimate (unfortunately, this association does not meet this 
 threshold).
 
 Let's see if we can make a multi-variate model with better performance.
