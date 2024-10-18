@@ -1,0 +1,182 @@
+---
+title: "Drug Dose Response Curves: Fitting and Plotting"
+author:
+  - name: Jermiah J. Joseph
+    email: jermiah.joseph@uhn.ca
+    affiliation:
+        - &pm Princess Margaret Cancer Centre
+output:
+  BiocStyle::html_document:
+    self_contained: yes
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    code_folding: show
+date: "`r doc_date()`"
+package: "`r pkg_ver('CBWWorkshop2024')`"
+vignette: >
+  %\VignetteIndexEntry{Drug Dose Response Curves: Fitting and Plotting}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r load_packages, eval=TRUE, echo=FALSE, include=FALSE}
+library(CBWWorkshop2024)
+library(PharmacoGx)
+```
+
+# Generate Profiles for a Single Sample and Treatment
+```{r get_pset}
+pset <- CBWWorkshop2024::dummy_pset
+show(pset)
+SAMPLE_OF_INTEREST <- "786-O"
+TREATMENT_OF_INTEREST <- "Ixabepilone"
+```
+
+
+```{r profile_tre, warning = FALSE}
+
+
+pset |>
+  # Get the TreatmentResponseExperiment
+  treatmentResponse() |>
+  # Filter the data to a single sample and treatment
+  subset(
+    treatmentid %in% TREATMENT_OF_INTEREST, 
+    sampleid %in% SAMPLE_OF_INTEREST
+  ) |>
+  # Group By to average out technical replicates
+  CoreGx::endoaggregate(
+    viability = mean(viability),
+    assay = "sensitivity",
+    target = "mean_sensitivity",
+    by = c("treatmentid", "treatmentdose", "sampleid", "bio_rep")
+  ) |>
+  # Fit the dose-response curve
+  CoreGx::endoaggregate(
+    {
+      fit <- PharmacoGx::logLogisticRegression(treatmentdose, viability)
+      IC50 <- PharmacoGx::computeIC50(treatmentdose, Hill_fit = fit)
+      AAC <- PharmacoGx::computeAUC(treatmentdose, Hill_fit = fit, area.type = "Fitted")
+      list(
+        HS = fit[["HS"]], E_inf = fit[["E_inf"]] / 100, EC50 = fit[["EC50"]],
+        Rsq = as.numeric(unlist(attributes(fit))),
+        AAC = AAC,
+        IC50 = IC50,
+        min_dose = min(treatmentdose),
+        max_dose = max(treatmentdose),
+        max_val = max(viability),
+        min_val = min(viability)
+      )
+    },
+    assay = "mean_sensitivity",
+    by = c("treatmentid", "sampleid", "bio_rep"),
+    enlist = FALSE,
+    target = "profiles"
+  ) -> tre_profiled
+tre_profiled
+```
+# Helper function to plot the curve
+
+
+```{r plot_function, warning=FALSE}
+
+#' @title Plot a dose-response curve
+#' 
+#' @description This function plots a dose-response curve for a given sample and treatment
+#' 
+#' @details This function takes a `CoreGx::TreatmentResponseExperiment` object and plots a dose-response curve for a given sample and treatment. The curve is fitted using the Hill equation.
+#'
+#' @param tre `CoreGx::TreatmentResponseExperiment` object
+#' @param sampleid `character` sample id
+#' @param treatmentid `character` treatment id
+#' @param raw_assay_name `character` name of the raw assay
+#' @param profiles_assay_name `character` name of the profiles assay
+#' @param HS_colname `character` name of the HS column
+#' @param E_inf_colname `character` name of the E_inf column
+#' @param EC50_colname `character` name of the EC50 column
+#'
+#' @return NULL
+#' 
+#' @export
+#'
+plot_curve <- function(
+    tre,
+    sampleid,
+    treatmentid,
+    mono_assay_name = "sensitivity",
+    profiles_assay_name = "profiles",
+    HS_colname = "HS",
+    E_inf_colname = "E_inf",
+    EC50_colname = "EC50"
+){
+  
+  mono_assay <- tre[[mono_assay_name]][
+    treatmentid == treatmentid & sampleid == sampleid
+  ]
+  
+  profile_assay <- tre[[profiles_assay_name]][
+    treatmentid == treatmentid & sampleid == sampleid
+  ]
+  
+  min_dose <- profile_assay$min_dose
+  max_dose <- profile_assay$max_dose
+  
+  pseudo_x <- seq(log10(min_dose), log10(max_dose), length.out = 100)
+  pseudo_y <- PharmacoGx:::.Hill(
+    pseudo_x,
+    c(
+      profile_assay[[HS_colname]],
+      profile_assay[[E_inf_colname]],
+      log10(profile_assay[[EC50_colname]])
+    )
+  )
+  
+  df <- data.frame(
+    treatmentdose = log10(mono_assay$treatmentdose),
+    viability = mono_assay$viability / 100
+  )
+  
+  pseudo_df <- data.frame(
+    pseudo_x = pseudo_x,
+    pseudo_y = pseudo_y
+  )
+  
+  # plot
+  library(ggplot2)
+  ggplot() +
+    geom_point(data = df, aes(x = treatmentdose, y = viability), color = "black", size = 3) +  # Points
+    geom_line(data = pseudo_df, aes(x = pseudo_x, y = pseudo_y), color = "red", size = 1.5) +  # Fitted curve
+    labs(
+      title = paste("Dose-Response Curve for", treatmentid, "(", sampleid, ")"),
+      x = "Log10 Treatment Dose",
+      y = "Viability"
+    ) +
+    theme_minimal(base_size = 15) +
+    theme(
+      plot.title = element_text(hjust = 0.5),
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 14)
+    )
+}
+
+```
+
+
+# Plot the curve
+
+```{r plot, warning = FALSE}
+plot_curve(
+  tre = tre_profiled, 
+  sampleid = SAMPLE_OF_INTEREST, 
+  treatmentid = TREATMENT_OF_INTEREST
+)
+```
+
