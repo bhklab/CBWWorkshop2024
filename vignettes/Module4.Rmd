@@ -90,7 +90,7 @@ Say we are interested in `ENSG00000003987` expression association with `PD-03259
 We can start by extracting this data from both PSets.
 
 *Gene Expression Data*
-```{r get_data_EDA, message=FALSE, warning=FALSE}
+```{r get_expression_data, message=FALSE, warning=FALSE}
 # specify our gene of interest
 gene <- "ENSG00000003987"
 
