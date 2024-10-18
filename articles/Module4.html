@@ -76,7 +76,7 @@ Feizi</h4>
 Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:nikta.feizi@uhn.ca" class="email">nikta.feizi@uhn.ca</a>
       </address>
                   
-            <h4 data-toc-skip class="date">17 October 2024</h4>
+            <h4 data-toc-skip class="date">18 October 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bhklab/CBWWorkshop2024/blob/main/vignettes/Module4.Rmd" class="external-link"><code>vignettes/Module4.Rmd</code></a></small>
       <div class="d-none name"><code>Module4.Rmd</code></div>
@@ -84,12 +84,34 @@ Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:nikta.feiz
 
     
     
+<div class="section level3">
+<h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h3>
+</div>
 <div class="section level2">
-<h2 id="introduction-and-objectives">Introduction and Objectives<a class="anchor" aria-label="anchor" href="#introduction-and-objectives"></a>
+<h2 class="unnumbered" id="lab-4-overview">Lab 4 Overview<a class="anchor" aria-label="anchor" href="#lab-4-overview"></a>
 </h2>
-<p>This workshop provides an overview of meta-analysis techniques in
-pharmacogenomics. By the end of this lab, participants will be able
-to:</p>
+<div class="section level3">
+<h3 class="unnumbered" id="instructors-names-and-contact-information">Instructor(s) name(s) and contact
+information<a class="anchor" aria-label="anchor" href="#instructors-names-and-contact-information"></a>
+</h3>
+<ul>
+<li>Nikta Feizi <a href="mailto:nikta.feizi@uhn.ca" class="email">nikta.feizi@uhn.ca</a>
+</li>
+<li>Julia Nguyen <a href="mailto:julia.nguyen@uhn.ca" class="email">julia.nguyen@uhn.ca</a>
+</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h3>
+<p>This workshop will touch on more advanced statistical methods for
+univariate biomarker discovery. It will primarily cover meta-analysis
+techniques and sub-group analysis.</p>
+<div class="section level4">
+<h4 id="learning-objectives">Learning Objectives<a class="anchor" aria-label="anchor" href="#learning-objectives"></a>
+</h4>
+<p>By the end of this lab, participants will be able to:</p>
 <ul>
 <li>Execute a meta-analysis using multiple PharmacoSets to evaluate a
 biomarker of interest across different cancer types.</li>
@@ -102,228 +124,757 @@ data.</li>
 models.</li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="load-required-libraries">Load Required Libraries<a class="anchor" aria-label="anchor" href="#load-required-libraries"></a>
-</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">PharmacoGx</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/guido-s/meta/" class="external-link">meta</a></span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="data-acquisition-and-preparation">Data Acquisition and Preparation<a class="anchor" aria-label="anchor" href="#data-acquisition-and-preparation"></a>
-</h2>
-<p>We will use smaller versions of the PharmacoSets for the workshop to
-minimize processing time. Before diving into the analysis, let’s
-normalize the data and address any missing values.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load smaller datasets for demonstration purposes</span></span>
+<div class="section level3">
+<h3 id="data-acquisition-and-preparation">Data Acquisition and Preparation<a class="anchor" aria-label="anchor" href="#data-acquisition-and-preparation"></a>
+</h3>
+<p>Like before, we will use smaller versions of the PharmacoSets for the
+workshop to minimize processing time. Let’s load these datasets in and
+subset for common cell lines and .</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># load in the datasets</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"GDSCsmall"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"CCLEsmall"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)<a class="anchor" aria-label="anchor" href="#exploratory-data-analysis-eda"></a>
-</h2>
-<p>Before performing the analysis, let’s explore the data to understand
-its characteristics.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Summary statistics</span></span>
+<div class="section level4">
+<h4 id="extracting-required-vectors-for-biomarker-analysis">Extracting required vectors for biomarker analysis<a class="anchor" aria-label="anchor" href="#extracting-required-vectors-for-biomarker-analysis"></a>
+</h4>
+<p>Recall there are two components needed for a biomarker association
+analysis: - Feature data (molecular profile) - Drug response</p>
+<p>Say we are interested in <code>ENSG00000003987</code> expression
+association with <code>PD-0325901</code>. We can start by extracting
+this data from both PSets.</p>
+<p><em>Gene Expression Data</em></p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># specify our gene of interest</span></span>
 <span><span class="va">gene</span> <span class="op">&lt;-</span> <span class="st">"ENSG00000003987"</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># extract the RNA-Seq data for our gene of interest in both GDSC and CCLE</span></span>
+<span><span class="va">ccle_rna_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span></span>
+<span>  <span class="va">CCLEsmall</span>,</span>
+<span>  mDataType <span class="op">=</span> <span class="st">"rna"</span>, features <span class="op">=</span> <span class="va">gene</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">gdsc_rna_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span></span>
 <span>  <span class="va">GDSCsmall</span>,</span>
 <span>  mDataType <span class="op">=</span> <span class="st">"rna"</span>, features <span class="op">=</span> <span class="va">gene</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</span></span>
-<span></span>
-<span><span class="va">ccle_rna_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span></span>
-<span>  <span class="va">CCLEsmall</span>,</span>
-<span>  mDataType <span class="op">=</span> <span class="st">"rna"</span>, features <span class="op">=</span> <span class="va">gene</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Distribution plots</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_string</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span></span>
-<span>    bins <span class="op">=</span> <span class="fl">30</span>, fill <span class="op">=</span> <span class="st">"skyblue"</span>, color <span class="op">=</span> <span class="st">"black"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_c.html" class="external-link">str_c</a></span><span class="op">(</span><span class="st">"Distribution of "</span>, <span class="va">gene</span>, <span class="st">" Expression in CCLEsmall"</span><span class="op">)</span>,</span>
-<span>    x <span class="op">=</span> <span class="st">"Expression"</span>, y <span class="op">=</span> <span class="st">"Frequency"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="Module4_files/figure-html/exploratory-data-analysis-1.png" width="700"></p>
-</div>
-<div class="section level2">
-<h2 id="extract-biomarker-data">Extract Biomarker Data<a class="anchor" aria-label="anchor" href="#extract-biomarker-data"></a>
-</h2>
-<p>Let’s extract gene expression and drug response data for a biomarker
-of interest, e.g., <code>GeneX</code>.</p>
+<span><span class="va">gdsc_rna_data</span></span>
+<span><span class="co">#&gt;                    22RV1 23132-87      380     5637    639-V    647-V     697</span></span>
+<span><span class="co">#&gt; ENSG00000003987 4.197327 4.022529 4.000509 4.031896 3.977781 3.834624 4.36307</span></span>
+<span><span class="co">#&gt;                    769-P    786-0  8-MG-BA</span></span>
+<span><span class="co">#&gt; ENSG00000003987 4.397028 3.973001 4.275385</span></span></code></pre></div>
+<p><em>Drug Response Data</em></p>
+<p>Next, let’s take a look at the available drug response data</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/sensitivityProfiles.html" class="external-link">sensitivityProfiles</a></span><span class="op">(</span><span class="va">CCLEsmall</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                        ic50_published auc_published amax_published</span></span>
+<span><span class="co">#&gt; drugid_AEW541_1321N1         8.000000     0.0873750      -42.55801</span></span>
+<span><span class="co">#&gt; drugid_AEW541_22Rv1          2.329924     0.2205000      -71.58934</span></span>
+<span><span class="co">#&gt; drugid_AEW541_42-MG-BA       2.682130     0.1144375      -63.49137</span></span>
+<span><span class="co">#&gt; drugid_AEW541_5637           5.002314     0.1243550      -62.35278</span></span>
+<span><span class="co">#&gt; drugid_AEW541_639-V          1.736181     0.1936250      -51.95981</span></span>
+<span><span class="co">#&gt; drugid_AEW541_697            4.260822     0.1087625      -73.33379</span></span>
+<span><span class="co">#&gt;                        auc_recomputed ic50_recomputed amax_recomputed</span></span>
+<span><span class="co">#&gt; drugid_AEW541_1321N1        0.1017047        13.09700        42.87563</span></span>
+<span><span class="co">#&gt; drugid_AEW541_22Rv1         0.2239774         2.18654        70.37213</span></span>
+<span><span class="co">#&gt; drugid_AEW541_42-MG-BA      0.1215999         2.68981        63.00413</span></span>
+<span><span class="co">#&gt; drugid_AEW541_5637          0.1092448         5.19939        61.43152</span></span>
+<span><span class="co">#&gt; drugid_AEW541_639-V         0.1912847         5.40523        54.22604</span></span>
+<span><span class="co">#&gt; drugid_AEW541_697           0.1146054         4.17688        69.94055</span></span></code></pre></div>
+<p>We can see a few options of drug response metrics to choose from. We
+will use <code>auc_published</code> for our drug response
+associations.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Extract data for biomarker</span></span>
-<span><span class="va">ccle_drug_data_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/sensitivityProfiles.html" class="external-link">sensitivityProfiles</a></span><span class="op">(</span><span class="va">CCLEsmall</span><span class="op">)</span></span>
-<span><span class="va">ccle_drug_data_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeSensitivityProfiles.html" class="external-link">summarizeSensitivityProfiles</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co"># extract AUC_published data from CCLE and GDSC</span></span>
+<span><span class="va">ccle_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeSensitivityProfiles.html" class="external-link">summarizeSensitivityProfiles</a></span><span class="op">(</span></span>
 <span>  <span class="va">CCLEsmall</span>,</span>
 <span>  sensitivity.measure <span class="op">=</span> <span class="st">"auc_published"</span>,</span>
 <span>  summary.stat <span class="op">=</span> <span class="st">"median"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span></span>
-<span><span class="va">gdsc_drug_data_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/sensitivityProfiles.html" class="external-link">sensitivityProfiles</a></span><span class="op">(</span><span class="va">GDSCsmall</span><span class="op">)</span></span>
-<span><span class="va">gdsc_drug_data_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeSensitivityProfiles.html" class="external-link">summarizeSensitivityProfiles</a></span><span class="op">(</span></span>
+<span><span class="va">gdsc_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeSensitivityProfiles.html" class="external-link">summarizeSensitivityProfiles</a></span><span class="op">(</span></span>
 <span>  <span class="va">GDSCsmall</span>,</span>
 <span>  sensitivity.measure <span class="op">=</span> <span class="st">"auc_published"</span>,</span>
 <span>  summary.stat <span class="op">=</span> <span class="st">"median"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="effect-size-calculation">Effect Size Calculation<a class="anchor" aria-label="anchor" href="#effect-size-calculation"></a>
-</h2>
-<p>Calculate the effect size for each dataset using linear models and
-check the assumptions of the model.</p>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ccle_auc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">#&gt;               1321N1 143B    22RV1 23132-87 253J-BV</span></span>
+<span><span class="co">#&gt; PD-0325901 0.1148875   NA 0.385000       NA      NA</span></span>
+<span><span class="co">#&gt; 17-AAG     0.4177000   NA 0.372460       NA      NA</span></span>
+<span><span class="co">#&gt; AEW541     0.0873750   NA 0.220500       NA      NA</span></span>
+<span><span class="co">#&gt; Nilotinib         NA   NA 0.000000       NA      NA</span></span>
+<span><span class="co">#&gt; PHA-665752 0.0333750   NA 0.094375       NA      NA</span></span></code></pre></div>
+<p>The <code><a href="https://rdrr.io/pkg/CoreGx/man/summarizeSensitivityProfiles.html" class="external-link">summarizeSensitivityProfiles()</a></code> function nicely pulls
+the drug response data and converts it into a sample~drug matrix for
+easy use.</p>
+<p>We only need the drug response data for <code>PD-0325901</code>, so
+let’s pull that out.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Function to compute effect size and check model diagnostics</span></span>
-<span><span class="co"># Default drug and gene parameters are set for example usage</span></span>
-<span><span class="va">computeEffectSize</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">study</span>, <span class="va">exp_data</span>, <span class="va">drug_response</span>, <span class="va">drug</span> <span class="op">=</span> <span class="st">"Erlotinib"</span>, <span class="va">gene</span> <span class="op">=</span> <span class="st">"ENSG00000003987"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">drug_response</span> <span class="op">&lt;-</span> <span class="va">drug_response</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">drug</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">drug_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">drug_response</span><span class="op">)</span> <span class="co"># this contains auc values</span></span>
+<code class="sourceCode R"><span><span class="va">drug</span> <span class="op">&lt;-</span> <span class="st">"PD-0325901"</span></span>
+<span><span class="va">ccle_drug_data</span> <span class="op">&lt;-</span> <span class="va">ccle_auc</span><span class="op">[</span><span class="va">drug</span>, <span class="op">]</span></span>
+<span><span class="va">gdsc_drug_data</span> <span class="op">&lt;-</span> <span class="va">gdsc_auc</span><span class="op">[</span><span class="va">drug</span>, <span class="op">]</span></span>
 <span></span>
-<span>  <span class="va">model_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">drug_response</span>, <span class="va">exp_data</span>, by <span class="op">=</span> <span class="st">"row.names"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cells"</span>, <span class="st">"auc"</span>, <span class="st">"GeneExpr"</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">auc</span> <span class="op">~</span> <span class="va">GeneExpr</span>, data <span class="op">=</span> <span class="va">model_data</span><span class="op">)</span></span>
-<span>  <span class="va">coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"GeneExpr"</span>, <span class="op">]</span></span>
-<span>  <span class="va">effect</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    EffectSize <span class="op">=</span> <span class="va">coef</span><span class="op">[</span><span class="st">"Estimate"</span><span class="op">]</span>,</span>
-<span>    SE <span class="op">=</span> <span class="va">coef</span><span class="op">[</span><span class="st">"Std. Error"</span><span class="op">]</span>,</span>
-<span>    Study <span class="op">=</span> <span class="va">study</span></span>
-<span>  <span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">effect</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">effect</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="co"># Compute effect sizes</span></span>
-<span><span class="va">ccle_effect</span> <span class="op">&lt;-</span> <span class="fu">computeEffectSize</span><span class="op">(</span></span>
-<span>  study <span class="op">=</span> <span class="st">"ccle"</span>,</span>
-<span>  exp_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span>,</span>
-<span>  drug_response <span class="op">=</span> <span class="va">ccle_drug_data_auc</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">gdsc_effect</span> <span class="op">&lt;-</span> <span class="fu">computeEffectSize</span><span class="op">(</span></span>
-<span>  study <span class="op">=</span> <span class="st">"gdsc"</span>,</span>
-<span>  exp_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">gdsc_rna_data</span><span class="op">)</span>,</span>
-<span>  drug_response <span class="op">=</span> <span class="va">gdsc_drug_data_auc</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ccle_drug_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    1321N1      143B     22RV1  23132-87   253J-BV      253J </span></span>
+<span><span class="co">#&gt; 0.1148875        NA 0.3850000        NA        NA        NA</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">gdsc_drug_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    22RV1 23132-87      380     5637    639-V    647-V </span></span>
+<span><span class="co">#&gt; 0.029649 0.122911       NA 0.007242 0.279261 0.100351</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="combine-effect-sizes-and-perform-meta-analysis">Combine Effect Sizes and Perform Meta-Analysis<a class="anchor" aria-label="anchor" href="#combine-effect-sizes-and-perform-meta-analysis"></a>
-</h2>
-<p>We will combine the effect sizes from <code>GDSCsmall</code> and
-<code>CCLEsmall</code> to perform a meta-analysis.</p>
+<div class="section level4">
+<h4 id="gene-expression-exploratory-data-analysis-eda">Gene Expression Exploratory Data Analysis (EDA)<a class="anchor" aria-label="anchor" href="#gene-expression-exploratory-data-analysis-eda"></a>
+</h4>
+<p>Before performing the statistical analysis, let’s quickly look at the
+distribution of <code>ENSG00000003987</code> expression data.</p>
+<p>First, we can check the number of cell lines in each vector:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Combine effect sizes</span></span>
-<span><span class="va">effects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">ccle_effect</span>, <span class="va">gdsc_effect</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Perform meta-analysis</span></span>
-<span><span class="va">meta.result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meta/man/metagen.html" class="external-link">metagen</a></span><span class="op">(</span></span>
-<span>  TE <span class="op">=</span> <span class="va">effects</span><span class="op">$</span><span class="va">EffectSize</span>,</span>
-<span>  seTE <span class="op">=</span> <span class="va">effects</span><span class="op">$</span><span class="va">SE</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">effects</span>,</span>
-<span>  sm <span class="op">=</span> <span class="st">"SMD"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="visualization-with-forest-plots">Visualization with Forest Plots<a class="anchor" aria-label="anchor" href="#visualization-with-forest-plots"></a>
-</h2>
-<p>Generate and interpret a forest plot to visualize the effect
-sizes.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Number of cell lines in GDSC:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gdsc_rna_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Number of cell lines in GDSC: 10"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Number of cell lines in CCLE:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Number of cell lines in CCLE: 1061"</span></span></code></pre></div>
+<p>Notice there is a large difference between the number of samples
+between GDSC and CCLE. This difference in sample size may reflected in
+the meta-analysis.</p>
+<p>Let’s quickly look at the distribution of this gene in both
+PSets.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Generate forest plot</span></span>
-<span><span class="fu"><a href="https://wviechtb.github.io/metafor/reference/forest.html" class="external-link">forest</a></span><span class="op">(</span><span class="va">meta.result</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Module4_files/figure-html/forest-plot-1.png" width="700"></p>
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span>, <span class="fu">aes_string</span><span class="op">(</span>x <span class="op">=</span> <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu">geom_histogram</span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">30</span>, fill <span class="op">=</span> <span class="st">"skyblue"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu">labs</span><span class="op">(</span></span>
+<span>          title <span class="op">=</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_c.html" class="external-link">str_c</a></span><span class="op">(</span><span class="st">"Distribution of "</span>, <span class="va">gene</span>, <span class="st">" Expression in CCLEsmall"</span><span class="op">)</span>,</span>
+<span>          x <span class="op">=</span> <span class="st">"Expression"</span>, y <span class="op">=</span> <span class="st">"Frequency"</span></span>
+<span>        <span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">gdsc_rna_data</span><span class="op">)</span>, <span class="fu">aes_string</span><span class="op">(</span>x <span class="op">=</span> <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu">geom_histogram</span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">30</span>, fill <span class="op">=</span> <span class="st">"skyblue"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu">labs</span><span class="op">(</span></span>
+<span>          title <span class="op">=</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_c.html" class="external-link">str_c</a></span><span class="op">(</span><span class="st">"Distribution of "</span>, <span class="va">gene</span>, <span class="st">" Expression in GDSCsmall"</span><span class="op">)</span>,</span>
+<span>          x <span class="op">=</span> <span class="st">"Expression"</span>, y <span class="op">=</span> <span class="st">"Frequency"</span></span>
+<span>        <span class="op">)</span></span>
+<span><span class="fu">ggarrange</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Module4_files/figure-html/plot_EDA-1.png" width="700"></p>
+<p>Notice that the difference in distribution shapes. You can imagine
+what implications a small sample size (e.g. GDSC) would have when
+downstream analysis.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="effect-size-calculation">Effect Size Calculation<a class="anchor" aria-label="anchor" href="#effect-size-calculation"></a>
+</h3>
+<p>In this next section, we will compute the associations between our
+feature and drug within each individual PSet. These results will be what
+we input into the meta-analysis.</p>
+<p>Before we start, let’s confirm that the samples in our input
+<code>ENSG00000003987</code> expression and <code>PD-0325901</code>
+response vectors are in the samae order.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Enhanced forest plot with ggplot2</span></span>
-<span><span class="va">forest_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  Study <span class="op">=</span> <span class="va">effects</span><span class="op">$</span><span class="va">Study</span>,</span>
-<span>  EffectSize <span class="op">=</span> <span class="va">effects</span><span class="op">$</span><span class="va">EffectSize</span>,</span>
-<span>  LowerCI <span class="op">=</span> <span class="va">effects</span><span class="op">$</span><span class="va">EffectSize</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">effects</span><span class="op">$</span><span class="va">SE</span>,</span>
-<span>  UpperCI <span class="op">=</span> <span class="va">effects</span><span class="op">$</span><span class="va">EffectSize</span> <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">effects</span><span class="op">$</span><span class="va">SE</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">gdsc_drug_data</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">gdsc_rna_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; TRUE </span></span>
+<span><span class="co">#&gt;   10</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ccle_drug_data</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; TRUE </span></span>
+<span><span class="co">#&gt; 1061</span></span>
+<span></span>
+<span><span class="co"># manually look at the cell line names</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">gdsc_drug_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "22RV1"    "23132-87" "380"      "5637"     "639-V"    "647-V"   </span></span>
+<span><span class="co">#&gt;  [7] "697"      "769-P"    "786-0"    "8-MG-BA"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">gdsc_rna_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "22RV1"    "23132-87" "380"      "5637"     "639-V"    "647-V"   </span></span>
+<span><span class="co">#&gt;  [7] "697"      "769-P"    "786-0"    "8-MG-BA"</span></span></code></pre></div>
+<p>We can use any of the statistical methods discussed in Module 3 to
+calculate the effect size of the association between
+<code>ENSG00000003987</code> expression and <code>PD-0325901</code>
+response.</p>
+<p>Let’s try using concordance index:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># fixing drug response data (to change in subsetted PSet)</span></span>
+<span><span class="va">gdsc_drug_data</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
+<span></span>
+<span><span class="co"># compute concordance index for each pset</span></span>
+<span><span class="va">CCLE_ci</span> <span class="op">&lt;-</span> <span class="fu">survcomp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survcomp/man/concordance.index.html" class="external-link">concordance.index</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">ccle_drug_data</span><span class="op">)</span>,                   <span class="co"># drug vector</span></span>
+<span>  surv.time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span>,        <span class="co"># gene vector</span></span>
+<span>  surv.event <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ccle_rna_data</span><span class="op">)</span><span class="op">)</span>,   </span>
+<span>  outx <span class="op">=</span> <span class="cn">TRUE</span>, method<span class="op">=</span><span class="st">"noether"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">forest_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">EffectSize</span>, y <span class="op">=</span> <span class="va">Study</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_errorbarh.html" class="external-link">geom_errorbarh</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">LowerCI</span>, xmax <span class="op">=</span> <span class="va">UpperCI</span><span class="op">)</span>, height <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span></span>
-<span>    xintercept <span class="op">=</span> <span class="va">meta.result</span><span class="op">$</span><span class="va">TE.random</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"red"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Concordance Index:"</span>, <span class="va">CCLE_ci</span><span class="op">$</span><span class="va">c.index</span>, <span class="st">"\n"</span>,</span>
+<span>    <span class="st">"P-value:"</span>, <span class="va">CCLE_ci</span><span class="op">$</span><span class="va">p.value</span>, <span class="st">"\n"</span>,</span>
+<span>    <span class="st">"Standard Error:"</span>, <span class="va">CCLE_ci</span><span class="op">$</span><span class="va">se</span>, <span class="st">"\n"</span>, </span>
+<span>    <span class="st">"Upper CI:"</span>, <span class="va">CCLE_ci</span><span class="op">$</span><span class="va">upper</span>,<span class="st">"\n"</span>,</span>
+<span>    <span class="st">"Lower CI:"</span>, <span class="va">CCLE_ci</span><span class="op">$</span><span class="va">lower</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Concordance Index: 0.5352986 </span></span>
+<span><span class="co">#&gt;  P-value: 0.01556791 </span></span>
+<span><span class="co">#&gt;  Standard Error: 0.0145929 </span></span>
+<span><span class="co">#&gt;  Upper CI: 0.5639002 </span></span>
+<span><span class="co">#&gt;  Lower CI: 0.5066971</span></span>
+<span></span>
+<span><span class="va">GDSC_ci</span> <span class="op">&lt;-</span> <span class="fu">survcomp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survcomp/man/concordance.index.html" class="external-link">concordance.index</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">gdsc_drug_data</span><span class="op">)</span>,                   <span class="co"># drug vector</span></span>
+<span>  surv.time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">gdsc_rna_data</span><span class="op">)</span>,        <span class="co"># gene vector</span></span>
+<span>  surv.event <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gdsc_rna_data</span><span class="op">)</span><span class="op">)</span>,   </span>
+<span>  outx <span class="op">=</span> <span class="cn">TRUE</span>, method<span class="op">=</span><span class="st">"noether"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Concordance Index:"</span>, <span class="va">GDSC_ci</span><span class="op">$</span><span class="va">c.index</span>, <span class="st">"\n"</span>,</span>
+<span>    <span class="st">"P-value:"</span>, <span class="va">GDSC_ci</span><span class="op">$</span><span class="va">p.value</span>, <span class="st">"\n"</span>,</span>
+<span>    <span class="st">"Standard Error:"</span>, <span class="va">GDSC_ci</span><span class="op">$</span><span class="va">se</span>, <span class="st">"\n"</span>, </span>
+<span>    <span class="st">"Upper CI:"</span>, <span class="va">GDSC_ci</span><span class="op">$</span><span class="va">upper</span>,<span class="st">"\n"</span>,</span>
+<span>    <span class="st">"Lower CI:"</span>, <span class="va">GDSC_ci</span><span class="op">$</span><span class="va">lower</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Concordance Index: 0.5777778 </span></span>
+<span><span class="co">#&gt;  P-value: 0.08389382 </span></span>
+<span><span class="co">#&gt;  Standard Error: 0.04499657 </span></span>
+<span><span class="co">#&gt;  Upper CI: 0.6659694 </span></span>
+<span><span class="co">#&gt;  Lower CI: 0.4895861</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="combine-effect-sizes-and-perform-meta-analysis">Combine Effect Sizes and Perform Meta-Analysis<a class="anchor" aria-label="anchor" href="#combine-effect-sizes-and-perform-meta-analysis"></a>
+</h3>
+<p>Now we can combine the effect sizes from <code>GDSCsmall</code> and
+<code>CCLEsmall</code> to perform a meta-analysis.</p>
+<p>Recall from the lecture that we need three variables for our
+meta-analysis: - Effect Size (also called Treatment Effect or TE) -
+Standard Error - Dataset Labels (just for plotting purposes)</p>
+<p>Let’s extract all of this information from our outputs above and put
+it into a dataframe.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  Concordance.Index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">GDSC_ci</span><span class="op">$</span><span class="va">c.index</span>, <span class="va">CCLE_ci</span><span class="op">$</span><span class="va">c.index</span><span class="op">)</span>,</span>
+<span>  Standard.Error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">GDSC_ci</span><span class="op">$</span><span class="va">se</span>, <span class="va">CCLE_ci</span><span class="op">$</span><span class="va">se</span><span class="op">)</span>,</span>
+<span>  Upper.CI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">GDSC_ci</span><span class="op">$</span><span class="va">upper</span>, <span class="va">CCLE_ci</span><span class="op">$</span><span class="va">upper</span><span class="op">)</span>,</span>
+<span>  Lower.CI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">GDSC_ci</span><span class="op">$</span><span class="va">lower</span>, <span class="va">CCLE_ci</span><span class="op">$</span><span class="va">lower</span><span class="op">)</span>,</span>
+<span>  Dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GDSC"</span>, <span class="st">"CCLE"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">combined</span></span>
+<span><span class="co">#&gt;   Concordance.Index Standard.Error  Upper.CI  Lower.CI Dataset</span></span>
+<span><span class="co">#&gt; 1         0.5777778     0.04499657 0.6659694 0.4895861    GDSC</span></span>
+<span><span class="co">#&gt; 2         0.5352986     0.01459290 0.5639002 0.5066971    CCLE</span></span></code></pre></div>
+<p>Now we can use the <code>metagen</code> function from the
+<code>meta</code> package to perform the meta-analysis.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">meta.result</span> <span class="op">&lt;-</span> <span class="fu">metagen</span><span class="op">(</span>data <span class="op">=</span> <span class="va">combined</span>,</span>
+<span>  TE <span class="op">=</span> <span class="va">Concordance.Index</span>,</span>
+<span>  seTE <span class="op">=</span> <span class="va">Standard.Error</span>,</span>
+<span>  studlab <span class="op">=</span> <span class="va">combined</span><span class="op">$</span><span class="va">Dataset</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">meta.result</span></span>
+<span><span class="co">#&gt; Number of studies: k = 2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                                       95%-CI     z p-value</span></span>
+<span><span class="co">#&gt; Common effect model  0.5393 [0.5121; 0.5665] 38.85       0</span></span>
+<span><span class="co">#&gt; Random effects model 0.5393 [0.5121; 0.5665] 38.85       0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Quantifying heterogeneity:</span></span>
+<span><span class="co">#&gt;  tau^2 = 0; tau = 0; I^2 = 0.0%; H = 1.00</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Test of heterogeneity:</span></span>
+<span><span class="co">#&gt;     Q d.f. p-value</span></span>
+<span><span class="co">#&gt;  0.81    1  0.3692</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Details on meta-analytical method:</span></span>
+<span><span class="co">#&gt; - Inverse variance method</span></span>
+<span><span class="co">#&gt; - Restricted maximum-likelihood estimator for tau^2</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="visualization-with-forest-plots">Visualization with Forest Plots<a class="anchor" aria-label="anchor" href="#visualization-with-forest-plots"></a>
+</h4>
+<p><em>forest function from meta package</em></p>
+<p>We can use the built in <code>forest</code> function from the
+<code>meta</code> package to quickly create a forest plot using the
+output of the <code>metagen</code> function:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set your file path</span></span>
+<span><span class="va">file_path</span> <span class="op">&lt;-</span> <span class="st">"forest_plot.png"</span></span>
+<span></span>
+<span><span class="co"># generate forest plot</span></span>
+<span><span class="co"># png(file = file_path, width = 10, height = 4, res = 600, units = "in")</span></span>
+<span><span class="co"># forest(meta.result)</span></span>
+<span><span class="co"># dev.off()</span></span></code></pre></div>
+<p>The forest plot has been saved to your device at your specified file
+path. We have also attached the plot below:</p>
+<div class="figure">
+<img src="forest_plot.png" alt="**PharmacoSet** class structure" width="3000"><p class="caption">
+<strong>PharmacoSet</strong> class structure
+</p>
+</div>
+<p><em>Using ggplot2</em></p>
+<p>We can also visualize this data usign the <code>ggplot2</code>
+package. While this will not return a full forest plot, we can get a
+closer look at the relationship between the effect sizes of each
+individual dataset and the meta-estimate.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">combined</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Concordance.Index</span>, y <span class="op">=</span> <span class="va">Dataset</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_errorbarh</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">Lower.CI</span>, xmax <span class="op">=</span> <span class="va">Upper.CI</span><span class="op">)</span>, height <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">meta.result</span><span class="op">$</span><span class="va">TE.random</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Meta-Analysis of GeneX Expression and Drug Response"</span>,</span>
 <span>    x <span class="op">=</span> <span class="st">"Effect Size"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"Study"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_errorbarh()`).</span></span></code></pre></div>
-<p><img src="Module4_files/figure-html/forest-plot-2.png" width="700"></p>
+<span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Module4_files/figure-html/ggplot_forest_plot-1.png" width="700"></p>
+<p>In the plot above, we have each data point representing the
+individual dataset effect sizes, the error bars represents the
+confidence interval, and the vertical line representing the
+meta-analysis treatment estimate.</p>
+<p>We can very clearly see that the red line is closer to the CCLE data
+point compared to the GDSC data point. This is reflective of the CCLE
+having a greater weight due to a lower variance among other
+considerations.</p>
 </div>
-<div class="section level2">
-<h2 id="subgroup-analysis">Subgroup Analysis<a class="anchor" aria-label="anchor" href="#subgroup-analysis"></a>
-</h2>
-<p>We will now conduct a subgroup analysis using a subset of the
-<code>CCLEsmall</code> dataset.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># TODO: To debug:</span></span>
+</div>
+<div class="section level3">
+<h3 id="subgroup-analysis">Subgroup Analysis<a class="anchor" aria-label="anchor" href="#subgroup-analysis"></a>
+</h3>
+<p>We will now conduct a tissue-subgroup analysis using a subset of the
+<code>CCLEsmall</code> dataset, using all the steps that we have learned
+from this workshop.</p>
+<p>We will be looking at the response of RNA-Seq data on AUC drug
+response. We will take a discovery approach, looking for any
+associations in our rich dataset.</p>
+<div class="section level4">
+<h4 id="data-preparation">Data Preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
+</h4>
+<p>Let’s start by loading in and looking at our data.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># load in expression data</span></span>
+<span><span class="va">expr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span><span class="va">CCLEsmall</span>, mDataType<span class="op">=</span><span class="st">'rna'</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">assay</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">expr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                    1321N1      143B     22RV1  23132-87   253J-BV</span></span>
+<span><span class="co">#&gt; ENSG00000181019 10.907043  9.773744  8.907329 13.961104 12.258347</span></span>
+<span><span class="co">#&gt; ENSG00000157764  7.072053  6.553047  7.237172  7.462726  7.190695</span></span>
+<span><span class="co">#&gt; ENSG00000000003  4.052251 10.542824  7.951917  8.079243 10.079808</span></span>
+<span><span class="co">#&gt; ENSG00000000005  3.430694  3.585748  3.524705  3.580134  3.651864</span></span>
+<span><span class="co">#&gt; ENSG00000000419 13.477683 12.891333 12.043700 12.200771 12.133981</span></span>
 <span></span>
-<span><span class="co"># Load dataset</span></span>
-<span><span class="co"># data("CCLEsmall")</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># # Extract drugs and cells</span></span>
-<span><span class="co"># CCLEdrugs &lt;- treatmentNames(CCLEsmall)</span></span>
-<span><span class="co"># CCLEcells &lt;- sampleNames(CCLEsmall)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># # Subset to a specific drug and cell line</span></span>
-<span><span class="co"># pSet &lt;- subsetTo(CCLEsmall, drugs = CCLEdrugs[1], cells = CCLEcells[1])</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># # Display subset</span></span>
-<span><span class="co"># dim(pSet)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># # Subgroup analysis for tissue-specific biomarker</span></span>
-<span><span class="co"># gene.expr &lt;- summarizeMolecularProfiles(pSet, mDataType = 'rna', features = gene)</span></span>
-<span><span class="co"># ccle_effect &lt;- computeEffectSize(study = "ccle", exp_data = t(gene.expr) , drug_response = drug.response)</span></span></code></pre></div>
+<span><span class="co"># load in drug response data</span></span>
+<span><span class="va">auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeSensitivityProfiles.html" class="external-link">summarizeSensitivityProfiles</a></span><span class="op">(</span></span>
+<span>  <span class="va">CCLEsmall</span>,</span>
+<span>  sensitivity.measure <span class="op">=</span> <span class="st">"auc_published"</span>,</span>
+<span>  summary.stat <span class="op">=</span> <span class="st">"median"</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">auc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">#&gt;               1321N1 143B    22RV1 23132-87 253J-BV</span></span>
+<span><span class="co">#&gt; PD-0325901 0.1148875   NA 0.385000       NA      NA</span></span>
+<span><span class="co">#&gt; 17-AAG     0.4177000   NA 0.372460       NA      NA</span></span>
+<span><span class="co">#&gt; AEW541     0.0873750   NA 0.220500       NA      NA</span></span>
+<span><span class="co">#&gt; Nilotinib         NA   NA 0.000000       NA      NA</span></span>
+<span><span class="co">#&gt; PHA-665752 0.0333750   NA 0.094375       NA      NA</span></span></code></pre></div>
+<p>We have our RNA-Seq expression and drug response matrix in the
+feature~sample format.</p>
+<p>Next, let’s load in the metadata for the cell lines.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># load in metadata</span></span>
+<span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="va">CCLEsmall</span><span class="op">@</span><span class="va">molecularProfiles</span><span class="op">[[</span><span class="st">"rna"</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu">colData</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">meta</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "samplename"                "filename"                 </span></span>
+<span><span class="co">#&gt;  [3] "chiptype"                  "hybridization.date"       </span></span>
+<span><span class="co">#&gt;  [5] "hybridization.hour"        "file.day"                 </span></span>
+<span><span class="co">#&gt;  [7] "file.hour"                 "batch"                    </span></span>
+<span><span class="co">#&gt;  [9] "sampleid"                  "CCLE.name"                </span></span>
+<span><span class="co">#&gt; [11] "Cell.line.primary.name"    "Cell.line.aliases"        </span></span>
+<span><span class="co">#&gt; [13] "Gender"                    "Site.Primary"             </span></span>
+<span><span class="co">#&gt; [15] "Histology"                 "Hist.Subtype1"            </span></span>
+<span><span class="co">#&gt; [17] "Notes"                     "Source"                   </span></span>
+<span><span class="co">#&gt; [19] "Expression.arrays"         "SNP.arrays"               </span></span>
+<span><span class="co">#&gt; [21] "Oncomap"                   "Hybrid.Capture.Sequencing"</span></span>
+<span><span class="co">#&gt; [23] "batchid"                   "rownames"</span></span></code></pre></div>
+<p>Since we want to do a tissue subgroup analysis, we need to identify
+the variable that gives us the tissue type for each cell line.</p>
+<p>We also need to find the variable that maps to the column names of
+our <code>expr</code> matrix. Then, we make sure that all our samples
+are present in this metadata</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># show needed column names</span></span>
+<span><span class="va">meta</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Cell.line.primary.name'</span>, <span class="st">'Site.Primary'</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; DataFrame with 6 rows and 2 columns</span></span>
+<span><span class="co">#&gt;                                              Cell.line.primary.name</span></span>
+<span><span class="co">#&gt;                                                         &lt;character&gt;</span></span>
+<span><span class="co">#&gt; NIECE_P_NCLE_RNA3_HG-U133_PLUS_2_B06_296024                  1321N1</span></span>
+<span><span class="co">#&gt; MAKER_P_NCLE_RNA7_HG-U133_PLUS_2_F09_454702                    143B</span></span>
+<span><span class="co">#&gt; NIECE_P_NCLE_RNA3_HG-U133_PLUS_2_F06_296120                   22Rv1</span></span>
+<span><span class="co">#&gt; WATCH_P_NCLE_RNA8_HG-U133_PLUS_2_E11_474718                23132/87</span></span>
+<span><span class="co">#&gt; CRAZY_P_NCLE_RNA10_HG-U133_PLUS_2_A05_569490                253J-BV</span></span>
+<span><span class="co">#&gt; CRAZY_P_NCLE_RNA10_HG-U133_PLUS_2_A03_569510                   253J</span></span>
+<span><span class="co">#&gt;                                                        Site.Primary</span></span>
+<span><span class="co">#&gt;                                                         &lt;character&gt;</span></span>
+<span><span class="co">#&gt; NIECE_P_NCLE_RNA3_HG-U133_PLUS_2_B06_296024  central_nervous_system</span></span>
+<span><span class="co">#&gt; MAKER_P_NCLE_RNA7_HG-U133_PLUS_2_F09_454702                    bone</span></span>
+<span><span class="co">#&gt; NIECE_P_NCLE_RNA3_HG-U133_PLUS_2_F06_296120                prostate</span></span>
+<span><span class="co">#&gt; WATCH_P_NCLE_RNA8_HG-U133_PLUS_2_E11_474718                 stomach</span></span>
+<span><span class="co">#&gt; CRAZY_P_NCLE_RNA10_HG-U133_PLUS_2_A05_569490          urinary_tract</span></span>
+<span><span class="co">#&gt; CRAZY_P_NCLE_RNA10_HG-U133_PLUS_2_A03_569510          urinary_tract</span></span>
+<span></span>
+<span><span class="co"># check for cell lines included in metadata</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">meta</span><span class="op">$</span><span class="va">Cell.line.primary.name</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; FALSE  TRUE </span></span>
+<span><span class="co">#&gt;   125   936</span></span></code></pre></div>
+<p>Notice we have some cell lines not included in the metadata. We will
+want to remove these samples from our analysis as we cannot give them a
+tissue label.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># identify cell lines with both expression and metadata</span></span>
+<span><span class="va">commonCells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span>, <span class="va">meta</span><span class="op">$</span><span class="va">Cell.line.primary.name</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Number of common cell lines:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">commonCells</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Number of common cell lines: 936"</span></span>
+<span></span>
+<span><span class="co"># check that all these cell lines also have drug response data</span></span>
+<span><span class="va">commonCells</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">auc</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; TRUE </span></span>
+<span><span class="co">#&gt;  936</span></span>
+<span></span>
+<span><span class="co"># subset metadata to only include these samples</span></span>
+<span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="va">meta</span><span class="op">[</span><span class="va">meta</span><span class="op">$</span><span class="va">Cell.line.primary.name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">commonCells</span>,<span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">meta</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 936  24</span></span></code></pre></div>
+<p>There were 936 cell lines with all RNA-Seq expression, drug response,
+and metadata. We only keep the metadata for these cell lines.</p>
+<p>Next, let’s take a look at the tissue types available within the
+samples we have.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">meta</span><span class="op">$</span><span class="va">Site.Primary</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                  autonomic_ganglia                      biliary_tract </span></span>
+<span><span class="co">#&gt;                                 15                                  7 </span></span>
+<span><span class="co">#&gt;                               bone                             breast </span></span>
+<span><span class="co">#&gt;                                 26                                 56 </span></span>
+<span><span class="co">#&gt;             central_nervous_system                        endometrium </span></span>
+<span><span class="co">#&gt;                                 59                                 24 </span></span>
+<span><span class="co">#&gt; haematopoietic_and_lymphoid_tissue                             kidney </span></span>
+<span><span class="co">#&gt;                                168                                 32 </span></span>
+<span><span class="co">#&gt;                    large_intestine                              liver </span></span>
+<span><span class="co">#&gt;                                 52                                 26 </span></span>
+<span><span class="co">#&gt;                               lung                         oesophagus </span></span>
+<span><span class="co">#&gt;                                175                                 26 </span></span>
+<span><span class="co">#&gt;                              ovary                           pancreas </span></span>
+<span><span class="co">#&gt;                                 47                                 38 </span></span>
+<span><span class="co">#&gt;                             pleura                           prostate </span></span>
+<span><span class="co">#&gt;                                 10                                  5 </span></span>
+<span><span class="co">#&gt;                     salivary_gland                               skin </span></span>
+<span><span class="co">#&gt;                                  1                                 55 </span></span>
+<span><span class="co">#&gt;                        soft_tissue                            stomach </span></span>
+<span><span class="co">#&gt;                                 20                                 31 </span></span>
+<span><span class="co">#&gt;                            thyroid          upper_aerodigestive_tract </span></span>
+<span><span class="co">#&gt;                                 11                                 29 </span></span>
+<span><span class="co">#&gt;                      urinary_tract </span></span>
+<span><span class="co">#&gt;                                 23</span></span></code></pre></div>
+<p>We have a large range of different tissue types represented in our
+CCLE dataset. Let’s select
+<code>haematopoietic_and_lymphoid_tissue</code> and <code>lung</code>
+tissues as they have the largest sample sizes.</p>
+<p>Let’s subset our PSets for each of these tissue types.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get cell lines from each tissue</span></span>
+<span><span class="va">lymp_cells</span> <span class="op">&lt;-</span> <span class="va">meta</span><span class="op">$</span><span class="va">Cell.line.primary.name</span><span class="op">[</span><span class="va">meta</span><span class="op">$</span><span class="va">Site.Primary</span> <span class="op">==</span> <span class="st">"haematopoietic_and_lymphoid_tissue"</span><span class="op">]</span></span>
+<span><span class="va">lung_cells</span> <span class="op">&lt;-</span> <span class="va">meta</span><span class="op">$</span><span class="va">Cell.line.primary.name</span><span class="op">[</span><span class="va">meta</span><span class="op">$</span><span class="va">Site.Primary</span> <span class="op">==</span> <span class="st">"lung"</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># subset psets to only include cells within each tissue group</span></span>
+<span><span class="va">lymp_pset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/subsetTo.html" class="external-link">subsetTo</a></span><span class="op">(</span><span class="va">CCLEsmall</span>, cells <span class="op">=</span> <span class="va">lymp_cells</span><span class="op">)</span></span>
+<span><span class="va">lung_pset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/subsetTo.html" class="external-link">subsetTo</a></span><span class="op">(</span><span class="va">CCLEsmall</span>, cells <span class="op">=</span> <span class="va">lung_cells</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># quickly check dimensions of the assays in our subsetted psets</span></span>
+<span><span class="fu">assay</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span><span class="va">lymp_pset</span>, mDataType<span class="op">=</span><span class="st">'rna'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]  50 168</span></span></code></pre></div>
+<p>All our molecular profiles and drug response data within each
+tissue-specific pset is now subsetted to only include the cell lines
+that are in the respective tissue.</p>
 </div>
-<div class="section level2">
-<h2 id="interactive-exercise">Interactive Exercise<a class="anchor" aria-label="anchor" href="#interactive-exercise"></a>
-</h2>
-<p><strong>Task</strong>: Compare the fixed-effects and random-effects
-models using the effect sizes computed above. Perform a subgroup
-analysis to evaluate the effect of <code>GeneX</code> on drug response
-specifically for the chosen drug and cell line.</p>
+<div class="section level4">
+<h4 id="statistical-analysis-to-measure-drug-response-associations">Statistical Analysis to measure Drug Response Associations<a class="anchor" aria-label="anchor" href="#statistical-analysis-to-measure-drug-response-associations"></a>
+</h4>
+<p>Let’s say we want to discover a gene (biomarker) that is predictive
+of response to the drug <code>lapatinib</code>. To do that, we will
+compute the association between the expression of each gene to the
+lapatinib drug response.</p>
+<p>First, let’s get our assays:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># extract the expression assays</span></span>
+<span><span class="va">lymp_expr</span> <span class="op">&lt;-</span> <span class="fu">assay</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span><span class="va">lymp_pset</span>, mDataType<span class="op">=</span><span class="st">'rna'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">lung_expr</span> <span class="op">&lt;-</span> <span class="fu">assay</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeMolecularProfiles.html" class="external-link">summarizeMolecularProfiles</a></span><span class="op">(</span><span class="va">lung_pset</span>, mDataType<span class="op">=</span><span class="st">'rna'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># extract the drug response assays</span></span>
+<span><span class="va">lymp_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeSensitivityProfiles.html" class="external-link">summarizeSensitivityProfiles</a></span><span class="op">(</span><span class="va">lymp_pset</span>, sensitivity.measure <span class="op">=</span> <span class="st">"auc_published"</span>,</span>
+<span>                    summary.stat <span class="op">=</span> <span class="st">"median"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">lung_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/summarizeSensitivityProfiles.html" class="external-link">summarizeSensitivityProfiles</a></span><span class="op">(</span><span class="va">lung_pset</span>, sensitivity.measure <span class="op">=</span> <span class="st">"auc_published"</span>,</span>
+<span>                    summary.stat <span class="op">=</span> <span class="st">"median"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># extract just the drug response vector for lapatinib</span></span>
+<span><span class="va">drug</span> <span class="op">&lt;-</span> <span class="st">"lapatinib"</span></span>
+<span></span>
+<span><span class="va">lymp_auc</span> <span class="op">&lt;-</span> <span class="va">lymp_auc</span><span class="op">[</span><span class="va">drug</span>,<span class="op">]</span></span>
+<span><span class="va">lung_auc</span> <span class="op">&lt;-</span> <span class="va">lung_auc</span><span class="op">[</span><span class="va">drug</span>,<span class="op">]</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># quickly view the data</span></span>
+<span><span class="va">lymp_expr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                       697   ALL-SIL   AML-193     AMO-1     BCP-1</span></span>
+<span><span class="co">#&gt; ENSG00000181019  6.609914  7.032188  7.637502  9.810762 10.006768</span></span>
+<span><span class="co">#&gt; ENSG00000157764  7.754090  7.138147  7.228066  8.115521  7.197811</span></span>
+<span><span class="co">#&gt; ENSG00000000003  4.509136  4.072092  3.937972  5.118464  3.846667</span></span>
+<span><span class="co">#&gt; ENSG00000000005  3.736073  3.661470  3.770592  3.803109  3.660946</span></span>
+<span><span class="co">#&gt; ENSG00000000419 11.718635 11.769529 12.287833 12.586162 11.837654</span></span>
+<span><span class="va">lymp_auc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">#&gt;       697   ALL-SIL   AML-193     AMO-1     BCP-1 </span></span>
+<span><span class="co">#&gt; 0.0453250 0.0767875        NA 0.0663875        NA</span></span></code></pre></div>
+<p>The PSet has already ensured that the cell line order between the
+RNA-Seq expression matrix and the drug response vector is the same.
+Don’t forget to always check when working with your own data.</p>
+<p>Now we will have to compute the association between each gene to
+lapatinib. We can use a for loop to quickly do this:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create data frame to hold results</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fl">0</span>, ncol <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene"</span>, <span class="st">"drug"</span>, <span class="st">"ci"</span>, <span class="st">"pvalue"</span>, <span class="st">"se"</span>, <span class="st">"upper"</span>, <span class="st">"lower"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># get the number of genes (features)</span></span>
+<span><span class="va">num_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">lymp_expr</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># loop through every gene to compute concordance index to drug responses</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">gene</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">lymp_expr</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="co"># compute concordance index</span></span>
+<span>  <span class="va">ci</span> <span class="op">&lt;-</span> <span class="fu">survcomp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survcomp/man/concordance.index.html" class="external-link">concordance.index</a></span><span class="op">(</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">lymp_auc</span><span class="op">)</span>,                   <span class="co"># drug vector</span></span>
+<span>            surv.time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">lymp_expr</span><span class="op">[</span><span class="va">gene</span>,<span class="op">]</span><span class="op">)</span>,       <span class="co"># gene vector</span></span>
+<span>            surv.event <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">lymp_expr</span><span class="op">[</span><span class="va">gene</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span>,   </span>
+<span>            outx <span class="op">=</span> <span class="cn">TRUE</span>, method<span class="op">=</span><span class="st">"noether"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>          <span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># extract summary statistics</span></span>
+<span>  <span class="va">gene_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">drug</span>, </span>
+<span>                            ci <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">c.index</span>,</span>
+<span>                            pvalue <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">p.value</span>,</span>
+<span>                            se <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">se</span>,</span>
+<span>                            upper <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">upper</span>,</span>
+<span>                            lower <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">lower</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># merge with results dataframe</span></span>
+<span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">gene_result</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># filtering and multiple test correction</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">results</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html" class="external-link">complete.cases</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">pvalue</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="va">results</span><span class="op">$</span><span class="va">FDR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">p.adjust</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">pvalue</span>, method <span class="op">=</span> <span class="st">"BH"</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">pvalue</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">results</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;              gene      drug        ci     pvalue         se     upper     lower</span></span>
+<span><span class="co">#&gt; 1 ENSG00000181019 lapatinib 0.5497723 0.30681314 0.04870411 0.6452306 0.4543140</span></span>
+<span><span class="co">#&gt; 2 ENSG00000157764 lapatinib 0.5191932 0.72503712 0.05456734 0.6261432 0.4122432</span></span>
+<span><span class="co">#&gt; 3 ENSG00000000003 lapatinib 0.4528302 0.38826533 0.05467268 0.5599867 0.3456737</span></span>
+<span><span class="co">#&gt; 4 ENSG00000000005 lapatinib 0.4547820 0.37310423 0.05076826 0.5542860 0.3552781</span></span>
+<span><span class="co">#&gt; 5 ENSG00000000419 lapatinib 0.4925179 0.86910085 0.04540095 0.5815021 0.4035337</span></span>
+<span><span class="co">#&gt; 6 ENSG00000000457 lapatinib 0.6005205 0.06179093 0.05381779 0.7060014 0.4950396</span></span>
+<span><span class="co">#&gt;         FDR</span></span>
+<span><span class="co">#&gt; 1 0.8522587</span></span>
+<span><span class="co">#&gt; 2 0.9062964</span></span>
+<span><span class="co">#&gt; 3 0.8688491</span></span>
+<span><span class="co">#&gt; 4 0.8688491</span></span>
+<span><span class="co">#&gt; 5 0.9516488</span></span>
+<span><span class="co">#&gt; 6 0.7079522</span></span></code></pre></div>
+<p>Notice at the end we also computed the false discovery rate (FDR)
+which is a method for multiple test correction.</p>
+<p>We would have to repeat this code for every tissue type. Although we
+are only working with two, imagine we wanted to do more tissue types in
+the future.</p>
+<p><em>Function for computing concordance index</em></p>
+<p>To simply this, we can turn the code above into a function such that
+we just have to input the expression matrix and drug response vector to
+get our result without having to change the rest of the code.</p>
+<p>Below is a function named <code>compute_CI</code> which takes two
+arguments: - <code>expr</code>: an expression matrix with features as
+rows and samples as columns - <code>drug_vector</code>: a vector of drug
+response in the same order as the samples in expr - <code>drug</code>:
+string name of drug (just for putting in the results dataframe)</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">compute_CI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">expr</span>, <span class="va">drug_vector</span>, <span class="va">drug</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  </span>
+<span>  <span class="co"># create data frame to hold results</span></span>
+<span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fl">0</span>, ncol <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene"</span>, <span class="st">"drug"</span>, <span class="st">"ci"</span>, <span class="st">"pvalue"</span>, <span class="st">"se"</span>, <span class="st">"upper"</span>, <span class="st">"lower"</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># get the number of genes (features)</span></span>
+<span>  <span class="va">num_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># loop through every gene to compute concordance index to drug responses</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">gene</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    </span>
+<span>    <span class="co"># compute concordance index</span></span>
+<span>    <span class="va">ci</span> <span class="op">&lt;-</span> <span class="fu">survcomp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survcomp/man/concordance.index.html" class="external-link">concordance.index</a></span><span class="op">(</span></span>
+<span>              <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">drug_vector</span><span class="op">)</span>,                   <span class="co"># drug vector</span></span>
+<span>              surv.time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">expr</span><span class="op">[</span><span class="va">gene</span>,<span class="op">]</span><span class="op">)</span>,       <span class="co"># gene vector</span></span>
+<span>              surv.event <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">expr</span><span class="op">[</span><span class="va">gene</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span>,   </span>
+<span>              outx <span class="op">=</span> <span class="cn">TRUE</span>, method<span class="op">=</span><span class="st">"noether"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>            <span class="op">)</span></span>
+<span>    </span>
+<span>    <span class="co"># extract summary statistics</span></span>
+<span>    <span class="va">gene_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">drug</span>, </span>
+<span>                              ci <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">c.index</span>,</span>
+<span>                              pvalue <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">p.value</span>,</span>
+<span>                              se <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">se</span>,</span>
+<span>                              upper <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">upper</span>,</span>
+<span>                              lower <span class="op">=</span> <span class="va">ci</span><span class="op">$</span><span class="va">lower</span><span class="op">)</span></span>
+<span>    </span>
+<span>    <span class="co"># merge with results dataframe</span></span>
+<span>    <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">gene_result</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  </span>
+<span>  <span class="co"># filtering and multiple test correction</span></span>
+<span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="va">results</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html" class="external-link">complete.cases</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">pvalue</span><span class="op">)</span>,<span class="op">]</span></span>
+<span>  <span class="va">results</span><span class="op">$</span><span class="va">FDR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">p.adjust</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">pvalue</span>, method <span class="op">=</span> <span class="st">"BH"</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">pvalue</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">results</span><span class="op">$</span><span class="va">FDRsig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">FDR</span> <span class="op">&lt;</span> <span class="fl">0.05</span>, <span class="st">'FDR Sig'</span>, <span class="st">'Not FDR Sig'</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># output results</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># use this function on both our lymp and lung data</span></span>
+<span><span class="va">lymp_results</span> <span class="op">&lt;-</span> <span class="fu">compute_CI</span><span class="op">(</span>expr <span class="op">=</span> <span class="va">lymp_expr</span>, drug_vector <span class="op">=</span> <span class="va">lymp_auc</span>, drug <span class="op">=</span> <span class="va">drug</span><span class="op">)</span></span>
+<span><span class="va">lung_results</span> <span class="op">&lt;-</span> <span class="fu">compute_CI</span><span class="op">(</span>expr <span class="op">=</span> <span class="va">lung_expr</span>, drug_vector <span class="op">=</span> <span class="va">lung_auc</span>, drug <span class="op">=</span> <span class="va">drug</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lymp_results</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;              gene      drug        ci     pvalue         se     upper     lower</span></span>
+<span><span class="co">#&gt; 1 ENSG00000181019 lapatinib 0.5497723 0.30681314 0.04870411 0.6452306 0.4543140</span></span>
+<span><span class="co">#&gt; 2 ENSG00000157764 lapatinib 0.5191932 0.72503712 0.05456734 0.6261432 0.4122432</span></span>
+<span><span class="co">#&gt; 3 ENSG00000000003 lapatinib 0.4528302 0.38826533 0.05467268 0.5599867 0.3456737</span></span>
+<span><span class="co">#&gt; 4 ENSG00000000005 lapatinib 0.4547820 0.37310423 0.05076826 0.5542860 0.3552781</span></span>
+<span><span class="co">#&gt; 5 ENSG00000000419 lapatinib 0.4925179 0.86910085 0.04540095 0.5815021 0.4035337</span></span>
+<span><span class="co">#&gt; 6 ENSG00000000457 lapatinib 0.6005205 0.06179093 0.05381779 0.7060014 0.4950396</span></span>
+<span><span class="co">#&gt;         FDR      FDRsig</span></span>
+<span><span class="co">#&gt; 1 0.8522587 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 2 0.9062964 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 3 0.8688491 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 4 0.8688491 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 5 0.9516488 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 6 0.7079522 Not FDR Sig</span></span></code></pre></div>
+<p>We also added a column called <code>FDRsig</code> which represents if
+the association met the FDR &lt; 5% threshold. This will help us in
+plotting.</p>
+<p><em>Visualizing feature-drug associations</em></p>
+<p>Now that we have the associations between all our genes with
+lapatinib response for both our tissue groups, let’s visualize the
+distribution of the computed associations.</p>
+<p>Let’s first rank by concordance index.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lymp_results</span> <span class="op">&lt;-</span> <span class="va">lymp_results</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">lymp_results</span><span class="op">$</span><span class="va">ci</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="va">lung_results</span> <span class="op">&lt;-</span> <span class="va">lung_results</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">lung_results</span><span class="op">$</span><span class="va">ci</span><span class="op">)</span>,<span class="op">]</span></span>
+<span></span>
+<span><span class="va">lymp_results</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;               gene      drug        ci     pvalue         se     upper</span></span>
+<span><span class="co">#&gt; 40 ENSG00000003400 lapatinib 0.4014314 0.07602913 0.05555649 0.5103201</span></span>
+<span><span class="co">#&gt; 14 ENSG00000001461 lapatinib 0.4098894 0.08110842 0.05166032 0.5111418</span></span>
+<span><span class="co">#&gt; 10 ENSG00000001036 lapatinib 0.4131425 0.10091227 0.05294747 0.5169176</span></span>
+<span><span class="co">#&gt; 35 ENSG00000003096 lapatinib 0.4183474 0.11327235 0.05155958 0.5194024</span></span>
+<span><span class="co">#&gt; 46 ENSG00000003989 lapatinib 0.4255042 0.14509404 0.05112672 0.5257108</span></span>
+<span><span class="co">#&gt; 25 ENSG00000002586 lapatinib 0.4294079 0.17377225 0.05189897 0.5311281</span></span>
+<span><span class="co">#&gt;        lower       FDR      FDRsig</span></span>
+<span><span class="co">#&gt; 40 0.2925426 0.7079522 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 14 0.3086370 0.7079522 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 10 0.3093674 0.7079522 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 35 0.3172925 0.7079522 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 46 0.3252977 0.7254702 Not FDR Sig</span></span>
+<span><span class="co">#&gt; 25 0.3276878 0.7898739 Not FDR Sig</span></span></code></pre></div>
+<p>Next, we will create a waterfall plot. We’ve created a function to do
+so, the function is named <code>plot_waterfall</code> and takes the
+following arguments: - <code>ci_results</code>: results matrix from the
+<code>compute_CI</code> function - <code>tissue</code>: string of the
+tissue type</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create palette</span></span>
+<span><span class="va">pal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'FDR Sig'</span> <span class="op">=</span> <span class="st">"#B1D3A3"</span>, <span class="st">'Not FDR Sig'</span> <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># function to plot waterfall plots</span></span>
+<span><span class="va">plot_waterfall</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ci_results</span>, <span class="va">tissue</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="co"># minor formating for plotting</span></span>
+<span>  <span class="va">ci_results</span><span class="op">$</span><span class="va">rank</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ci_results</span><span class="op">)</span></span>
+<span>  <span class="va">ci_results</span><span class="op">$</span><span class="va">rank</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">ci_results</span><span class="op">$</span><span class="va">rank</span><span class="op">)</span></span>
+<span>  <span class="va">ci_results</span><span class="op">$</span><span class="va">drug</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">ci_results</span><span class="op">$</span><span class="va">drug</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># create waterfall plot</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="va">ci_results</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">ci</span> <span class="op">-</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="va">rank</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">geom_col</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">FDRsig</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu">scale_x_continuous</span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>, labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">scale_y_discrete</span><span class="op">(</span>breaks <span class="op">=</span> <span class="va">ci_results</span><span class="op">$</span><span class="va">rank</span>, labels <span class="op">=</span> <span class="va">ci_results</span><span class="op">$</span><span class="va">gene</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">scale_fill_manual</span><span class="op">(</span><span class="st">"FDR Significance"</span>, values <span class="op">=</span> <span class="va">pal</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu">theme</span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu">labs</span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Gene"</span>, title <span class="op">=</span> <span class="va">tissue</span>, x <span class="op">=</span> <span class="st">"Concordance Index (CI)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># call the function on our lymp and lung results</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">plot_waterfall</span><span class="op">(</span><span class="va">lymp_results</span>, <span class="st">'Haematopoietic &amp; Lymphoid'</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">plot_waterfall</span><span class="op">(</span><span class="va">lung_results</span>, <span class="st">'Lung'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggarrange</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Module4_files/figure-html/waterfall_plot-1.png" width="700"></p>
+<p>Notice that there are no FDR significant associations within the lymp
+data, but there are some from the lung data.</p>
+<p>If you inspect closely, you can also see that the genes with the most
+predictive power (low and high CI values) are different between the two
+tissue types.</p>
+<p><em>Identifying candidate biomarkers</em></p>
+<p>We see some FDR significant associations in our lung data. Let’s
+extract those genes.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lung_sig</span> <span class="op">&lt;-</span> <span class="va">lung_results</span><span class="op">[</span><span class="va">lung_results</span><span class="op">$</span><span class="va">FDR</span> <span class="op">&lt;</span> <span class="fl">0.05</span>,<span class="op">]</span></span>
+<span><span class="va">lung_sig</span></span>
+<span><span class="co">#&gt;               gene      drug        ci       pvalue         se     upper</span></span>
+<span><span class="co">#&gt; 3  ENSG00000000003 lapatinib 0.3532213 2.812853e-05 0.03504651 0.4219112</span></span>
+<span><span class="co">#&gt; 26 ENSG00000002587 lapatinib 0.3789916 3.713691e-04 0.03399460 0.4456198</span></span>
+<span><span class="co">#&gt; 9  ENSG00000000971 lapatinib 0.3837535 3.707483e-04 0.03265282 0.4477519</span></span>
+<span><span class="co">#&gt; 31 ENSG00000002834 lapatinib 0.3882353 1.091398e-03 0.03422234 0.4553099</span></span>
+<span><span class="co">#&gt; 40 ENSG00000003400 lapatinib 0.4028011 5.219215e-03 0.03479861 0.4710051</span></span>
+<span><span class="co">#&gt; 48 ENSG00000004139 lapatinib 0.6196078 1.663106e-04 0.03176533 0.6818667</span></span>
+<span><span class="co">#&gt;        lower         FDR  FDRsig</span></span>
+<span><span class="co">#&gt; 3  0.2845314 0.001406427 FDR Sig</span></span>
+<span><span class="co">#&gt; 26 0.3123634 0.004642114 FDR Sig</span></span>
+<span><span class="co">#&gt; 9  0.3197552 0.004642114 FDR Sig</span></span>
+<span><span class="co">#&gt; 31 0.3211607 0.010913980 FDR Sig</span></span>
+<span><span class="co">#&gt; 40 0.3345971 0.043493456 FDR Sig</span></span>
+<span><span class="co">#&gt; 48 0.5573489 0.004157765 FDR Sig</span></span></code></pre></div>
+<p>There are 6 genes that have FDR significant associations with
+lapatinib response. Of these 6, the most predictive is
+<code>ENSG00000000003</code> which is associated with resistance (CI
+&lt; 0.5).</p>
+<p>A next possible step would be to take some of these genes and assess
+their association in lung tissue-derived cell lines from another PSet
+(do a meta-analysis!)</p>
 </div>
-<div class="section level2">
-<h2 id="additional-considerations">Additional Considerations<a class="anchor" aria-label="anchor" href="#additional-considerations"></a>
-</h2>
-<ul>
-<li>
-<p><strong>Heterogeneity</strong>: Examine the variability across
-different studies. Use the I² and Q-statistics to assess
-heterogeneity.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Q Statistic:"</span>, <span class="va">meta.result</span><span class="op">$</span><span class="va">Q</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Q Statistic: 0</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"I-squared Statistic:"</span>, <span class="va">meta.result</span><span class="op">$</span><span class="va">I2</span>, <span class="st">"%\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; I-squared Statistic: NA %</span></span></code></pre></div>
-</li>
-<li><p><strong>Limitations</strong>: Discuss the limitations of
-meta-analysis, such as the variability between studies and the
-challenges of combining datasets from different sources.</p></li>
-</ul>
+</div>
+<div class="section level3">
+<h3 id="interactive-exercise">Interactive Exercise<a class="anchor" aria-label="anchor" href="#interactive-exercise"></a>
+</h3>
+<p><strong>Task1:</strong>: Compare the fixed-effects and random-effects
+models using the effect sizes using a new gene-drug pair. Examine the
+variability across different the two studies. Use the I² and
+Q-statistics to assess heterogeneity.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># perform meta analysis on GDSC and CCLE on a new gene-drug pair</span></span>
+<span></span>
+<span><span class="co"># Once you have your meta.result, you can use the code below to examine the Q and I-squared statistics</span></span>
+<span></span>
+<span><span class="co">#cat("Q Statistic:", meta.result$Q, "\n")</span></span>
+<span><span class="co">#cat("I-squared Statistic:", meta.result$I2, "%\n")</span></span></code></pre></div>
+<p><strong>Task2</strong>: Perform a subgroup analysis on a new tissue
+type.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># do a tissue subtype analysis on a new tissue type, reporting any candidate biomarkers</span></span></code></pre></div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

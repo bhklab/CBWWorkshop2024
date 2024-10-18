@@ -73,19 +73,20 @@ Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:jermiah.jo
 Feizi</h4>
             <address class="author_afil">
       Princess Margaret Cancer
-Centre<br><h4 data-toc-skip class="author">Julia
+Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:nikta.feizi@uhn.ca" class="email">nikta.feizi@uhn.ca</a>
+      </address>
+                              <h4 data-toc-skip class="author">Julia
 Nguyen</h4>
             <address class="author_afil">
       Princess Margaret Cancer
 Centre<br><a class="author_email" href="mailto:#"></a><a href="mailto:julia.nguyen@uhn.ca" class="email">julia.nguyen@uhn.ca</a>
       </address>
                   
-            <h4 data-toc-skip class="date">17 October 2024</h4>
+            <h4 data-toc-skip class="date">18 October 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bhklab/CBWWorkshop2024/blob/main/vignettes/Module3.Rmd" class="external-link"><code>vignettes/Module3.Rmd</code></a></small>
       <div class="d-none name"><code>Module3.Rmd</code></div>
-    </address>
-</div>
+    </div>
 
     
     
@@ -293,7 +294,7 @@ subsetted to include only the common cell lines.</p>
 <p>Notice that most of the molecular profiles are subsetted to include
 the 9 common samples. Some odd cases include RNA from GDSC which has a
 technical replicate (hence 10 samples) and CNV from CCLE which is
-missing CNV profiles for two fo the nine cell lines.</p>
+missing CNV profiles for two of the nine cell lines.</p>
 </div>
 <div class="section level4">
 <h4 id="summarize-drug-sensitivity-profiles">Summarize Drug Sensitivity Profiles<a class="anchor" aria-label="anchor" href="#summarize-drug-sensitivity-profiles"></a>
@@ -348,7 +349,7 @@ sensitivity.</p>
 <span><span class="co">## Nutlin-3   0.00000000 0.0655125</span></span></code></pre>
 <p>We can visualize the distribution of drug sensitivity profiles to
 compare between the two psets.</p>
-<p>First we quickly reformat the data into a long format to faciliate
+<p>First we quickly reformat the data into a long format to facilitate
 plotting. We use the <code>melt()</code> function from the
 <code>reshape2</code> package.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
@@ -553,8 +554,9 @@ gene expression correlations and the drug sensitivity correlations.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Display p-values</span></span>
 <span><span class="va">ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"GE vs. AUC = %.1E\nGE vs. IC50 = %.1E"</span>, <span class="va">w1</span><span class="op">$</span><span class="va">p.value</span>, <span class="va">w2</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span></span>
-<span><span class="va">ss</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "GE vs. AUC = 1.5E-03\nGE vs. IC50 = 1.0E-03"</span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">ss</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## GE vs. AUC = 1.5E-03</span></span>
+<span><span class="co">## GE vs. IC50 = 1.0E-03</span></span></code></pre>
 <div class="section level4">
 <h4 id="boxplot-visualization">Boxplot Visualization<a class="anchor" aria-label="anchor" href="#boxplot-visualization"></a>
 </h4>
@@ -656,7 +658,7 @@ between the gene expression and the drug response.</p>
 <h4 id="pearsons-correlation-coefficient">Pearson’s Correlation Coefficient<a class="anchor" aria-label="anchor" href="#pearsons-correlation-coefficient"></a>
 </h4>
 <p>Using the same feature and drug, let’s compute the association again
-but this time using Pearon’s correlation.</p>
+but this time using Pearson’s correlation.</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html" class="external-link">cor.test</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">Gene</span>,</span>
@@ -682,18 +684,24 @@ concordance index and the Pearson’s correlation.</p>
 </h4>
 <p>The last method we will explore is a built-in function from the
 <code>PharmacoGx</code> package called <code>drugSensitivitySig</code>.
-This function takes a Pharmacoset along with a list of drugs and
-features, then computes the association between the feature expression
-and drug response for each pair.</p>
+This function takes a <code>PharmacoSet</code> along with a list of
+drugs and features, then computes the association between the feature
+expression and drug response for each pair.</p>
 <p>Let’s first select the first 3 genes and drugs as our features &amp;
 drugs of interest:</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="va">commonGenes</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
-<span><span class="va">drugs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">common</span><span class="op">$</span><span class="va">GDSC</span><span class="op">@</span><span class="va">treatment</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">drugs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">common</span><span class="op">$</span><span class="va">GDSC</span><span class="op">@</span><span class="va">treatment</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
+<span></span>
+<span><span class="va">features</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "ENSG00000000003" "ENSG00000000005" "ENSG00000000419"</span></span></code></pre>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">drugs</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "PD-0325901" "17-AAG"     "Nilotinib"</span></span></code></pre>
 <p>Now we can calculate the drug sensitivity signature using the vector
 of genes and drugs for the GDSC dataset. Note that this gene-drug
 signature is based on univariable analysis.</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># gene expression signature</span></span>
 <span><span class="va">sig.rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/drugSensitivitySig.html" class="external-link">drugSensitivitySig</a></span><span class="op">(</span></span>
 <span>  object <span class="op">=</span> <span class="va">GDSCsmall</span>,</span>
@@ -727,7 +735,7 @@ other array components in <code>sig.rna@.Data</code>.</p>
 relationship between multiple molecular features and drugs.</p>
 <p>Let’s do the same for mutations, we’ll do a quick example using one
 gene and drug from the CCLE dataset.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># mutation signature</span></span>
 <span><span class="va">sig.mut</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CoreGx/man/drugSensitivitySig.html" class="external-link">drugSensitivitySig</a></span><span class="op">(</span></span>
 <span>  object <span class="op">=</span> <span class="va">CCLEsmall</span>,</span>
@@ -756,7 +764,7 @@ linear model using the same Gene and Drug vector from earlier.</p>
 <p>Recall <code>Gene</code> is the RNA expression vector of
 <code>ENSG00000000005</code> and <code>Drug</code> is the drug response
 vector (AUC) for <code>PD-0325901</code> in the GDSC dataset.</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Drug</span> <span class="op">~</span> <span class="va">Gene</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Call:</span></span>
@@ -778,24 +786,25 @@ vector (AUC) for <code>PD-0325901</code> in the GDSC dataset.</p>
 <p><em>Residuals</em>: the difference between the predicted y (drug
 response) values and the actual y values. A larger range suggests the
 model may not be a good fit of the data.</p>
-<p><em>Coefficients</em>: the parameters of the model.
+<p><em>Coefficients</em>: the parameters of the model. -
 <code>Estimate</code> can be considered the effect size. Specifically,
-it is the one-unit change in the y variable (drug repsonse) per one-unit
+it is the one-unit change in the y variable (drug response) per one-unit
 change in the x variable (gene expression). The estimate from our
-drug~gene assocaition is <code>0.014028</code>. <code>Pr(&gt;|t|)</code>
-is the corresponding p-value for each estimate. The p-value from our
-drug~gene association test is <code>0.443</code>.</p>
+drug~gene association is <code>0.014028</code>. -
+<code>Pr(&gt;|t|)</code> is the corresponding p-value for each estimate.
+The p-value from our drug~gene association test is
+<code>0.443</code>.</p>
 <p>Note: If any of the coefficients had met the p-value &lt; 0.05
 significance threshold, you would have seen <code>*</code> beside the
-estiamte (unfortunatly, this association does not meet this
+estimate (unfortunately, this association does not meet this
 threshold).</p>
 <p>Let’s see if we can make a multi-variate model with better
 performance.</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get another gene vector</span></span>
 <span><span class="va">commonGenes</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "ENSG00000000005"</span></span></code></pre>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Gene2</span> <span class="op">&lt;-</span> <span class="va">GDSCexpression</span><span class="op">[</span><span class="va">commonGenes</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,<span class="op">]</span></span>
 <span></span>
 <span><span class="co"># multi-variate model</span></span>
