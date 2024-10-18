@@ -33,7 +33,6 @@ knitr::opts_chunk$set(
 ```
 
 
-## Overview 
 # Lab 4 Overview {-}
 
 ## Instructor(s) name(s) and contact information {-}
@@ -69,7 +68,7 @@ suppressPackageStartupMessages({
 ```
 
 
-## Data Acquisition and Preparation
+# Data Acquisition and Preparation
 
 Like before, we will use smaller versions of the PharmacoSets for the workshop to minimize
 processing time. Let's load these datasets in and subset for common cell lines and .
@@ -80,7 +79,7 @@ data("GDSCsmall")
 data("CCLEsmall")
 ```
 
-### Extracting required vectors for biomarker analysis
+## Extracting required vectors for biomarker analysis
 
 Recall there are two components needed for a biomarker association analysis:
 - Feature data (molecular profile)
@@ -89,7 +88,7 @@ Recall there are two components needed for a biomarker association analysis:
 Say we are interested in `ENSG00000003987` expression association with `PD-0325901`. 
 We can start by extracting this data from both PSets.
 
-*Gene Expression Data*
+### Gene Expression Data
 ```{r get_expression_data, message=FALSE, warning=FALSE}
 # specify our gene of interest
 gene <- "ENSG00000003987"
@@ -108,7 +107,7 @@ gdsc_rna_data <- summarizeMolecularProfiles(
 gdsc_rna_data
 ```
 
-*Drug Response Data*
+### Drug Response Data
 
 Next, let's take a look at the available drug response data
 
@@ -153,7 +152,7 @@ head(gdsc_drug_data)
 ```
 
 
-### Gene Expression Exploratory Data Analysis (EDA)
+## Gene Expression Exploratory Data Analysis (EDA)
 
 Before performing the statistical analysis, let's quickly look at the distribution 
 of `ENSG00000003987` expression data.
@@ -190,7 +189,7 @@ Notice that the difference in distribution shapes. You can imagine what implicat
 a small sample size (e.g. GDSC) would have when downstream analysis.
 
 
-## Effect Size Calculation
+# Effect Size Calculation
 
 In this next section, we will compute the associations between our feature and drug
 within each individual PSet. These results will be what we input into the meta-analysis.
@@ -247,7 +246,7 @@ cat("Concordance Index:", GDSC_ci$c.index, "\n",
 ```
 
 
-## Combine Effect Sizes and Perform Meta-Analysis
+# Perform Meta-Analysis
 
 Now we can combine the effect sizes from `GDSCsmall` and `CCLEsmall` to perform a
 meta-analysis.
@@ -286,9 +285,9 @@ meta.result
 ```
 
 
-### Visualization with Forest Plots
+## Visualization with Forest Plots
 
-*forest function from meta package*
+### forest function from meta package
 
 We can use the built in `forest` function from the `meta` package to quickly create 
 a forest plot using the output of the `metagen` function:
@@ -311,7 +310,7 @@ knitr::include_graphics("./forest_plot.png")
 ```
 
 
-*Using ggplot2*
+### Using ggplot2
 
 We can also visualize this data usign the `ggplot2` package. While this will not
 return a full forest plot, we can get a closer look at the relationship between the
@@ -339,7 +338,7 @@ to the GDSC data point. This is reflective of the CCLE having a greater weight d
 to a lower variance among other considerations.
 
 
-## Subgroup Analysis
+# Subgroup Analysis
 
 We will now conduct a tissue-subgroup analysis using a subset of the `CCLEsmall` dataset, 
 using all the steps that we have learned from this workshop.
@@ -347,7 +346,7 @@ using all the steps that we have learned from this workshop.
 We will be looking at the response of RNA-Seq data on AUC drug response. We will take
 a discovery approach, looking for any associations in our rich dataset.
 
-### Data Preparation
+## Data Preparation
 
 Let's start by loading in and looking at our data.
 
@@ -437,7 +436,7 @@ assay(summarizeMolecularProfiles(lymp_pset, mDataType='rna')) |> dim()
 All our molecular profiles and drug response data within each tissue-specific pset
 is now subsetted to only include the cell lines that are in the respective tissue.
 
-### Statistical Analysis to measure Drug Response Associations
+## Statistical Analysis to measure Drug Response Associations
 
 Let's say we want to discover a gene (biomarker) that is predictive of response to
 the drug `lapatinib`. To do that, we will compute the association between the 
@@ -519,7 +518,7 @@ for multiple test correction.
 We would have to repeat this code for every tissue type. Although we are only working 
 with two, imagine we wanted to do more tissue types in the future.
 
-*Function for computing concordance index*
+### Function for computing concordance index
 
 To simply this, we can turn the code above into a function such that we just
 have to input the expression matrix and drug response vector to get our result
@@ -584,7 +583,7 @@ We also added a column called `FDRsig` which represents if the association met t
 FDR < 5% threshold. This will help us in plotting.
 
 
-*Visualizing feature-drug associations*
+### Visualizing feature-drug associations
 
 Now that we have the associations between all our genes with lapatinib response for
 both our tissue groups, let's visualize the distribution of the computed associations.
@@ -629,10 +628,8 @@ plot_waterfall <- function(ci_results, tissue) {
 }
 
 # call the function on our lymp and lung results
-p1 <- plot_waterfall(lymp_results, 'Haematopoietic & Lymphoid')
-p2 <- plot_waterfall(lung_results, 'Lung')
-
-ggarrange(p1, p2, nrow = 2)
+plot_waterfall(lymp_results, 'Haematopoietic & Lymphoid')
+plot_waterfall(lung_results, 'Lung')
 ```
 
 
@@ -643,7 +640,7 @@ If you inspect closely, you can also see that the genes with the most predictive
 power (low and high CI values) are different between the two tissue types.
 
 
-*Identifying candidate biomarkers*
+### Identifying candidate biomarkers
 
 We see some FDR significant associations in our lung data. Let's extract those
 genes.
@@ -662,9 +659,9 @@ A next possible step would be to take some of these genes and assess their assoc
 in lung tissue-derived cell lines from another PSet (do a meta-analysis!)
 
 
-## Interactive Exercise
+# Interactive Exercise
 
-**Task1:**: Compare the fixed-effects and random-effects models using the effect
+**Task1:** Compare the fixed-effects and random-effects models using the effect
 sizes using a new gene-drug pair. Examine the variability across different the 
 two studies. Use the I² and Q-statistics to assess heterogeneity.
 
